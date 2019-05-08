@@ -8,7 +8,7 @@ version: 2.1
 executors:
   daml-executor:
     docker:
-      - image: digitalasset/daml-sdk:0.12.1-circleci-master
+      - image: digitalasset/daml-sdk:0.12.15-circleci-master
 
 jobs:
   mvn_test:
