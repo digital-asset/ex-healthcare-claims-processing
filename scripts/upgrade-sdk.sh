@@ -7,10 +7,6 @@
 
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd )"
 
-fetch_latest_version() {
-    SDK_VERSION="$(curl -s -L -H "Accept: application/json"  https://github.com/digital-asset/daml/releases/latest | jq -r '.tag_name' | tr -d v)"
-}
-
 if [ $# -eq 0 ]
 then
     echo "Fetching latest SDK version"
@@ -19,7 +15,7 @@ elif [ $# -eq 1 ]
 then
     SDK_VERSION=$1
 else
-    echo "Usage ${BASH_SOURCE[0]} [SDK_VERSION]"
+    echo "Usage: ${BASH_SOURCE[0]} [SDK_VERSION]"
     exit 1
 fi
 
