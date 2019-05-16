@@ -29,6 +29,10 @@ jobs:
           path: target/surefire-reports
       - store_artifacts:
           path: target/surefire-reports
+      - run:
+          name: Run Blackduck Detect
+          command: |
+            bash <(curl -s https://raw.githubusercontent.com/DACH-NY/security-blackduck/master/synopsys-detect) ci-build digitalasset_ex-healthcare-claims-processing master --logging.level.com.synopsys.integration=DEBUG          
   daml_test:
     executor: daml-executor
     steps:
@@ -48,4 +52,5 @@ workflows:
   build_and_test:
     jobs:
       - daml_test
-      - mvn_test
+      - mvn_test:
+          context: blackduck
