@@ -203,8 +203,6 @@ To create a referral:
 
 
 1. Log in as Primary Care Provider. 
-
-   In the application, Dr. Paige Mattel is the name of the PCP.
 2. Go to **Provider Actions** tab and click on the contract.
 3. Select the **CreateReferral** choice.
 4. Enter Referral values:
