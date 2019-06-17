@@ -7,7 +7,7 @@ daml 1.2
 module Main.Rules where
 
 import DA.Date
-import qualified DA.Map as M
+import DA.Next.Map qualified as M
 import Main.Types
 import Main.RuleTypes
 import Main.Mapping

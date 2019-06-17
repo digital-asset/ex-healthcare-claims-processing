@@ -7,7 +7,7 @@ daml 1.2
 module Main.Procedure where
 
 import DA.List
-import DA.Map
+import DA.Next.Map
 import Main.Types
 
 type ProcedureMap = Map ProcedureCode (ContractId Procedure)

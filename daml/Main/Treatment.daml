@@ -8,7 +8,7 @@ module Main.Treatment where
 
 import Main.Policy
 import Main.Types
-import qualified Main.CostCalculation as CC
+import Main.CostCalculation qualified as CC
 import Main.Claim
 
 -- Payment information created after a treatment finished

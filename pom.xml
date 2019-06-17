@@ -20,7 +20,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <daml-sdk.version>100.12.15</daml-sdk.version>
+        <daml-sdk.version>100.12.25</daml-sdk.version>
         <slf4j.version>1.7.26</slf4j.version>
         <logback.version>1.2.3</logback.version>
         <args4j.version>2.33</args4j.version>
@@ -150,10 +150,11 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>da</executable>
+                            <executable>daml</executable>
                             <arguments>
-                                <argument>--script</argument>
-                                <argument>compile</argument>
+                                <argument>build</argument>
+                                <argument>-o</argument>
+                                <argument>${project.build.directory}/healthcare-claims-processing.dar</argument>
                             </arguments>
                         </configuration>
                     </execution>

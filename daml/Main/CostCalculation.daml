@@ -8,7 +8,7 @@ module Main.CostCalculation where
 
 import Main.Types
 import Main.RuleTypes
-import qualified DA.Map as M
+import DA.Next.Map qualified as M
 import DA.Optional
 
 -- Encounter stage on which the cost calculation depends on

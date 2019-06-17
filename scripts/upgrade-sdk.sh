@@ -23,6 +23,10 @@ echo "SDK version is $SDK_VERSION"
 echo "modifying ${PROJECT_DIR}/da.yaml"
 sed -e "s/sdk-version: .*$/sdk-version: $SDK_VERSION/" -i "${PROJECT_DIR}/da.yaml"
 
+echo "SDK version is $SDK_VERSION"
+echo "modifying ${PROJECT_DIR}/daml.yaml"
+sed -e "s/sdk-version: .*$/sdk-version: $SDK_VERSION/" -i "${PROJECT_DIR}/daml.yaml"
+
 echo "modifying ${PROJECT_DIR}/pom.xml"
 sed -e "s/<daml-sdk.version>.*<\/daml-sdk.version>$/<daml-sdk.version>10$SDK_VERSION<\/daml-sdk.version>/" -i "${PROJECT_DIR}/pom.xml"
 
@@ -33,4 +37,4 @@ echo "modifying ${PROJECT_DIR}/Dockerfile-sandbox"
 sed -e "s/FROM digitalasset\/daml-sdk:.*$/FROM digitalasset\/daml-sdk:$SDK_VERSION-master/" -i "${PROJECT_DIR}/Dockerfile-sandbox"
 
 echo "modifying ${PROJECT_DIR}/.circleci/config.yml"
-sed -e "s/image: digitalasset\/daml-sdk:.*$/image: digitalasset\/daml-sdk:$SDK_VERSION-circleci-master/" -i "${PROJECT_DIR}/.circleci/config.yml"
+sed -e "s/_version: \".*\"$/_version: \"$SDK_VERSION\"/" -i "${PROJECT_DIR}/.circleci/config.yml"

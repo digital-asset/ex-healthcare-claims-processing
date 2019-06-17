@@ -6,7 +6,7 @@
 daml 1.2
 module Test.Procedure where
 
-import DA.Map
+import DA.Next.Map
 import Main.Procedure
 import Main.Types
 

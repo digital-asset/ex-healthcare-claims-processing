@@ -12,7 +12,7 @@ import Main.Procedure
 import Main.Policy
 import DemoOnboardScenario.NetworkContracts qualified as NC
 import DemoOnboardScenario.ReferenceData
-import DA.Map
+import DA.Next.Map
 import DA.Date
 
 data InsurancePoliciesData = InsurancePoliciesData

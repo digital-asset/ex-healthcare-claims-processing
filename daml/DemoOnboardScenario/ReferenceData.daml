@@ -6,7 +6,7 @@
 daml 1.2 module DemoOnboardScenario.ReferenceData where
 
 import Main.Types
-import DA.Map
+import DA.Next.Map
 import DA.Date
 
 

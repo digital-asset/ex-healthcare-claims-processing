@@ -8,9 +8,9 @@ daml 1.2 module Test.Onboard where
 import Test.ReferenceData
 import Main.Onboard
 import Main.Payer
-import qualified Main.Provider as P
+import Main.Provider qualified as P
 import Main.Patient
-import qualified Main.NetworkContract as NC
+import Main.NetworkContract qualified as NC
 
 data OnboardResult =
   OnboardResult with

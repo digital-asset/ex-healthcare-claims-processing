@@ -209,7 +209,7 @@ To create a referral:
 3. Select the **CreateReferral** choice.
 4. Enter Referral values:
     * Receiver: Radiologist
-    * Policy: #38:17
+    * Policy: #38:11
     * Encounter id: 1
     * Procedure code: Preventative_Care
     * Diagnosis code: Pain_in_right_arm_M79_601
@@ -291,7 +291,7 @@ To make payment:
    Details on this claim will be displayed.
 
 3. To pay the claim, choose the **Pay Claim** button.
-4. Enter the Policy contract id: #43:6
+4. Enter the Policy contract id: #43:4
 
    Payment will be sent to the Radiologist. The Radiologist can view their claims and see that this one is no longer an open claim by clicking on the **Claims** tab and enabling the **Include Archived** choice.
 

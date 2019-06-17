@@ -13,7 +13,7 @@ import Main.Appointment
 import Main.NetworkContract
 import Main.Rules
 import Main.RuleTypes
-import qualified Main.CostCalculation as CC
+import Main.CostCalculation qualified as CC
 
 -- Invitation from the operator that the provider can accept
 template ProviderInvitation

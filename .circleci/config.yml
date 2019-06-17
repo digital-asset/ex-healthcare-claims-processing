@@ -8,23 +8,48 @@ version: 2.1
 executors:
   daml-executor:
     docker:
-      - image: digitalasset/daml-sdk:0.12.15-circleci-master
+      - image: circleci/openjdk:11.0-jdk
+
+commands:
+  install_sdk:
+    description: "Install the DAML SDK"
+    parameters:
+      version:
+        type: string
+    steps:
+      - run:
+          command: |
+            cd ${HOME}
+            wget https://github.com/digital-asset/daml/releases/download/v<< parameters.version >>/daml-sdk-<< parameters.version >>-linux.tar.gz
+            tar -zxvf daml-sdk-<< parameters.version >>-linux.tar.gz
+            cd sdk-<< parameters.version >>
+            ./install.sh
+            cd ${HOME}
+            rm -rf sdk-<< parameters.version >>
 
 jobs:
   mvn_test:
+    parameters:
+      daml_sdk_version:
+        type: string
     executor: daml-executor
     steps:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}-{{ checksum "daml.yaml" }}
             - m2
+      - install_sdk:
+          version: << parameters.daml_sdk_version >>
       - run:
-          command: mvn verify
+          command: |
+            export PATH=${HOME}/.daml/bin:${PATH}
+            mvn verify
       - save_cache:
           paths:
             - ~/.m2
-          key: m2-{{ checksum "pom.xml" }}
+            - ~/.daml
+          key: m2-{{ checksum "pom.xml" }}-{{ checksum "daml.yaml" }}
       - store_test_results:
           path: target/surefire-reports
       - store_artifacts:
@@ -34,14 +59,26 @@ jobs:
           command: |
             bash <(curl -s https://raw.githubusercontent.com/DACH-NY/security-blackduck/master/synopsys-detect) ci-build digitalasset_ex-healthcare-claims-processing master --logging.level.com.synopsys.integration=DEBUG          
   daml_test:
+    parameters:
+      daml_sdk_version:
+        type: string
     executor: daml-executor
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - daml-{{ checksum "daml.yaml" }}
+      - install_sdk:
+          version: << parameters.daml_sdk_version >>
       - run:
           command: |
-            mkdir -p target/daml-test-reports
-            da compile
-            da run -- damlc test --junit target/daml-test-reports/daml-test.xml daml/LibraryModules.daml
+            export PATH=${HOME}/.daml/bin:${PATH}
+            daml build -o target/healthcare-claims-processing.dar
+            daml test --junit target/daml-test-reports/daml-test.xml --files daml/LibraryModules.daml
+      - save_cache:
+          paths:
+            - ~/.daml
+          key: daml-{{ checksum "daml.yaml" }}
       - store_test_results:
           path: target/daml-test-reports
       - store_artifacts:
@@ -51,6 +88,7 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - daml_test
+      - daml_test:
+          daml_sdk_version: "0.12.25"
       - mvn_test:
-          context: blackduck
+          daml_sdk_version: "0.12.25"

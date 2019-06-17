@@ -9,11 +9,11 @@ module Main.Appointment where
 import DA.Date
 
 import Main.Treatment
-import Main.Types
+import Main.Types()
 import Main.Policy
 import Main.Rules
 import Main.RuleTypes
-import qualified Main.CostCalculation as CC
+import Main.CostCalculation qualified as CC
 
 -- A scheduled appointment
 template Appointment

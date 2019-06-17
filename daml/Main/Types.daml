@@ -6,7 +6,8 @@
 daml 1.2
 module Main.Types where
 
-import DA.Map
+import DA.Optional
+import DA.Next.Map
 
 -- In the workflow, a primary provider creates referral for the patient
 -- and sending them to a specialist
@@ -58,7 +59,18 @@ data PolicyType = Gold | Bronze deriving (Eq, Show)
 type FeeSchedule = Map ProcedureCode Decimal
 
 data ProcedureCode = Preventative_Care | Physicals | Sick_Visits | X_Ray_Wrist_2_Views | X_Ray_Wrist_3_Views
-  deriving (Eq, Show, Ord)
+  deriving (Enum, Eq, Show, Ord)
+
+instance MapKey ProcedureCode where
+   keyToText = show
+   keyFromText = readEnum "ProcedureCode" [Preventative_Care .. ]
+
+readEnum: Show a => Text -> [a] -> Text -> a
+readEnum name enum t = fromSomeNote err $ Prelude.lookup t textsWithProcCodes
+  where
+    textsWithProcCodes = zip texts enum
+    texts = map show enum
+    err = "Error reading " <> name <> ": " <> t
 
 data DiagnosisCode = Fracture_of_scaphoid_bone_right_wrist_S62_001 |
   Closed_fracture_of_scaphoid_bone_right_wrist_S62_001A |

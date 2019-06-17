@@ -9,7 +9,7 @@ import Main.Provider
 import Main.Payer
 import Main.NetworkContract
 import DemoOnboardScenario.Onboard qualified as O
-import qualified DemoOnboardScenario.ReferenceData as Ref
+import DemoOnboardScenario.ReferenceData qualified as Ref
 
 
 requestNetworkContract

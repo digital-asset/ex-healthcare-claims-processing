@@ -3,12 +3,20 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-FROM digitalasset/daml-sdk:0.12.15-master
+FROM ubuntu:18.04
 
 WORKDIR /home/sdk
 
 COPY ui-backend.conf frontend-config.js /home/sdk/
 
+RUN /bin/bash -c "apt-get update --no-show-upgraded &&  apt-get install curl openjdk-8-jdk -y"
+RUN /bin/bash -c "curl -L https://github.com/digital-asset/daml/releases/download/v0.12.25/daml-sdk-0.12.25-linux.tar.gz -o daml-sdk-0.12.25-linux.tar.gz && \
+                  tar -zxvf daml-sdk-0.12.25-linux.tar.gz && \
+                  cd sdk-0.12.25 && \
+                  ./install.sh && \
+                  cd - && \
+                  rm -rf sdk-0.12.25"
+
 EXPOSE 7500
 
-CMD da run navigator -- server ${SANDBOX_HOST} ${SANDBOX_PORT} --port 7500 --config-file ui-backend.conf
+CMD ~/.daml/bin/daml navigator -- server ${SANDBOX_HOST} ${SANDBOX_PORT} --port 7500 --config-file ui-backend.conf
