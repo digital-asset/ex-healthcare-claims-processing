@@ -6,45 +6,19 @@
 daml 1.2
 module LibraryModules where
 
-import Test.Appointment
-import Test.Claim
-import Test.Onboard
-import Test.Patient
-import Test.Payer
-import Test.Referral
-import Test.Treatment
-import Test.Procedure
-import DemoOnboardScenario.Onboard
-import DemoOnboardScenario.NetworkContracts
-import DemoOnboardScenario.InsurancePolicies
-import DemoOnboardScenario.ReferenceData
-import DemoOnboardScenario.Referral
-import DemoOnboardScenario.Appointment
-import DemoOnboardScenario.Treatment
-import DemoOnboardScenario.Claim
-
--- We do this to have all the scenarios, even the tests in the DAR
-allTests =
-    [ v Test.Appointment.appointmentTest
-    , v Test.Claim.claimTest
-    , v Test.Onboard.onboard
-    , v onboardPatient
-    , v payerOnboard
-    , v Test.Procedure.testProcedureList
-    , v test2ProcedureList
-    , v referralTest
-    , v Test.Treatment.treatmentTest
-
-    , v DemoOnboardScenario.Appointment.appointmentTest
-    , v DemoOnboardScenario.Claim.claimTest
-    , v insurancePoliciesSet
-    , v insurancePoliciesSetSingle
-    , v networkContractsSet
-    , v DemoOnboardScenario.Onboard.onboard
-    , v disclosureList
-    , v DemoOnboardScenario.Referral.referral
-    , v DemoOnboardScenario.Treatment.treatmentTest
-    ]
-
--- Void
-v = fmap (\_ -> ())
+import Test.Appointment()
+import Test.Claim()
+import Test.Onboard()
+import Test.Patient()
+import Test.Payer()
+import Test.Referral()
+import Test.Treatment()
+import Test.Procedure()
+import DemoOnboardScenario.Onboard()
+import DemoOnboardScenario.NetworkContracts()
+import DemoOnboardScenario.InsurancePolicies()
+import DemoOnboardScenario.ReferenceData()
+import DemoOnboardScenario.Referral()
+import DemoOnboardScenario.Appointment()
+import DemoOnboardScenario.Treatment()
+import DemoOnboardScenario.Claim()
