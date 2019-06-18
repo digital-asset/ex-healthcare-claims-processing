@@ -19,13 +19,7 @@ commands:
     steps:
       - run:
           command: |
-            cd ${HOME}
-            wget https://github.com/digital-asset/daml/releases/download/v<< parameters.version >>/daml-sdk-<< parameters.version >>-linux.tar.gz
-            tar -zxvf daml-sdk-<< parameters.version >>-linux.tar.gz
-            cd sdk-<< parameters.version >>
-            ./install.sh
-            cd ${HOME}
-            rm -rf sdk-<< parameters.version >>
+            ./scripts/install-daml.sh << parameters.version >>
 
 jobs:
   mvn_test:
