@@ -5,17 +5,19 @@
 
 FROM ubuntu:18.04
 
+ARG sdk_version=0.13.0
+
 WORKDIR /home/sdk
 
 COPY ui-backend.conf frontend-config.js /home/sdk/
 
 RUN /bin/bash -c "apt-get update --no-show-upgraded &&  apt-get install curl openjdk-8-jdk -y"
-RUN /bin/bash -c "curl -L https://github.com/digital-asset/daml/releases/download/v0.12.25/daml-sdk-0.12.25-linux.tar.gz -o daml-sdk-0.12.25-linux.tar.gz && \
-                  tar -zxvf daml-sdk-0.12.25-linux.tar.gz && \
-                  cd sdk-0.12.25 && \
+RUN /bin/bash -c "curl -L https://github.com/digital-asset/daml/releases/download/v${sdk_version}/daml-sdk-${sdk_version}-linux.tar.gz -o daml-sdk-${sdk_version}-linux.tar.gz && \
+                  tar -zxvf daml-sdk-${sdk_version}-linux.tar.gz && \
+                  cd sdk-${sdk_version} && \
                   ./install.sh && \
                   cd - && \
-                  rm -rf sdk-0.12.25"
+                  rm -rf sdk-${sdk_version}"
 
 EXPOSE 7500
 
