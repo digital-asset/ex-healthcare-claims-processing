@@ -10,14 +10,10 @@ ARG sdk_version=0.13.0
 WORKDIR /home/sdk
 
 COPY target/healthcare-claims-processing.dar /home/sdk/
+COPY scripts/install-daml.sh /home/sdk/
 
-RUN /bin/bash -c "apt-get update --no-show-upgraded &&  apt-get install curl openjdk-8-jdk -y"
-RUN /bin/bash -c "curl -L https://github.com/digital-asset/daml/releases/download/v${sdk_version}/daml-sdk-${sdk_version}-linux.tar.gz -o daml-sdk-${sdk_version}-linux.tar.gz && \
-                  tar -zxvf daml-sdk-${sdk_version}-linux.tar.gz && \
-                  cd sdk-${sdk_version} && \
-                  ./install.sh && \
-                  cd - && \
-                  rm -rf sdk-${sdk_version}"
+RUN /bin/bash -c "apt-get update --no-show-upgraded &&  apt-get install wget openjdk-8-jdk -y"
+RUN /home/sdk/install-daml.sh ${sdk_version}
 
 EXPOSE 7600
 
