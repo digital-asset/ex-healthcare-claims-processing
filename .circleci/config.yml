@@ -83,7 +83,7 @@ workflows:
   build_and_test:
     jobs:
       - daml_test:
-          daml_sdk_version: "0.13.0"
+          daml_sdk_version: "0.13.10"
       - mvn_test:
-          daml_sdk_version: "0.13.0"
+          daml_sdk_version: "0.13.10"
           context: blackduck
