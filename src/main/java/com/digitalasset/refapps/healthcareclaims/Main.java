@@ -18,6 +18,7 @@ import com.digitalasset.refapps.healthcareclaims.util.TimeManager;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.concurrent.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,74 +31,79 @@ public class Main {
   private static final String InsuranceCompany = "InsuranceCompany";
   private static final String PatientNameBase = "Patient";
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
     CliOptions options = CliOptions.parseArgs(args);
     DamlLedgerClient client =
         DamlLedgerClient.forHostWithLedgerIdDiscovery(
             options.getSandboxHost(), options.getSandboxPort(), Optional.empty());
-    waitForSandbox(options, client);
+    try {
+      logger.info(
+          "Waiting for DAML Sandbox on {}:{}", options.getSandboxHost(), options.getSandboxPort());
+      runBots(client);
+
+      logger.info("Welcome to Direct Asset Control Demo Application!");
+      logger.info("Press Ctrl+C (for Mac and Linux, Ctrl+Z on Windows) to shut down the program.");
+      Thread.currentThread().join();
+      logger.info("Application terminated.");
+    } catch (Exception e) {
+      logger.warn("Is Sandbox running? ", e);
+    }
+  }
+
+  public static void runBots(DamlLedgerClient client) {
+    waitForSandbox(client);
+    logger.info("Connected to DAML Sandbox.");
 
     StringBuilder sb = new StringBuilder("Listing packages:");
     client.getPackageClient().listPackages().forEach(id -> sb.append(id).append("\n"));
     logger.info(sb.toString());
 
-    try {
-      CommandsAndPendingSetBuilder.Factory factory =
-          new CommandsAndPendingSetBuilder.Factory(
-              applicationId, new TimeManager(client.getTimeClient()), Duration.ofMillis(5000));
-      AcceptClaimBot acceptClaimBot = new AcceptClaimBot(factory, InsuranceCompany);
+    CommandsAndPendingSetBuilder.Factory factory =
+        new CommandsAndPendingSetBuilder.Factory(
+            applicationId, new TimeManager(client.getTimeClient()), Duration.ofMillis(5000));
+    AcceptClaimBot acceptClaimBot = new AcceptClaimBot(factory, InsuranceCompany);
 
-      Bot.wire(
-          applicationId,
-          client,
-          acceptClaimBot.transactionFilter,
-          acceptClaimBot::calculateCommands,
-          acceptClaimBot::getContractInfo);
+    Bot.wire(
+        applicationId,
+        client,
+        acceptClaimBot.transactionFilter,
+        acceptClaimBot::calculateCommands,
+        acceptClaimBot::getContractInfo);
 
-      EvaluateReferralBot evaluateReferralBot = new EvaluateReferralBot(factory, Radiologist);
+    EvaluateReferralBot evaluateReferralBot = new EvaluateReferralBot(factory, Radiologist);
 
-      Bot.wire(
-          applicationId,
-          client,
-          evaluateReferralBot.transactionFilter,
-          evaluateReferralBot::calculateCommands,
-          evaluateReferralBot::getContractInfo);
+    Bot.wire(
+        applicationId,
+        client,
+        evaluateReferralBot.transactionFilter,
+        evaluateReferralBot::calculateCommands,
+        evaluateReferralBot::getContractInfo);
 
-      AcknowledgeAppointmentBot acknowledgeAppointmentBot =
-          new AcknowledgeAppointmentBot(factory, InsuranceCompany);
+    AcknowledgeAppointmentBot acknowledgeAppointmentBot =
+        new AcknowledgeAppointmentBot(factory, InsuranceCompany);
 
-      Bot.wire(
-          applicationId,
-          client,
-          acknowledgeAppointmentBot.transactionFilter,
-          acknowledgeAppointmentBot::calculateCommands,
-          acknowledgeAppointmentBot::getContractInfo);
+    Bot.wire(
+        applicationId,
+        client,
+        acknowledgeAppointmentBot.transactionFilter,
+        acknowledgeAppointmentBot::calculateCommands,
+        acknowledgeAppointmentBot::getContractInfo);
 
-      UpdateReferralDetailsBot updateReferralDetailsBot =
-          new UpdateReferralDetailsBot(factory, Radiologist);
+    UpdateReferralDetailsBot updateReferralDetailsBot =
+        new UpdateReferralDetailsBot(factory, Radiologist);
 
-      Bot.wire(
-          applicationId,
-          client,
-          updateReferralDetailsBot.transactionFilter,
-          updateReferralDetailsBot::calculateCommands,
-          updateReferralDetailsBot::getContractInfo);
+    Bot.wire(
+        applicationId,
+        client,
+        updateReferralDetailsBot.transactionFilter,
+        updateReferralDetailsBot::calculateCommands,
+        updateReferralDetailsBot::getContractInfo);
 
-      // acknowledgeBot for 10 patients
-      for (int i = 0; i < 10; ++i) {
-        String patient = PatientNameBase + (i + 1);
-        addAcknowledgeAndDiscloseBot(client, factory, patient);
-        addAcceptPatientPaymentRequestBot(client, factory, patient);
-      }
-
-      logger.info("Welcome to Healthcare Claims Processing application!");
-      logger.info("Press Ctrl+C to shut down the program.");
-
-      Thread.currentThread().join();
-      client.close();
-      logger.info("Program terminated.");
-    } catch (Exception e) {
-      logger.warn("Is Sandbox running? ", e);
+    // acknowledgeBot for 10 patients
+    for (int i = 0; i < 10; ++i) {
+      String patient = PatientNameBase + (i + 1);
+      addAcknowledgeAndDiscloseBot(client, factory, patient);
+      addAcceptPatientPaymentRequestBot(client, factory, patient);
     }
   }
 
@@ -126,25 +132,24 @@ public class Main {
         acceptPatientPaymentRequestBot::getContractInfo);
   }
 
-  private static void waitForSandbox(CliOptions options, DamlLedgerClient client) {
+  public static void waitForSandbox(DamlLedgerClient client) {
+    int time = 0;
     boolean connected = false;
     while (!connected) {
       try {
+        if (time >= 10) {
+          throw new TimeoutException("Cannot connect to Sandbox.");
+        }
         client.connect();
         connected = true;
-      } catch (Exception ignored) {
-        System.out.println(
-            String.format(
-                "Connecting to sandbox at %s:%s",
-                options.getSandboxHost(), options.getSandboxPort()));
+      } catch (Exception _ignored) {
+        logger.info(String.format("Connecting to sandbox..."));
         try {
           Thread.sleep(1000);
-        } catch (InterruptedException ignored2) {
+          time++;
+        } catch (InterruptedException ignored) {
         }
       }
     }
-    System.out.println(
-        String.format(
-            "Connected to sandbox at %s:%s", options.getSandboxHost(), options.getSandboxPort()));
   }
 }
