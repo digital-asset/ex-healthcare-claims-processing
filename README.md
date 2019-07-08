@@ -43,15 +43,16 @@ docker-compose up --build
 
 1.  Make sure you have built the application with Maven (see Build with Maven step).
 
-2.  Start the DA Sandbox and the Navigator.
-Type: 
-
+2. Start the Sandbox with Navigator and with the DAR deployed.
 ```
-DAML_PROJECT="$(pwd)" da start 
+daml start
 ```
-   The Navigator automatically opens in a new browser tab.
 
-3.  Start the automation logic by starting bots. Type: 
+2. Open UI in a new browser tab with http://localhost:7500.
+
+Disclaimer: "localhost" which the application is run on should not have a web facing ip address assigned to it.
+
+3.  Start the automation logic by starting bots. Type:
 
 ```
 java -jar ./target/healthcare-claims-processing-0.0.1-SNAPSHOT.jar
@@ -69,11 +70,7 @@ java -jar ./target/healthcare-claims-processing-0.0.1-SNAPSHOT.jar
 
 2.  Stop the bots by pressing **Ctrl+C**.
 
-3.  Stop the Sandbox. Type: 
-
-```
-da stop
-```
+2.  Stop the Sandbox and Navigator by pressing **Ctrl+C**.
 
 ### Resetting the Prototype
 
@@ -85,7 +82,7 @@ Reset the application by following these steps:
 
 ## This Guide
 
-This User Guide will take you step-by-step through healthcare claims processing, executing one successful claim. 
+This User Guide will take you step-by-step through healthcare claims processing, executing one successful claim.
 
 **Note:** This demo is designed to show successful processing of a claim without exceptions or error conditions. A full production implementation would include additional features, handle errors and exceptions, and incorporate appropriate security controls.
 
