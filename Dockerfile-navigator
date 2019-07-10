@@ -5,7 +5,7 @@
 
 FROM ubuntu:18.04
 
-ARG sdk_version=0.13.10
+ARG sdk_version=0.13.12
 
 WORKDIR /home/sdk
 
