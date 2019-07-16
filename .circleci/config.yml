@@ -63,7 +63,7 @@ jobs:
           command: |
             bash <(curl -s https://raw.githubusercontent.com/DACH-NY/security-blackduck/master/synopsys-detect) ci-build digitalasset_ex-healthcare-claims-processing master --logging.level.com.synopsys.integration=DEBUG  --detect.notices.report=true
       - run:
-          command: cp digitalasset_ex_healthcase_claims_processing_Black_Duck_Notices_Report.txt target/NOTICE
+          command: cp digitalasset_ex_healthcare_claims_processing_Black_Duck_Notices_Report.txt target/NOTICE
       - persist_to_workspace:
           root: target
           paths:
