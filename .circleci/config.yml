@@ -9,6 +9,16 @@ executors:
   daml-executor:
     docker:
       - image: circleci/openjdk:11.0-jdk
+  docker_buildpack:
+    docker:
+      - image: circleci/buildpack-deps:xenial
+
+only-release-tags: &only-release-tags
+  filters:
+    tags:
+      only: /^v.*/
+    branches:
+      ignore: /.*/
 
 commands:
   install_sdk:
@@ -51,7 +61,17 @@ jobs:
       - run:
           name: Run Blackduck Detect
           command: |
-            bash <(curl -s https://raw.githubusercontent.com/DACH-NY/security-blackduck/master/synopsys-detect) ci-build digitalasset_ex-healthcare-claims-processing master --logging.level.com.synopsys.integration=DEBUG          
+            bash <(curl -s https://raw.githubusercontent.com/DACH-NY/security-blackduck/master/synopsys-detect) ci-build digitalasset_ex-healthcare-claims-processing master --logging.level.com.synopsys.integration=DEBUG  --detect.notices.report=true
+      - run:
+          command: cp digitalasset_ex_healthcare_claims_processing_master_Black_Duck_Notices_Report.txt target/NOTICE
+      - persist_to_workspace:
+          root: target
+          paths:
+            - "*.jar"
+            - "*.dar"
+            - "lib"
+            - "NOTICE"
+
   daml_test:
     parameters:
       daml_sdk_version:
@@ -78,6 +98,17 @@ jobs:
       - store_artifacts:
           path: target/daml-test-reports
 
+  github_release:
+    executor: docker_buildpack
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Push a new github release
+          command: |
+            ./scripts/release.sh ex-healthcare-claims-processing
+
 workflows:
   version: 2
   build_and_test:
@@ -87,3 +118,18 @@ workflows:
       - mvn_test:
           daml_sdk_version: "0.13.12"
           context: blackduck
+  build_and_release:
+    jobs:
+      - daml_test:
+          <<: *only-release-tags
+          daml_sdk_version: "0.13.12"
+      - mvn_test:
+          <<: *only-release-tags
+          daml_sdk_version: "0.13.12"
+          context: blackduck
+      - github_release:
+          context: github-refapp-repo-context
+          requires:
+            - daml_test
+            - mvn_test
+          <<: *only-release-tags
