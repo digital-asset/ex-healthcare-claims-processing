@@ -113,9 +113,11 @@ jobs:
               tar xvzf hub-linux-amd64-2.12.1.tgz
               export PATH="${HOME}/hub-linux-amd64-2.12.1/bin/:${PATH}"
             popd
-             export GITHUB_TOKEN="${GITHUB_REFAPP_MACHINE_TOKEN}"
+
+            export GITHUB_TOKEN="${GITHUB_REFAPP_MACHINE_TOKEN}"
             version=$(git describe --abbrev=0 --tags)
-             echo "testing if tag is on master"
+
+            echo "testing if tag is on master"
             if git merge-base --is-ancestor $(git rev-parse $version) $(git rev-parse master)
             then
               echo "archiving"
@@ -123,7 +125,8 @@ jobs:
               pushd /tmp/workspace
               tar -czf "$package" *.jar *.dar lib NOTICE
               popd
-               echo "releasing $version"
+
+              echo "releasing $version"
               hub release create \
                 --attach "/tmp/workspace/$package" \
                 --message "Release $version" \
