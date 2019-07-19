@@ -9,11 +9,10 @@ import static org.junit.Assert.assertEquals;
 
 import com.daml.ledger.javaapi.data.ExerciseCommand;
 import com.daml.ledger.javaapi.data.Template;
-import com.daml.ledger.javaapi.data.Unit;
 import com.daml.ledger.rxjava.components.helpers.CommandsAndPendingSet;
 import com.digitalasset.nanobot.healthcare.models.main.policy.InsurancePolicy;
 import com.digitalasset.nanobot.healthcare.models.main.provider.NotifyPayer;
-import com.digitalasset.nanobot.healthcare.models.main.types.policytype.Gold;
+import com.digitalasset.nanobot.healthcare.models.main.types.PolicyType;
 import com.digitalasset.refapps.healthcareclaims.LedgerTestView;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -57,7 +56,7 @@ public class AcknowledgeAppointmentBotTest {
         patient,
         "John Doe",
         "insuranceId",
-        new Gold(Unit.getInstance()),
+        PolicyType.GOLD,
         BigDecimal.ONE,
         BigDecimal.ONE,
         null,
