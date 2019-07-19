@@ -12,14 +12,13 @@ import static org.junit.Assert.assertThat;
 import com.daml.ledger.javaapi.data.ContractId;
 import com.daml.ledger.javaapi.data.ExerciseCommand;
 import com.daml.ledger.javaapi.data.Template;
-import com.daml.ledger.javaapi.data.Unit;
 import com.daml.ledger.rxjava.components.helpers.CommandsAndPendingSet;
 import com.digitalasset.nanobot.healthcare.models.main.networkcontract.ProviderNetworkContract;
 import com.digitalasset.nanobot.healthcare.models.main.policy.DisclosedPolicy;
 import com.digitalasset.nanobot.healthcare.models.main.provider.ReferralRequest;
 import com.digitalasset.nanobot.healthcare.models.main.types.EncounterDetails;
 import com.digitalasset.nanobot.healthcare.models.main.types.ProviderDemographics;
-import com.digitalasset.nanobot.healthcare.models.main.types.providertype.Specialist;
+import com.digitalasset.nanobot.healthcare.models.main.types.ProviderType;
 import com.digitalasset.refapps.healthcareclaims.LedgerTestView;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -99,7 +98,7 @@ public class EvaluateReferralBotTest {
             "providerTaxID",
             "providerBankDFINumber",
             "providerBankAccountNumber",
-            new Specialist(Unit.getInstance()),
+            ProviderType.SPECIALIST,
             "providerAddressFirstLine",
             "providerAddressSecondLine",
             "providerCity",

@@ -8,10 +8,9 @@ import static org.junit.Assert.assertTrue;
 
 import com.daml.ledger.javaapi.data.Command;
 import com.daml.ledger.javaapi.data.ExerciseCommand;
-import com.daml.ledger.javaapi.data.Unit;
 import com.daml.ledger.rxjava.components.helpers.CommandsAndPendingSet;
-import com.digitalasset.nanobot.healthcare.models.main.types.diagnosiscode.Pain_in_right_arm_M79_601;
-import com.digitalasset.nanobot.healthcare.models.main.types.procedurecode.Preventative_Care;
+import com.digitalasset.nanobot.healthcare.models.main.types.DiagnosisCode;
+import com.digitalasset.nanobot.healthcare.models.main.types.ProcedureCode;
 import com.digitalasset.refapps.healthcareclaims.util.CommandsAndPendingSetBuilder;
 import com.digitalasset.refapps.healthcareclaims.util.TimeManager;
 import java.time.Duration;
@@ -48,11 +47,11 @@ public class BotTestUtils {
         .collect(Collectors.toList());
   }
 
-  public static Preventative_Care preventative_Care() {
-    return new Preventative_Care(Unit.getInstance());
+  public static ProcedureCode preventative_Care() {
+    return ProcedureCode.PREVENTATIVE_CARE;
   }
 
-  public static Pain_in_right_arm_M79_601 pain_in_the_right_arn() {
-    return new Pain_in_right_arm_M79_601(Unit.getInstance());
+  public static DiagnosisCode pain_in_the_right_arn() {
+    return DiagnosisCode.PAIN_IN_RIGHT_ARM_M79_601;
   }
 }
