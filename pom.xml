@@ -299,11 +299,7 @@
             <url>https://dl.bintray.com/digitalassetsdk/DigitalAssetSDK/</url>
             <layout>default</layout>
         </repository>
-        <repository>
-            <id>Sonatype-public</id>
-            <name>Sonatype public repository</name>
-            <url>http://oss.sonatype.org/content/groups/public/</url>
-        </repository>
+
     </repositories>
     <pluginRepositories>
         <pluginRepository>
