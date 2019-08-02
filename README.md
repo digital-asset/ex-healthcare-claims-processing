@@ -55,7 +55,7 @@ Disclaimer: "localhost" which the application is run on should not have a web fa
 3.  Start the automation logic by starting bots. Type:
 
 ```
-java -jar ./target/healthcare-claims-processing-0.0.1-SNAPSHOT.jar
+java -jar ./target/healthcare-claims-processing-0.0.1-SNAPSHOT.jar -p 6865
 ```
 
 ### Stopping the App
