@@ -16,6 +16,8 @@ import com.digitalasset.nanobot.healthcare.models.main.treatment.Treatment;
 import com.digitalasset.nanobot.healthcare.models.main.types.DiagnosisCode;
 import com.digitalasset.nanobot.healthcare.models.main.types.ProcedureCode;
 import com.digitalasset.testing.junit4.Sandbox;
+import com.digitalasset.testing.ledger.DefaultLedgerAdapter;
+import com.google.protobuf.InvalidProtocolBufferException;
 import io.grpc.StatusRuntimeException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,8 +29,6 @@ import org.junit.rules.ExternalResource;
 public class HealthcareClaimsProcessingIT {
   private static final Path RELATIVE_DAR_PATH =
       Paths.get("./target/healthcare-claims-processing.dar");
-  private static final Integer sandboxPort = 6865;
-  private static final int WAIT_TIMEOUT = 20;
   private static final String TEST_MODULE = "DemoOnboardScenario.InsurancePolicies";
   private static final String TEST_SCENARIO = "insurancePoliciesSetSingle";
 
@@ -53,10 +53,11 @@ public class HealthcareClaimsProcessingIT {
   @Rule public Sandbox.Process sandbox = sandboxC.process();
 
   @Test
-  public void testHealthcareClaimsProcessingMainWorkflow() {
+  public void testHealthcareClaimsProcessingMainWorkflow() throws InvalidProtocolBufferException {
+    DefaultLedgerAdapter ledgerAdapter = sandbox.getLedgerAdapter();
     DisclosedPolicy.ContractId policy = new DisclosedPolicy.ContractId("#38:11");
     Provider.ContractId provider =
-        sandbox.getCreatedContractId(
+        ledgerAdapter.getCreatedContractId(
             PROVIDER_PARTY, Provider.TEMPLATE_ID, Provider.ContractId::new);
 
     sandbox
@@ -73,10 +74,10 @@ public class HealthcareClaimsProcessingIT {
                 "Elective"));
 
     ReferralDetails.ContractId initialReferral =
-        sandbox.getCreatedContractId(
+        ledgerAdapter.getCreatedContractId(
             RADIOLOGIST_PARTY, ReferralDetails.TEMPLATE_ID, ReferralDetails.ContractId::new);
     ReferralDetails.ContractId updatedReferral =
-        sandbox.getCreatedContractId(
+        ledgerAdapter.getCreatedContractId(
             RADIOLOGIST_PARTY, ReferralDetails.TEMPLATE_ID, ReferralDetails.ContractId::new);
 
     LocalDate appointmentDate = LocalDate.of(2019, 7, 7);
@@ -90,7 +91,7 @@ public class HealthcareClaimsProcessingIT {
         .getLedgerAdapter()
         .setCurrentTime(Instant.ofEpochSecond(appointmentDate.toEpochDay() * 24 * 60 * 60));
     Appointment.ContractId appointment =
-        sandbox.getCreatedContractId(
+        ledgerAdapter.getCreatedContractId(
             RADIOLOGIST_PARTY, Appointment.TEMPLATE_ID, Appointment.ContractId::new);
     sandbox
         .getLedgerAdapter()
@@ -98,28 +99,28 @@ public class HealthcareClaimsProcessingIT {
 
     // We check whether the insurance policy is there. It will be updated with the completed
     // treatment.
-    sandbox.getCreatedContractId(
+    ledgerAdapter.getCreatedContractId(
         INSURANCE_COMPANY_PARTY, InsurancePolicy.TEMPLATE_ID, InsurancePolicy.ContractId::new);
 
     Treatment.ContractId treatment =
-        sandbox.getCreatedContractId(
+        ledgerAdapter.getCreatedContractId(
             RADIOLOGIST_PARTY, Treatment.TEMPLATE_ID, Treatment.ContractId::new);
     sandbox
         .getLedgerAdapter()
         .exerciseChoice(RADIOLOGIST_PARTY, treatment.exerciseCompleteTreatment());
 
     Claim.ContractId claim =
-        sandbox.getCreatedContractId(
+        ledgerAdapter.getCreatedContractId(
             INSURANCE_COMPANY_PARTY, Claim.TEMPLATE_ID, Claim.ContractId::new);
     InsurancePolicy.ContractId insurancePolicy =
-        sandbox.getCreatedContractId(
+        ledgerAdapter.getCreatedContractId(
             INSURANCE_COMPANY_PARTY, InsurancePolicy.TEMPLATE_ID, InsurancePolicy.ContractId::new);
     sandbox
         .getLedgerAdapter()
         .exerciseChoice(INSURANCE_COMPANY_PARTY, claim.exercisePayClaim(insurancePolicy));
 
     PatientObligation.ContractId obligation =
-        sandbox.getCreatedContractId(
+        ledgerAdapter.getCreatedContractId(
             PATIENT_PARTY, PatientObligation.TEMPLATE_ID, PatientObligation.ContractId::new);
     sandbox
         .getLedgerAdapter()
@@ -127,10 +128,12 @@ public class HealthcareClaimsProcessingIT {
   }
 
   @Test(expected = StatusRuntimeException.class)
-  public void testHealthcareClaimsProcessingMainWorkflowWrongCheckingDate() {
+  public void testHealthcareClaimsProcessingMainWorkflowWrongCheckingDate()
+      throws InvalidProtocolBufferException {
+    DefaultLedgerAdapter ledgerAdapter = sandbox.getLedgerAdapter();
     DisclosedPolicy.ContractId policy = new DisclosedPolicy.ContractId("#38:11");
     Provider.ContractId provider =
-        sandbox.getCreatedContractId(
+        ledgerAdapter.getCreatedContractId(
             PROVIDER_PARTY, Provider.TEMPLATE_ID, Provider.ContractId::new);
 
     sandbox
@@ -147,10 +150,10 @@ public class HealthcareClaimsProcessingIT {
                 "Elective"));
 
     ReferralDetails.ContractId initialReferral =
-        sandbox.getCreatedContractId(
+        ledgerAdapter.getCreatedContractId(
             RADIOLOGIST_PARTY, ReferralDetails.TEMPLATE_ID, ReferralDetails.ContractId::new);
     ReferralDetails.ContractId updatedReferral =
-        sandbox.getCreatedContractId(
+        ledgerAdapter.getCreatedContractId(
             RADIOLOGIST_PARTY, ReferralDetails.TEMPLATE_ID, ReferralDetails.ContractId::new);
 
     LocalDate appointmentDate = LocalDate.of(2019, 7, 7);
@@ -161,7 +164,7 @@ public class HealthcareClaimsProcessingIT {
 
     // Check-in should happen on appointment date!
     Appointment.ContractId appointment =
-        sandbox.getCreatedContractId(
+        ledgerAdapter.getCreatedContractId(
             RADIOLOGIST_PARTY, Appointment.TEMPLATE_ID, Appointment.ContractId::new);
     sandbox
         .getLedgerAdapter()
