@@ -23,4 +23,7 @@ Installation & startup
 `java -jar target/healthcare-claims-processing-0.0.1-SNAPSHOT.jar`
 
 5) [Terminal 3] Start Navigator:
-`daml navigator server localhost 7600 --config-file daml-on-x/canton/ui-backend.conf`
+The DAML assistant automatically supplies the `daml.yaml` parties that won't work for canton as their party ids are designed to be unique.
+So instead ensure the sdk tooling is installed and launch navigator directly.
+
+`daml install project && java -jar ~/.daml/sdk/$(grep sdk-version daml.yaml | cut -d' ' -f2)/navigator/navigator.jar server localhost 7600 --config-file daml-on-x/canton/ui-backend.conf`
