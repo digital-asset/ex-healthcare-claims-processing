@@ -1,9 +1,11 @@
-import java.io.File
+import better.files._
+import better.files.Dsl._
+import java.io.{File => JFile}
 
-val darPath = "./target/healthcare-claims-processing.dar"
+val dar = pwd / "target" / "healthcare-claims-processing.dar"
 val parties = Seq("ClearingHouse", "PrimaryCareProvider", "Patient1", "Radiologist", "InsuranceCompany")
 
-require(new File(darPath).exists, s"DAR must first be built [$darPath]")
+require(dar.exists, s"DAR must first be built [$dar.toString]")
 
 // start everything and connect participants to our domain
 all start
@@ -11,12 +13,22 @@ all start
 all_participants foreach { connect(_, mydomain) }
 
 // load our dar into each participant and the scenario runner
-all_participants upload_dar darPath
+all_participants upload_dar dar.toString
 
-scenario load darPath
+scenario load dar.toString
 
 // onboard our parties
 parties foreach { enable_party(participant1, _) }
 
 // run market setup
 scenario run "DemoOnboardScenario.InsurancePolicies:insurancePoliciesSetSingle"
+
+// generate naviagator config
+val usersConfig = participant1.list_parties().map(_.party)
+  .map(_.split("::"))
+  .map { case Array(name, ns) => (name, s"${name}_${ns}") } // tuple of name and full party id for the ledger api
+  .filter(p => parties.contains(p._1)) // filter to just the parties we onboarded
+  .map(p => s"${p._1}.party=${p._2}") // write in a `.properties` file format
+  .mkString(System.lineSeparator)
+
+pwd / "daml-on-x" / "canton" / "users.properties" < usersConfig
