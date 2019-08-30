@@ -12,10 +12,10 @@ export const version = {
 };
 
 export function theme(userId, party, role) {
-    return (party == "PrimaryCareProvider" ? { documentBackground: "#344a83" } :
-           party == "Patient1" ? { documentBackground: "#4c566e" } :
-           party == "Radiologist" ? { documentBackground: "Grey" } :
-           party == "InsuranceCompany" ? { documentBackground: "#6f639e" } :
+    return (userId == "PrimaryCareProvider" ? { documentBackground: "#344a83" } :
+           userId == "Patient1" ? { documentBackground: "#4c566e" } :
+           userId == "Radiologist" ? { documentBackground: "Grey" } :
+           userId == "InsuranceCompany" ? { documentBackground: "#6f639e" } :
            { documentBackground: "#800000" });
   };
 
@@ -136,7 +136,7 @@ const failedSchedulingAppointmentView = createTab("Failed Appointments", ":Faile
 // --- Assigning views to parties --------------------------------------------------------------------
 
 export const customViews = (userId, party, role) => {
-    if (party == 'Radiologist') {
+    if (userId == 'Radiologist') {
         return {
             providerActionsView,
             referralsView,
@@ -150,7 +150,7 @@ export const customViews = (userId, party, role) => {
         };
     }
 
-    if (party == 'PrimaryCareProvider') {
+    if (userId == 'PrimaryCareProvider') {
         return {
             providerActionsView,
             referralsView,
@@ -161,7 +161,7 @@ export const customViews = (userId, party, role) => {
         };
     }
 
-    if (party == 'Patient1') {
+    if (userId == 'Patient1') {
         return {
             appointmentsView,
             treatmentView,
@@ -171,7 +171,7 @@ export const customViews = (userId, party, role) => {
         };
     }
 
-    if (party == 'InsuranceCompany') {
+    if (userId == 'InsuranceCompany') {
         return {
             insurancePolicyView,
             disclosedPolicyView,
