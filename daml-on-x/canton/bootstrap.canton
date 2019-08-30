@@ -1,0 +1,22 @@
+import java.io.File
+
+val darPath = "./target/healthcare-claims-processing.dar"
+val parties = Seq("ClearingHouse", "PrimaryCareProvider", "Patient1", "Radiologist", "InsuranceCompany")
+
+require(new File(darPath).exists, s"DAR must first be built [$darPath]")
+
+// start everything and connect participants to our domain
+all start
+
+all_participants foreach { connect(_, mydomain) }
+
+// load our dar into each participant and the scenario runner
+all_participants upload_dar darPath
+
+scenario load darPath
+
+// onboard our parties
+parties foreach { enable_party(participant1, _) }
+
+// run market setup
+scenario run "DemoOnboardScenario.InsurancePolicies:insurancePoliciesSetSingle"
