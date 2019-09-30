@@ -3,17 +3,13 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-FROM ubuntu:18.04
+ARG sdk_vsn=0.13.27
 
-ARG sdk_version=0.13.27
+FROM digitalasset/daml-sdk:${sdk_vsn}
 
 WORKDIR /home/sdk
 
 COPY ui-backend.conf frontend-config.js /home/sdk/
-COPY scripts/install-daml.sh /home/sdk/
-
-RUN /bin/bash -c "apt-get update --no-show-upgraded &&  apt-get install wget openjdk-8-jdk -y"
-RUN /home/sdk/install-daml.sh ${sdk_version}
 
 EXPOSE 7500
 
