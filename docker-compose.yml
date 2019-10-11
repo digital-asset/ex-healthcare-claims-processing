@@ -11,7 +11,7 @@ services:
       context: .
       dockerfile: Dockerfile-sandbox
     ports:
-      - "7600:7600"
+      - "127.0.0.1:7600:7600"
   hcp-navigator:
     image: digitalasset/healthcare-claims-processing-navigator:0.0.1
     build:
@@ -20,7 +20,7 @@ services:
     depends_on:
       - "hcp-sandbox"
     ports:
-      - "7500:7500"
+      - "127.0.0.1:7500:7500"
     environment:
       - SANDBOX_HOST=hcp-sandbox
       - SANDBOX_PORT=7600
