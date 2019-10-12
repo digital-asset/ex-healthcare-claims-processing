@@ -8,6 +8,8 @@ This application simulates processing a healthcare claim, starting with the refe
 
 ### Installing
 
+**Disclaimer:** This reference application is intended to demonstrate the capabilities of the DAML. You are recommended to consider other non-functional aspects, like security, resiliency, recoverability, etc prior to production use.
+
 #### Prerequisites
 Be sure you have the following installed:
 *  DAML SDK
