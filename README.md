@@ -11,6 +11,7 @@ This application simulates processing a healthcare claim, starting with the refe
 **Disclaimer:** This reference application is intended to demonstrate the capabilities of the DAML. You are recommended to consider other non-functional aspects, like security, resiliency, recoverability, etc prior to production use.
 
 #### Prerequisites
+
 Be sure you have the following installed:
 *  DAML SDK
 *  Docker
@@ -24,7 +25,7 @@ Type:
 ```
 mvn clean package
 ```
-**Note:** If you change the DAML models locally, you need to run re-run this command before starting the application.
+**Note:** If you change the DAML models locally, you need to re-run this command before starting the application.
 
 ### Starting the App
 There are two options:
@@ -57,7 +58,7 @@ Disclaimer: "localhost" which the application is run on should not have a web fa
 3.  Start the automation logic by starting bots. Type:
 
 ```
-java -jar ./target/healthcare-claims-processing-0.0.1-SNAPSHOT.jar -p 6865
+java -jar target/healthcare-claims-processing-0.0.1-SNAPSHOT.jar -p 6865
 ```
 
 ### Stopping the App
