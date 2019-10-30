@@ -1,7 +1,7 @@
-[![CircleCI](https://circleci.com/gh/digital-asset/ex-healthcare-claims-processing.svg?style=svg)](https://circleci.com/gh/digital-asset/ex-healthcare-claims-processing)
 # Reference Application: Healthcare Claims Processing
 
 ## Introduction
+
 This application simulates processing a healthcare claim, starting with the referral from the Primary Care Provider (PCP) and including the creation of an appointment with the radiologist, checking in the patient on the date of the appointment, checking out the patient after service delivery, generation of the claim, and finally, payment for the procedure.
 
 ## Getting Started
@@ -11,78 +11,63 @@ This application simulates processing a healthcare claim, starting with the refe
 **Disclaimer:** This reference application is intended to demonstrate the capabilities of the DAML. You are recommended to consider other non-functional aspects, like security, resiliency, recoverability, etc prior to production use.
 
 #### Prerequisites
+
 Be sure you have the following installed:
-*  DAML SDK
-*  Docker
-*  Java 
-*  Maven
+- [DAML SDK](https://docs.daml.com/)
+- Docker
+- Java
+- Maven
 
 #### Build with Maven
 
-Type: 
-
-```
+Type:
+```shell
 mvn clean package
 ```
-**Note:** If you change the DAML models locally, you need to run re-run this command before starting the application.
+**Note:** If you change the DAML models locally, you need to re-run this command before starting the application.
 
 ### Starting the App
+
+**Note:** Make sure you have built the application with Maven (see: [Build with Maven](#build-with-maven)).
+
 There are two options:
 
-#### Option 1: Starting the App with Docker
+#### Option 1: Start App with Docker
 
-1.  Make sure you have built the application with Maven (see Build with Maven step).
+1. Type:
+    ```shell
+    docker-compose up --build
+    ```
+2. Open UI with a browser at http://localhost:7500.
 
-2.  Type: 
+#### Option 2: Start App in Standalone
 
-```
-docker-compose up --build
-```
-
-3.  Open UI in a new browser tab with http://localhost:7500 in a browser.
-
-#### Option 2: Starting App in Stand-Alone Mode
-
-1.  Make sure you have built the application with Maven (see Build with Maven step).
-
-2. Start the Sandbox with Navigator and with the DAR deployed.
-```
-daml start
-```
-
-2. Open UI in a new browser tab with http://localhost:7500.
-
-Disclaimer: "localhost" which the application is run on should not have a web facing ip address assigned to it.
-
-3.  Start the automation logic by starting bots. Type:
-
-```
-java -jar ./target/healthcare-claims-processing-0.0.1-SNAPSHOT.jar -p 6865
-```
+1. Start the DAML Sandbox and Navigator. Type:
+    ```shell
+    daml start --sandbox-option --address=localhost
+    ```
+    The navigator will automatically open in new browser tab at http://localhost:7500.
+2. Start the automation logic by starting bots. Type:
+    ```shell
+    java -jar target/healthcare-claims-processing-0.0.1-SNAPSHOT.jar
+    ```
 
 ### Stopping the App
 
 #### Stopping Dockerized Run
-1.  Close the browser tab.
+1. Stop the Docker containers or bots by pressing **Ctrl+C**. (Alternatively, you can also stop it by typing `docker-compose down`.)
 
-2.  Stop the Docker containers or bots by pressing **Ctrl+C**.
-
-#### Stopping Stand-Alone Run
-1.  Close the browser tab.
-
-2.  Stop the bots by pressing **Ctrl+C**.
-
-2.  Stop the Sandbox and Navigator by pressing **Ctrl+C**.
+#### Stopping Standalone Run
+1. Stop the bots by pressing **Ctrl+C**.
+1. Stop the Sandbox and the Navigator by pressing **Ctrl+C** in the DAML assistant.
 
 ### Resetting the Prototype
 
 Reset the application by following these steps:
+1.  Stop the app by following the steps in [Stopping the App](#stopping-the-app) section.
+2.  Start the app in [Docker](#using-docker) or [Standalone](#standalone-mode) by following the steps in the relevant section.
 
-1.  Stop the App by following the steps in Stopping the App section.
-
-2.  Start the App in Docker or stand-alone by following the steps in the relevant section.
-
-## This Guide
+## User Guide
 
 This User Guide will take you step-by-step through healthcare claims processing, executing one successful claim.
 
