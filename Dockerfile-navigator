@@ -7,9 +7,9 @@ ARG sdk_vsn=0.13.29
 
 FROM digitalasset/daml-sdk:${sdk_vsn}
 
-WORKDIR /home/sdk
+WORKDIR /home/daml
 
-COPY ui-backend.conf frontend-config.js /home/sdk/
+COPY ui-backend.conf frontend-config.js /home/daml/
 
 EXPOSE 7500
 

@@ -7,9 +7,14 @@ ARG sdk_vsn=0.13.29
 
 FROM digitalasset/daml-sdk:${sdk_vsn}
 
-WORKDIR /home/sdk
+WORKDIR /home/daml
 
-COPY target/healthcare-claims-processing.dar /home/sdk/
+COPY target/healthcare-claims-processing.dar /home/daml/
+
+# Need the root user to set appropriate ownership of the DAR file.
+USER root
+RUN chown daml healthcare-claims-processing.dar
+USER daml
 
 EXPOSE 6865
 
