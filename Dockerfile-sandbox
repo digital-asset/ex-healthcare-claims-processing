@@ -11,6 +11,6 @@ WORKDIR /home/sdk
 
 COPY target/healthcare-claims-processing.dar /home/sdk/
 
-EXPOSE 7600
+EXPOSE 6865
 
-CMD ~/.daml/bin/daml sandbox -- --port 7600 --scenario DemoOnboardScenario.InsurancePolicies:insurancePoliciesSetSingle healthcare-claims-processing.dar
+CMD ~/.daml/bin/daml sandbox -- --port 6865 --scenario DemoOnboardScenario.InsurancePolicies:insurancePoliciesSetSingle healthcare-claims-processing.dar

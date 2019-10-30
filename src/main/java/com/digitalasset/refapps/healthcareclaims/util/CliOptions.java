@@ -14,7 +14,7 @@ public class CliOptions {
   private String sandboxHost = "localhost";
 
   @Option(name = "-p", usage = "Sandbox port", metaVar = "SANDBOX_PORT")
-  private int sandboxPort = 7600;
+  private int sandboxPort = 6865;
 
   public String getSandboxHost() {
     return sandboxHost;
