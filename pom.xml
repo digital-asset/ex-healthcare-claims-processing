@@ -20,7 +20,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <daml-sdk.version>100.13.30</daml-sdk.version>
+        <daml-sdk.version>100.13.32</daml-sdk.version>
         <slf4j.version>1.7.26</slf4j.version>
         <logback.version>1.2.3</logback.version>
         <args4j.version>2.33</args4j.version>
@@ -31,11 +31,6 @@
         <dependency>
             <groupId>com.daml.ledger</groupId>
             <artifactId>bindings-rxjava</artifactId>
-            <version>${daml-sdk.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.digitalasset</groupId>
-            <artifactId>daml-lf-archive</artifactId>
             <version>${daml-sdk.version}</version>
         </dependency>
         <dependency>
