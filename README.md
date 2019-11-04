@@ -288,7 +288,6 @@ To make payment:
 
     Payment will be made to the Radiologist.
     
-    
+
 CONFIDENTIAL © 2019 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 Any unauthorized use, duplication or distribution is strictly prohibited.
-
