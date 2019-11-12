@@ -21,6 +21,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <daml-sdk.version>100.13.34</daml-sdk.version>
+        <daml-plugin.version>0.1</daml-plugin.version>
         <slf4j.version>1.7.26</slf4j.version>
         <logback.version>1.2.3</logback.version>
         <args4j.version>2.33</args4j.version>
@@ -138,52 +139,19 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
+                <groupId>com.digitalasset</groupId>
+                <artifactId>daml-maven-plugin</artifactId>
+                <version>${daml-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>compile-daml</id>
-                        <phase>generate-sources</phase>
+                        <id>daml-compile-codegen</id>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>damlcompile</goal>
+                            <goal>codegen</goal>
                         </goals>
-                        <configuration>
-                            <executable>daml</executable>
-                            <arguments>
-                                <argument>build</argument>
-                                <argument>-o</argument>
-                                <argument>${project.build.directory}/healthcare-claims-processing.dar</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>daml-codegen</id>
-                        <phase>generate-sources</phase>
-                        <goals><goal>java</goal></goals>
-                        <configuration>
-                            <mainClass>com.digitalasset.daml.lf.codegen.Main</mainClass>
-                            <sourceRoot>${project.build.directory}/generated-sources/main/java</sourceRoot>
-                            <arguments>
-                                <argument>-d</argument>
-                                <argument>da.refapps.derivatives.Decoder</argument>
-                                <argument>-o</argument>
-                                <argument>${project.build.directory}/generated-sources/main/java</argument>
-                                <argument>${project.build.directory}/healthcare-claims-processing.dar=com.digitalasset.nanobot.healthcare.models</argument>
-                            </arguments>
-                            <includePluginDependencies>true</includePluginDependencies>
-                        </configuration>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.daml.java</groupId>
-                        <artifactId>codegen</artifactId>
-                        <version>${daml-sdk.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
