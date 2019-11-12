@@ -144,9 +144,14 @@
                 <version>${daml-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>daml-compile-codegen</id>
+                        <id>daml-compile</id>
                         <goals>
                             <goal>damlcompile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>daml-codegen</id>
+                        <goals>
                             <goal>codegen</goal>
                         </goals>
                         <configuration>
