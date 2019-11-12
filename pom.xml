@@ -149,6 +149,9 @@
                             <goal>damlcompile</goal>
                             <goal>codegen</goal>
                         </goals>
+                        <configuration>
+                            <darName>${project.build.directory}/healthcare-claims-processing.dar=com.digitalasset.nanobot.healthcare.models</darName>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
