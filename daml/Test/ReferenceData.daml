@@ -37,7 +37,7 @@ patient1_AddressLine2 = ""
 patient1_City = "Cincinnati"
 patient1_State = "OH"
 patient1_ZipCode = "45206"
-patient1_deductible = 1000.0
+patient1_deductible = 1000.0 : Decimal
 
 -- Primary healthcare provider
 provider1_name = "Dr. John Smith"
