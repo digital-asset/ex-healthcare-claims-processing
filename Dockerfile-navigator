@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-ARG sdk_vsn=0.13.43
+ARG sdk_vsn=0.13.46
 
 FROM digitalasset/daml-sdk:${sdk_vsn}
 
