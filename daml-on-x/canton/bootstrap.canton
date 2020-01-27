@@ -1,0 +1,34 @@
+import better.files._
+import better.files.Dsl._
+import java.io.{File => JFile}
+
+val dar = pwd / "target" / "healthcare-claims-processing.dar"
+val parties = Seq("ClearingHouse", "PrimaryCareProvider", "Patient1", "Radiologist", "InsuranceCompany")
+
+require(dar.exists, s"DAR must first be built [$dar.toString]")
+
+// Start everything and connect participants to our domain
+all start
+
+all_participants foreach { connect(_, mydomain) }
+
+// Load our dar into each participant and the scenario runner
+all_participants upload_dar dar.toString
+
+scenario load dar.toString
+
+// Onboard our parties
+parties foreach { enable_party(participant1, _) }
+
+// Run market setup
+scenario run "DemoOnboardScenario.InsurancePolicies:insurancePoliciesSetSingle"
+
+// Generate Navigator config
+val usersConfig = participant1.list_parties().map(_.party)
+  .map(_.split("::"))
+  .map { case Array(name, ns) => (name, s"${name}_${ns}") } // tuple of name and full party id for the ledger api
+  .filter(p => parties.contains(p._1)) // filter to just the parties we onboarded
+  .map(p => s"${p._1}.party=${p._2}") // write in a `.properties` file format
+  .mkString(System.lineSeparator)
+
+pwd / "daml-on-x" / "canton" / "users.properties" < usersConfig
