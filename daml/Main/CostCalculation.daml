@@ -29,6 +29,7 @@ calculateCosts ruleParams encounterStage =
           do
             procedure <- fetch procedureCid
             let updatedEncounter = EncounterDetails with
+                    patient = policy.patient
                     encounterId = encounterDetails.encounterId
                     diagnosisCode = encounterDetails.diagnosisCode
                     allowedAmount = None
@@ -47,6 +48,7 @@ calculateCosts ruleParams encounterStage =
             case maybeAmt of
               Some allowedAmount ->
                 let updatedEncounter = EncounterDetails with
+                        patient = policy.patient
                         encounterId = encounterDetails.encounterId
                         diagnosisCode = encounterDetails.diagnosisCode
                         allowedAmount = Some allowedAmount
@@ -58,6 +60,7 @@ calculateCosts ruleParams encounterStage =
                 return updatedEncounter
               None ->
                 let updatedEncounter = EncounterDetails with
+                        patient = policy.patient
                         encounterId = encounterDetails.encounterId
                         procedureCode
                         diagnosisCode = encounterDetails.diagnosisCode
@@ -70,6 +73,7 @@ calculateCosts ruleParams encounterStage =
                 return updatedEncounter
       None ->
         let updatedEncounter = EncounterDetails with
+                patient = policy.patient
                 encounterId = encounterDetails.encounterId
                 procedureCode
                 diagnosisCode = encounterDetails.diagnosisCode

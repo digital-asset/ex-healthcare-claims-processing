@@ -8,3 +8,7 @@ node_modules
 *.iml
 healthcare-backend/src/main/resources/frontend
 dist
+.daml/
+.classpath
+.project
+.settings/

@@ -28,7 +28,7 @@ claimTest = scenario do
 
     _claimReceipt <- payer1 `submit` do
       _c <- fetch claim
-      exercise claim PayClaim with policyCid = originalPolicy
+      exercise claim PayClaim
 
     patientObligation <- patient1 `submit`
       exercise paymentReq.patientReq AcceptPatientObligation

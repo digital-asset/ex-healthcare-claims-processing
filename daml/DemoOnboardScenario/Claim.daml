@@ -20,7 +20,7 @@ payerPay : Party -> ContractId Claim -> ContractId InsurancePolicy -> Scenario (
 payerPay payer claim policy =
   payer `submit` do
     fetch claim
-    exercise claim PayClaim with policyCid = policy
+    exercise claim PayClaim
 
 patientAccept : Party -> TreatmentOutput -> Scenario (ContractId PatientObligation)
 patientAccept patient paymentReq =

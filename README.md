@@ -34,11 +34,14 @@ There are two options:
 
 #### Option 1: Start App with Docker
 
+Note: make sure to have at least 8gb of memory allocated to Docker.
+
 1. Type:
     ```shell
     docker-compose up --build
     ```
 2. Open UI with a browser at http://localhost:7500.
+
 
 #### Option 2: Start App in Standalone
 
@@ -275,9 +278,9 @@ To make payment:
    Details on this claim will be displayed.
 
 3. To pay the claim, choose the **Pay Claim** button.
-4. Enter the Policy contract id: #43:4
+4. Click the **Submit** button.
 
-   Payment will be sent to the Radiologist. The Radiologist can view their claims and see that this one is no longer an open claim by clicking on the **Claims** tab and enabling the **Include Archived** choice.
+   The payment will be sent to the Radiologist. The Radiologist can view their claims and see that this one is no longer an open claim by clicking on the **Claims** tab and enabling the **Include Archived** choice.
 
 5. Log in as Patient 1 and choose the **Patient Obligation** tab.
 

@@ -76,6 +76,7 @@ public class EvaluateReferralBotTest {
         PrimaryCareProvider2,
         new DisclosedPolicy.ContractId("disclosedPolicyCid"),
         new EncounterDetails(
+            "Patient1",
             "encounterId",
             preventative_Care(),
             pain_in_the_right_arn(),

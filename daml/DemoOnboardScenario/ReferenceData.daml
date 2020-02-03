@@ -8,7 +8,7 @@ daml 1.2 module DemoOnboardScenario.ReferenceData where
 import Main.Types
 import DA.Next.Map
 import DA.Date
-
+import DA.Optional
 
 operator_party = getParty "ClearingHouse"
 
@@ -272,6 +272,7 @@ procedureCodeList = [X_Ray_Wrist_2_Views, X_Ray_Wrist_3_Views, Preventative_Care
 
 patientEncounter11 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient1"
     encounterId = "4afc77be"
     procedureCode = X_Ray_Wrist_3_Views
     diagnosisCode = Fracture_of_scaphoid_bone_right_wrist_S62_001
@@ -282,6 +283,7 @@ patientEncounter11 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter12 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient1"
     encounterId = "5afc77be"
     procedureCode = Preventative_Care
     diagnosisCode = Pain_in_right_arm_M79_601
@@ -292,6 +294,7 @@ patientEncounter12 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter13 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient1"
     encounterId = "5afc78be"
     procedureCode = Physicals
     diagnosisCode = Pain_in_right_arm_M79_601
@@ -302,6 +305,7 @@ patientEncounter13 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter14 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient1"
     encounterId = "4afc88be"
     procedureCode = X_Ray_Wrist_2_Views
     diagnosisCode = Open_fracture_of_scaphoid_bone_left_wrist_S62_002B
@@ -312,6 +316,7 @@ patientEncounter14 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter21 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient2"
     encounterId = "23ad8148"
     procedureCode = X_Ray_Wrist_2_Views
     diagnosisCode = Open_fracture_of_scaphoid_bone_left_wrist_S62_002B
@@ -322,6 +327,7 @@ patientEncounter21 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter22 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient2"
     encounterId = "33ad8148"
     procedureCode = Physicals
     diagnosisCode = Pain_in_left_arm_M79_602
@@ -332,6 +338,7 @@ patientEncounter22 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter23 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient2"
     encounterId = "23ad9148"
     procedureCode = X_Ray_Wrist_3_Views
     diagnosisCode = Fracture_of_scaphoid_bone_right_wrist_S62_001
@@ -342,6 +349,7 @@ patientEncounter23 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter31 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient3"
     encounterId = "23ad8149"
     procedureCode = X_Ray_Wrist_3_Views
     diagnosisCode = Fracture_of_scaphoid_bone_right_wrist_S62_001
@@ -352,6 +360,7 @@ patientEncounter31 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter32 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient3"
     encounterId = "43ad8149"
     procedureCode = Sick_Visits
     diagnosisCode = Pain_in_arm_unspecified_M79_603
@@ -362,6 +371,7 @@ patientEncounter32 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter33 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient3"
     encounterId = "23ad8249"
     procedureCode = X_Ray_Wrist_2_Views
     diagnosisCode = Open_fracture_of_scaphoid_bone_left_wrist_S62_002B
@@ -372,6 +382,7 @@ patientEncounter33 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter41 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient4"
     encounterId = "23ad8150"
     procedureCode = X_Ray_Wrist_2_Views
     diagnosisCode = Open_fracture_of_scaphoid_bone_left_wrist_S62_002B
@@ -382,6 +393,7 @@ patientEncounter41 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter42 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient4"
     encounterId = "53ad8150"
     procedureCode = Preventative_Care
     diagnosisCode = Pain_in_right_arm_M79_601
@@ -392,6 +404,7 @@ patientEncounter42 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter43 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient4"
     encounterId = "23ad8160"
     procedureCode = X_Ray_Wrist_3_Views
     diagnosisCode = Fracture_of_scaphoid_bone_right_wrist_S62_001
@@ -402,6 +415,7 @@ patientEncounter43 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter51 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient5"
     encounterId = "23ad8151"
     procedureCode = X_Ray_Wrist_3_Views
     diagnosisCode = Fracture_of_scaphoid_bone_right_wrist_S62_001
@@ -412,6 +426,7 @@ patientEncounter51 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter52 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient5"
     encounterId = "34ad8148"
     procedureCode = Physicals
     diagnosisCode = Pain_in_left_arm_M79_602
@@ -422,6 +437,7 @@ patientEncounter52 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter53 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient5"
     encounterId = "23ad9251"
     procedureCode = X_Ray_Wrist_2_Views
     diagnosisCode = Open_fracture_of_scaphoid_bone_left_wrist_S62_002B
@@ -432,6 +448,7 @@ patientEncounter53 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter61 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient6"
     encounterId = "23ad8152"
     procedureCode = X_Ray_Wrist_2_Views
     diagnosisCode = Open_fracture_of_scaphoid_bone_left_wrist_S62_002B
@@ -442,6 +459,7 @@ patientEncounter61 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter62 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient6"
     encounterId = "43ad8249"
     procedureCode = Sick_Visits
     diagnosisCode = Pain_in_arm_unspecified_M79_603
@@ -452,6 +470,7 @@ patientEncounter62 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter63 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient6"
     encounterId = "23ad9262"
     procedureCode = X_Ray_Wrist_3_Views
     diagnosisCode = Fracture_of_scaphoid_bone_right_wrist_S62_001
@@ -462,6 +481,7 @@ patientEncounter63 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter71 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient7"
     encounterId = "23ad9261"
     procedureCode = X_Ray_Wrist_2_Views
     diagnosisCode = Open_fracture_of_scaphoid_bone_left_wrist_S62_002B
@@ -472,6 +492,7 @@ patientEncounter71 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter72 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient7"
     encounterId = "44ad8249"
     procedureCode = Sick_Visits
     diagnosisCode = Pain_in_arm_unspecified_M79_603
@@ -482,6 +503,7 @@ patientEncounter72 = EncounterDetails
     appointmentPriority = "Elective"
 patientEncounter73 = EncounterDetails
   with
+    patient = fromSome $ partyFromText "Patient7"
     encounterId = "23ad9262"
     procedureCode = X_Ray_Wrist_3_Views
     diagnosisCode = Fracture_of_scaphoid_bone_right_wrist_S62_001

@@ -58,8 +58,10 @@ template Provider
           siteServiceCode : Text
           appointmentPriority : Text
         do
-          disclosedPolicy <- do exercise policy Disclose with newReceiver = receiver
+          p <- fetch policy
+          disclosedPolicy <- exercise policy Disclose with newReceiver = receiver
           let encounterDetails = EncounterDetails with
+                patient = p.patient
                 allowedAmount = None
                 coPay = None
                 patientResponsibility = None; ..

@@ -45,6 +45,7 @@ public class AcceptClaimBotTest {
             PrimaryCareProvider,
             InsuranceCompany,
             new EncounterDetails(
+                "Patient1",
                 "encounterId",
                 preventative_Care(),
                 pain_in_the_right_arn(),
@@ -63,6 +64,7 @@ public class AcceptClaimBotTest {
             PrimaryCareProvider,
             InsuranceCompany2,
             new EncounterDetails(
+                "Patient1",
                 "encounterId",
                 preventative_Care(),
                 pain_in_the_right_arn(),

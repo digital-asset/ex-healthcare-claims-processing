@@ -66,6 +66,7 @@ public class UpdateReferralDetailsBotTest {
         PrimaryCareProvider,
         PrimaryCareProvider2,
         new EncounterDetails(
+            "Patient1",
             encounterId,
             preventative_Care(),
             pain_in_the_right_arn(),
@@ -89,6 +90,7 @@ public class UpdateReferralDetailsBotTest {
         new RuleParameters(
             new DisclosedPolicy.ContractId("policyCid"),
             new EncounterDetails(
+                "Patient1",
                 encounterId,
                 preventative_Care(),
                 pain_in_the_right_arn(),

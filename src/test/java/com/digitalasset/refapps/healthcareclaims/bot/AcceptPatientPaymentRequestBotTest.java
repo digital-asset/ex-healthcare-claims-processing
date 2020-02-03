@@ -46,6 +46,7 @@ public class AcceptPatientPaymentRequestBotTest {
             PrimaryCareProvider,
             Patient1,
             new EncounterDetails(
+                Patient1,
                 "encounterId",
                 preventative_Care(),
                 pain_in_the_right_arn(),
@@ -65,6 +66,7 @@ public class AcceptPatientPaymentRequestBotTest {
             PrimaryCareProvider,
             Patient1,
             new EncounterDetails(
+                Patient1,
                 "encounterId",
                 preventative_Care(),
                 pain_in_the_right_arn(),

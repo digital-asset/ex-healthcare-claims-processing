@@ -8,6 +8,7 @@ daml 1.2 module Test.ReferenceData where
 import Main.Types
 import DA.Next.Map
 import DA.Date
+import DA.Optional
 
 -- InsuranceCompany
 payer1_payerHIN = "PAY1"
@@ -123,6 +124,7 @@ procedureCodeList = [X_Ray_Wrist_2_Views, X_Ray_Wrist_3_Views]
 
 patient1Encounter = EncounterDetails
   with
+    patient = fromSome $ partyFromText "John Doe"
     encounterId = "encounter1"
     procedureCode = X_Ray_Wrist_3_Views
     diagnosisCode = Fracture_of_scaphoid_bone_right_wrist_S62_001

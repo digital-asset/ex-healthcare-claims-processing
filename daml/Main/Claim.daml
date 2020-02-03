@@ -22,8 +22,8 @@ template Claim
 
     controller payer can
       PayClaim : (ContractId PaymentReceipt, ContractId InsurancePolicy)
-        with policyCid : ContractId InsurancePolicy
         do
+        (policyCid, _) <- fetchByKey @InsurancePolicy (operator, payer, encounterDetails.patient)
         let
           procedureCode = encounterDetails.procedureCode
           maybePatientResp = encounterDetails.patientResponsibility

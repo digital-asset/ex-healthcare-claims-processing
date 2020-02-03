@@ -28,6 +28,9 @@ template InsurancePolicy
   where
     signatory payer
 
+    key (operator, payer, patient) : (Party, Party, Party)
+    maintainer key._2
+
     controller payer can
       LockProcedureOnAppointmentCreation : ContractId InsurancePolicy
         with

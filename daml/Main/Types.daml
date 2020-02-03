@@ -88,6 +88,7 @@ data DiagnosisCode = Fracture_of_scaphoid_bone_right_wrist_S62_001 |
 
 -- The encounter parameters of an appointment
 data EncounterDetails = EncounterDetails with
+  patient : Party
   encounterId : Text
   procedureCode : ProcedureCode
   diagnosisCode : DiagnosisCode
