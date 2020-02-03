@@ -112,9 +112,7 @@ public class HealthcareClaimsProcessingIT {
     Claim.ContractId claim =
         ledgerAdapter.getCreatedContractId(
             INSURANCE_COMPANY_PARTY, Claim.TEMPLATE_ID, Claim.ContractId::new);
-    sandbox
-        .getLedgerAdapter()
-        .exerciseChoice(INSURANCE_COMPANY_PARTY, claim.exercisePayClaim());
+    sandbox.getLedgerAdapter().exerciseChoice(INSURANCE_COMPANY_PARTY, claim.exercisePayClaim());
 
     PatientObligation.ContractId obligation =
         ledgerAdapter.getCreatedContractId(
