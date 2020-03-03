@@ -10,6 +10,7 @@ import com.daml.ledger.javaapi.data.*;
 import com.daml.ledger.rxjava.components.LedgerViewFlowable;
 import com.daml.ledger.rxjava.components.helpers.CommandsAndPendingSet;
 import com.daml.ledger.rxjava.components.helpers.CreatedContract;
+import com.daml.ledger.rxjava.components.helpers.TemplateUtils;
 import com.digitalasset.nanobot.healthcare.models.main.claim.ClaimRequest;
 import com.digitalasset.refapps.healthcareclaims.util.BotLogger;
 import com.digitalasset.refapps.healthcareclaims.util.CommandsAndPendingSetBuilder;
@@ -53,15 +54,7 @@ public class AcceptClaimBot {
   }
 
   public Template getContractInfo(CreatedContract createdContract) {
-    Value args = createdContract.getCreateArguments();
-    if (createdContract.getTemplateId().equals(ClaimRequest.TEMPLATE_ID)) {
-      return ClaimRequest.fromValue(args);
-    } else {
-      String msg =
-          "AcceptClaimBot encountered an unknown contract of type "
-              + createdContract.getTemplateId();
-      logger.error(msg);
-      throw new IllegalStateException(msg);
-    }
+    //noinspection unchecked
+    return TemplateUtils.contractTransformer(ClaimRequest.class).apply(createdContract);
   }
 }

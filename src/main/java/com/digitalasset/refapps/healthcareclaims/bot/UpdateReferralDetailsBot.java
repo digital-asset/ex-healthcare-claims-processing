@@ -10,6 +10,7 @@ import com.daml.ledger.javaapi.data.*;
 import com.daml.ledger.rxjava.components.LedgerViewFlowable;
 import com.daml.ledger.rxjava.components.helpers.CommandsAndPendingSet;
 import com.daml.ledger.rxjava.components.helpers.CreatedContract;
+import com.daml.ledger.rxjava.components.helpers.TemplateUtils;
 import com.digitalasset.nanobot.healthcare.models.main.provider.ReferralDetails;
 import com.digitalasset.nanobot.healthcare.models.main.referral.Referral;
 import com.digitalasset.refapps.healthcareclaims.util.BotLogger;
@@ -86,17 +87,8 @@ public class UpdateReferralDetailsBot {
   }
 
   public Template getContractInfo(CreatedContract createdContract) {
-    Value args = createdContract.getCreateArguments();
-    if (createdContract.getTemplateId().equals(ReferralDetails.TEMPLATE_ID)) {
-      return ReferralDetails.fromValue(args);
-    } else if (createdContract.getTemplateId().equals(Referral.TEMPLATE_ID)) {
-      return Referral.fromValue(args);
-    } else {
-      String msg =
-          "UpdateReferralDetailsBot encountered an unknown contract of type "
-              + createdContract.getTemplateId();
-      logger.error(msg);
-      throw new IllegalStateException(msg);
-    }
+    //noinspection unchecked
+    return TemplateUtils.contractTransformer(ReferralDetails.class, Referral.class)
+        .apply(createdContract);
   }
 }

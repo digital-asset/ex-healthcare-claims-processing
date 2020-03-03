@@ -10,6 +10,7 @@ import com.daml.ledger.javaapi.data.*;
 import com.daml.ledger.rxjava.components.LedgerViewFlowable;
 import com.daml.ledger.rxjava.components.helpers.CommandsAndPendingSet;
 import com.daml.ledger.rxjava.components.helpers.CreatedContract;
+import com.daml.ledger.rxjava.components.helpers.TemplateUtils;
 import com.digitalasset.nanobot.healthcare.models.main.policy.InsurancePolicy;
 import com.digitalasset.nanobot.healthcare.models.main.provider.NotifyPayer;
 import com.digitalasset.refapps.healthcareclaims.util.BotLogger;
@@ -75,17 +76,8 @@ public class AcknowledgeAppointmentBot {
   }
 
   public Template getContractInfo(CreatedContract createdContract) {
-    Value args = createdContract.getCreateArguments();
-    if (createdContract.getTemplateId().equals(NotifyPayer.TEMPLATE_ID)) {
-      return NotifyPayer.fromValue(args);
-    } else if (createdContract.getTemplateId().equals(InsurancePolicy.TEMPLATE_ID)) {
-      return InsurancePolicy.fromValue(args);
-    } else {
-      String msg =
-          "AcknowledgeAndDiscloseBot encountered an unknown contract of type "
-              + createdContract.getTemplateId();
-      logger.error(msg);
-      throw new IllegalStateException(msg);
-    }
+    //noinspection unchecked
+    return TemplateUtils.contractTransformer(NotifyPayer.class, InsurancePolicy.class)
+        .apply(createdContract);
   }
 }
