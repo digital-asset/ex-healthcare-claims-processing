@@ -37,10 +37,9 @@ public class HealthcareClaimsProcessingIT {
   private static Party INSURANCE_COMPANY_PARTY = new Party("InsuranceCompany");
   private static Party PATIENT_PARTY = new Party("Patient1");
 
-  private static Sandbox sandboxC =
+  private static Sandbox sandbox =
       Sandbox.builder()
           .dar(RELATIVE_DAR_PATH)
-          .projectDir(Paths.get("."))
           .module(TEST_MODULE)
           .scenario(TEST_SCENARIO)
           .parties(
@@ -49,8 +48,8 @@ public class HealthcareClaimsProcessingIT {
           .setupAppCallback(Main::runBots)
           .build();
 
-  @ClassRule public static ExternalResource compile = sandboxC.compilation();
-  @Rule public Sandbox.Process sandbox = sandboxC.process();
+  @ClassRule public static ExternalResource sandboxClassRule = sandbox.getClassRule();
+  @Rule public ExternalResource sandboxRule = sandbox.getRule();
 
   @Test
   public void testHealthcareClaimsProcessingMainWorkflow() throws InvalidProtocolBufferException {
