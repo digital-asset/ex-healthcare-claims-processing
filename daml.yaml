@@ -5,7 +5,7 @@
 
 sdk-version: 1.0.0
 name: healthcare-claims-processing
-source: daml/LibraryModules.daml
+source: daml/
 scenario: DemoOnboardScenario.InsurancePolicies:insurancePoliciesSetSingle
 parties:
   - InsuranceCompany
