@@ -9,7 +9,10 @@ FROM digitalasset/daml-sdk:${sdk_vsn}
 
 WORKDIR /home/daml
 
-COPY target/healthcare-claims-processing.dar /home/daml/
+COPY --chown=daml \
+     target/healthcare-claims-processing.dar \
+     scripts/ledger_setup.sh \
+     /home/daml/
 
 USER root
 RUN chown daml healthcare-claims-processing.dar
@@ -17,4 +20,5 @@ USER daml
 
 EXPOSE 6865
 
-CMD ~/.daml/bin/daml sandbox -- --address 0.0.0.0 --port 6865 --scenario DemoOnboardScenario.InsurancePolicies:insurancePoliciesSetSingle healthcare-claims-processing.dar
+CMD ./ledger_setup.sh localhost 6865 healthcare-claims-processing.dar DemoOnboardScenario.StartScript:insurancePoliciesSetSingle & \
+    ~/.daml/bin/daml sandbox -- --static-time --address 0.0.0.0 --port 6865 healthcare-claims-processing.dar
