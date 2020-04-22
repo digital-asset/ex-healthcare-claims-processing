@@ -21,7 +21,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <daml-sdk.version>1.0.0</daml-sdk.version>
-        <daml-plugin.version>0.1</daml-plugin.version>
+        <daml-plugin.version>0.1.4</daml-plugin.version>
         <slf4j.version>1.7.26</slf4j.version>
         <logback.version>1.2.3</logback.version>
         <args4j.version>2.33</args4j.version>
@@ -30,7 +30,7 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.daml.ledger</groupId>
+            <groupId>com.daml</groupId>
             <artifactId>bindings-rxjava</artifactId>
             <version>${daml-sdk.version}</version>
         </dependency>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>com.digitalasset</groupId>
             <artifactId>functest-java_2.12</artifactId>
-            <version>0.1.16</version>
+            <version>0.1.17</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

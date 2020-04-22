@@ -1,0 +1,125 @@
+--
+-- Copyright (c) 2019, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+--
+
+daml 1.2 module DemoOnboardScenario.StartScript where
+
+import Main.Payer
+import Main.Patient
+import Main.Procedure
+import Main.Policy
+import DemoOnboardScenario.ReferenceData qualified as Ref
+import Main.Onboard
+import Main.Provider
+import DA.Next.Map
+import DA.Optional
+import DA.List
+import Daml.Script
+
+insurancePoliciesSetSingle : Script ()
+insurancePoliciesSetSingle = do
+    let provider1 = fromSome (partyFromText "PrimaryCareProvider")
+        provider2 = fromSome (partyFromText "Radiologist")
+        patient1 = fromSome (partyFromText "Patient1")
+        operator = fromSome (partyFromText "Operator")
+        payer1 = fromSome (partyFromText "InsuranceCompany")
+
+    entityMaster <- operator `submit`
+      createCmd OnboardEntityMaster with
+        operator
+
+    payerInvitation <- operator `submit`
+      exerciseCmd entityMaster InvitePayer with
+        payer = payer1
+    payerRole <- payer1 `submit`
+      exerciseCmd payerInvitation AcceptPayerInvitation with
+        payerName = Ref.payer1_payerName
+        demographics = Ref.payer1Demographics
+
+    provider1Invitation <-
+        operator `submit` exerciseCmd entityMaster InviteProvider with provider = provider1
+    provider1Role <-
+      provider1 `submit`
+        exerciseCmd provider1Invitation AcceptProviderInvitation with
+            providerName = Ref.provider1_name
+            demographics = Ref.provider1Demographics
+
+    provider2Invitation <-
+        operator `submit` exerciseCmd entityMaster InviteProvider with provider = provider2
+    provider2Role <-
+      provider2 `submit`
+        exerciseCmd provider2Invitation AcceptProviderInvitation with
+            providerName = Ref.provider2_name
+            demographics = Ref.provider2Demographics
+
+    patient1Invitation <-
+        operator `submit` exerciseCmd entityMaster InvitePatient with patient = patient1
+    patient1Role <-
+      patient1 `submit`
+        exerciseCmd patient1Invitation AcceptPatientInvitation with
+            patientName = Ref.patient1_Name
+            demographics = Ref.patient1Demographics
+
+    -- with the same payer
+    providerRequest <-
+        provider1 `submit`
+            exerciseCmd provider1Role RequestNetworkContract with payer = payer1
+    payer1 `submit`
+        exerciseCmd providerRequest AcceptNetworkContractRequest with
+            payerCid = payerRole
+            feeSchedule = Ref.feeSchedule
+
+    providerRequest <-
+        provider2 `submit`
+            exerciseCmd provider2Role RequestNetworkContract with payer = payer1
+    payer1 `submit`
+        exerciseCmd providerRequest AcceptNetworkContractRequest with
+            payerCid = payerRole
+            feeSchedule = Ref.feeSchedule
+
+    policyReq <-
+        patient1 `submit`
+            exerciseCmd patient1Role RequestInsurancePolicy with
+                payer = payer1
+                policyType = Ref.patient1_PolicyType
+    procedures <-
+        payer1 `submit`
+            let p = head Ref.procedureCodeList in
+            forA Ref.procedureCodeList $ \procedureCode ->
+                createCmd Procedure with
+                    copay = 15.0
+                    maxProcedures = 20
+                    scheduledProcedures = 0
+                    receivedProcedures = 0
+                    observers = [payer1]
+                    owner = payer1
+                    procedureCode = p
+    (insurancePolicy, notifyPatientOfPayerAcceptance) <-
+        payer1 `submit`
+            let procedureMap = fromList $ zip Ref.procedureCodeList procedures in
+            exerciseCmd policyReq AcceptMember with
+                payerCid = payerRole
+                insuranceID = Ref.patient1_InsuranceId
+                undisclosedProcedureList = procedureMap
+
+    patientRoleWithPolicy <-
+        patient1 `submit`
+            exerciseCmd patient1Role SetInsurancePolicy with notifyCid = notifyPatientOfPayerAcceptance
+    pcpReq <-
+        patient1 `submit`
+            exerciseCmd patientRoleWithPolicy RequestPrimaryCareProvider with primaryCareProvider = provider1
+    pcpNotifyCid <-
+        provider1 `submit`
+            exerciseCmd pcpReq AcceptPatient with providerID = Ref.provider1_HIN
+
+    patient1 `submit`
+        exerciseCmd patientRoleWithPolicy SetPrimaryCareProvider with
+            notifyCid = pcpNotifyCid
+
+    patient1 `submit`
+        exerciseCmd insurancePolicy DisclosePolicy with receivers = [provider1]
+    patient1 `submit`
+        exerciseCmd insurancePolicy DisclosePolicy with receivers = [provider2]
+
+    return ()

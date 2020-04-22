@@ -29,8 +29,8 @@ import org.junit.rules.ExternalResource;
 public class HealthcareClaimsProcessingIT {
   private static final Path RELATIVE_DAR_PATH =
       Paths.get("./target/healthcare-claims-processing.dar");
-  private static final String TEST_MODULE = "DemoOnboardScenario.InsurancePolicies";
-  private static final String TEST_SCENARIO = "insurancePoliciesSetSingle";
+  private static final String TEST_MODULE = "DemoOnboardScenario.StartScript";
+  private static final String TEST_SCRIPT = "insurancePoliciesSetSingle";
 
   private static Party PROVIDER_PARTY = new Party("PrimaryCareProvider");
   private static Party RADIOLOGIST_PARTY = new Party("Radiologist");
@@ -41,7 +41,7 @@ public class HealthcareClaimsProcessingIT {
       Sandbox.builder()
           .dar(RELATIVE_DAR_PATH)
           .module(TEST_MODULE)
-          .scenario(TEST_SCENARIO)
+          .startScript(TEST_SCRIPT)
           .parties(
               PROVIDER_PARTY.getValue(), RADIOLOGIST_PARTY.getValue(),
               INSURANCE_COMPANY_PARTY.getValue(), PATIENT_PARTY.getValue())
@@ -54,7 +54,9 @@ public class HealthcareClaimsProcessingIT {
   @Test
   public void testHealthcareClaimsProcessingMainWorkflow() throws InvalidProtocolBufferException {
     DefaultLedgerAdapter ledgerAdapter = sandbox.getLedgerAdapter();
-    DisclosedPolicy.ContractId policy = new DisclosedPolicy.ContractId("#38:11");
+    DisclosedPolicy.ContractId policy =
+        ledgerAdapter.getCreatedContractId(
+            PROVIDER_PARTY, DisclosedPolicy.TEMPLATE_ID, DisclosedPolicy.ContractId::new);
     Provider.ContractId provider =
         ledgerAdapter.getCreatedContractId(
             PROVIDER_PARTY, Provider.TEMPLATE_ID, Provider.ContractId::new);

@@ -88,7 +88,7 @@ public class CommandsAndPendingSetBuilder {
         Instant mrt = now.plus(mrtDuration);
         SubmitCommandsRequest commandsRequest =
             new SubmitCommandsRequest(
-                workflowId, appId, UUID.randomUUID().toString(), party, now, mrt, commands);
+                workflowId, appId, UUID.randomUUID().toString(), party, Optional.of(mrt), Optional.empty(), Optional.empty(), commands);
         return Optional.of(
             new CommandsAndPendingSet(commandsRequest, HashTreePMap.from(pendingContractIds)));
       }
