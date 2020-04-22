@@ -136,7 +136,7 @@ public class Main {
     boolean connected = false;
     while (!connected) {
       try {
-        if (time >= 30) {
+        if (time >= 60) {
           logger.info("Cannot connect to Sandbox: timeout.");
           System.exit(1);
         }
