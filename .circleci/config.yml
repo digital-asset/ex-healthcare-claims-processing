@@ -129,7 +129,7 @@ workflows:
           daml_sdk_version: "1.0.1"
       - mvn_test:
           daml_sdk_version: "1.0.1"
-          context: blackduck
+          context: refapps
   build_and_release:
     jobs:
       - daml_test:
