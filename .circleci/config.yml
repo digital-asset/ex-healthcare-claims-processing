@@ -70,12 +70,6 @@ jobs:
           when: always
       - store_artifacts:
           path: logs
-      - run:
-          name: Run Blackduck Detect
-          command: |
-            bash <(curl -s https://raw.githubusercontent.com/DACH-NY/security-blackduck/master/synopsys-detect) ci-build digitalasset_ex-healthcare-claims-processing master --logging.level.com.synopsys.integration=DEBUG  --detect.notices.report=true --detect.report.timeout=480
-      - run:
-          command: cp digitalasset_ex_healthcare_claims_processing_master_Black_Duck_Notices_Report.txt target/NOTICE
       - persist_to_workspace:
           root: target
           paths:
@@ -121,6 +115,42 @@ jobs:
           command: |
             ./scripts/release.sh ex-healthcare-claims-processing
 
+  blackduck:
+    parameters:
+      daml_sdk_version:
+        type: string
+    executor: daml-executor
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - m2-{{ checksum "pom.xml" }}-{{ checksum "daml.yaml" }}
+            - m2
+      - install_sdk:
+          version: << parameters.daml_sdk_version >>
+      - run:
+          command: |
+            export PATH=${HOME}/.daml/bin:${PATH}
+            mvn clean package
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/.daml
+          key: m2-{{ checksum "pom.xml" }}-{{ checksum "daml.yaml" }}
+      - run:
+          name: Run Blackduck Detect
+          command: |
+            bash <(curl -s https://raw.githubusercontent.com/DACH-NY/security-blackduck/master/synopsys-detect) ci-build digitalasset_ex-healthcare-claims-processing master --logging.level.com.synopsys.integration=DEBUG  --detect.notices.report=true --detect.report.timeout=480
+      - run:
+          command: cp digitalasset_ex_healthcare_claims_processing_master_Black_Duck_Notices_Report.txt target/NOTICE
+      - persist_to_workspace:
+          root: target
+          paths:
+            - "*.jar"
+            - "*.dar"
+            - "lib"
+            - "NOTICE"
+
 workflows:
   version: 2
   build_and_test:
@@ -130,6 +160,9 @@ workflows:
       - mvn_test:
           daml_sdk_version: "1.0.1"
           context: refapps
+      - blackduck:
+          daml_sdk_version: "1.0.1"
+          context: blackduck
   build_and_release:
     jobs:
       - daml_test:
