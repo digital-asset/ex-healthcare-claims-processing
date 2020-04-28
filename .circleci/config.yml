@@ -58,6 +58,18 @@ jobs:
           path: target/surefire-reports
       - store_artifacts:
           path: target/surefire-reports
+      - store_test_results:
+          path: target/failsafe-reports
+      - store_artifacts:
+          path: target/failsafe-reports
+      - run:
+          name: Moving log files so they can be stored
+          command: |
+            mkdir logs
+            mv *.log logs
+          when: always
+      - store_artifacts:
+          path: logs
       - run:
           name: Run Blackduck Detect
           command: |
