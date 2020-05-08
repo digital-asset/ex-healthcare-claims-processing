@@ -1,0 +1,29 @@
+--
+-- Copyright (c) 2019, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+--
+
+daml 1.2
+
+module Triggers.AcknowledgeAppointmentTrigger where
+
+import Daml.Trigger
+import DA.Next.Map qualified as Maps
+
+import Main.Provider
+
+acknowledgeAppointmentTrigger : Trigger ()
+acknowledgeAppointmentTrigger = Trigger
+  { initialize = const ()
+  , updateState = \_ _ _ -> ()
+  , rule = acknowledgeAppointments
+  , registeredTemplates = RegisteredTemplates [
+      registeredTemplate @NotifyPayer
+    ]
+  , heartbeat = None
+  }
+
+acknowledgeAppointments : Party -> ACS -> Time -> Maps.Map CommandId [Command] -> () -> TriggerA ()
+acknowledgeAppointments _party activeContracts _ _ () = (???)
+
+(???) = error "Not implemented."
