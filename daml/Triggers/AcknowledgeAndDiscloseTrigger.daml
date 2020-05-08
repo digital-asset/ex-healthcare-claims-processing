@@ -1,0 +1,123 @@
+--
+-- Copyright (c) 2019, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+--
+
+daml 1.2
+
+module Triggers.AcknowledgeAndDiscloseTrigger where
+
+import Test.ReferenceData
+import Test.Referral
+import Daml.Trigger
+import DA.Next.Map qualified as Maps
+import DA.Foldable hiding (length)
+import DA.Optional
+import Daml.Trigger.Assert
+import DA.Assert
+import Main.Policy
+import Main.Provider
+import Triggers.ContractUtils
+import DA.List.Total
+import DA.Either
+
+acknowledgeAndDiscloseTrigger : [Party] -> Trigger ()
+acknowledgeAndDiscloseTrigger receivers = Trigger
+  { initialize = const ()
+  , updateState = \_ _ _ -> ()
+  , rule = acknowledgeAndDiscloseRule receivers
+  , registeredTemplates = RegisteredTemplates [
+      registeredTemplate @InsurancePolicy,
+      registeredTemplate @NotifyPatient
+    ]
+  , heartbeat = None
+  }
+
+acknowledgeAndDiscloseRule : [Party] -> Party -> ACS -> Time -> Maps.Map CommandId [Command] -> () -> TriggerA ()
+acknowledgeAndDiscloseRule receivers _party activeContracts _ _ () =
+  forA_ notifyPatientContracts $ \(npCid, notifyPatient) -> do
+    let selectedPolicyOpt =
+          head $ filterContractIds
+            (\p -> p.patient == notifyPatient.patient) insurancePolicies
+    whenSome selectedPolicyOpt $ \selectedPolicy ->
+      dedupExercise npCid $ AcknowledgeAndDisclose with
+        policyCid = selectedPolicy
+        receivers = receivers
+ where
+  insurancePolicies = getContracts @InsurancePolicy activeContracts
+  notifyPatientContracts = getContracts @NotifyPatient activeContracts
+
+-- Tests ---------------------------
+
+testNotificationAcknowledgedAndDisclosed: Scenario ()
+testNotificationAcknowledgedAndDisclosed = scenario do
+  patient1 <- getParty "John Doe"
+  (updatedPolicy, notifyPatient) <- appointmentTest
+
+  let testAcknowledgeAndDiscloseTrigger =
+        acknowledgeAndDiscloseTrigger [patient1]
+      activeContracts =
+          toACS updatedPolicy <>
+          toACS notifyPatient
+  commands <-
+    testRule testAcknowledgeAndDiscloseTrigger patient1 activeContracts Maps.empty ()
+
+  let flattenedCommands = flattenCommands commands
+  length flattenedCommands === 1
+  assertExerciseCmd flattenedCommands $ \(cid, choiceArg) -> do
+    assertEq cid notifyPatient
+    assertEq choiceArg $ AcknowledgeAndDisclose with
+        policyCid = updatedPolicy
+        receivers = [patient1]
+
+testNoNotificationAcknowledgedAndDisclosedWhenNoPolicy: Scenario ()
+testNoNotificationAcknowledgedAndDisclosedWhenNoPolicy = scenario do
+  patient1 <- getParty "John Doe"
+  (_updatedPolicy, notifyPatient) <- appointmentTest
+
+  let testAcknowledgeAndDiscloseTrigger =
+        acknowledgeAndDiscloseTrigger [patient1]
+      activeContracts =
+          toACS notifyPatient
+  commands <-
+    testRule testAcknowledgeAndDiscloseTrigger patient1 activeContracts Maps.empty ()
+
+  let flattenedCommands = flattenCommands commands
+  length flattenedCommands === 0
+
+testNoNotification: Scenario ()
+testNoNotification = scenario do
+  patient1 <- getParty "John Doe"
+
+  let testAcknowledgeAndDiscloseTrigger =
+        acknowledgeAndDiscloseTrigger [patient1]
+      activeContracts = mempty
+  commands <-
+    testRule testAcknowledgeAndDiscloseTrigger patient1 activeContracts Maps.empty ()
+
+  let flattenedCommands = flattenCommands commands
+  length flattenedCommands === 0
+
+-- Utils
+
+appointmentTest = scenario do
+  referralScenario <- referralTest
+  operator <- getParty "Operator"
+  payer1 <- getParty "Insurance Company"
+  provider1 <- getParty "PrimaryCareProvider"
+  provider2 <- getParty "Specialist"
+  patient1 <- getParty "John Doe"
+
+  let provider2Role = referralScenario.provider2Role
+      appointmentDetails = referralScenario.ruleParameters
+      referralDetails = referralScenario.referralDetails
+      originalPolicy = referralScenario.originalPolicy
+      disclosureList = [provider1, provider2]
+
+  appointmentCid <- provider2 `submit` do
+    scheduleResult <- exercise referralDetails ScheduleAppointment with
+      appointmentDate = patient1_appointmentTime
+    return $ fromSome $ eitherToOptional $ scheduleResult
+
+  payer1 `submit`
+    exercise (snd appointmentCid) AcknowledgeAndLock with policyCid = originalPolicy
