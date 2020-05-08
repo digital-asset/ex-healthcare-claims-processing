@@ -22,6 +22,19 @@ import DA.List.Total
 import DA.Either
 import Test.Triggers.TriggerTestUtils
 
+-- TODO: Need a way to avoid hardcoding parties.
+acknowledgeAndDiscloseTriggerWired : Trigger ()
+acknowledgeAndDiscloseTriggerWired = Trigger
+  { initialize = const ()
+  , updateState = \_ _ _ -> ()
+  , rule = acknowledgeAndDiscloseRule [fromSome $ partyFromText "PrimaryCareProvider", fromSome $ partyFromText "Radiologist" ]
+  , registeredTemplates = RegisteredTemplates [
+      registeredTemplate @InsurancePolicy,
+      registeredTemplate @NotifyPatient
+    ]
+  , heartbeat = None
+  }
+
 acknowledgeAndDiscloseTrigger : [Party] -> Trigger ()
 acknowledgeAndDiscloseTrigger receivers = Trigger
   { initialize = const ()

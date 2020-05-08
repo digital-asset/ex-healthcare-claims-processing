@@ -15,6 +15,8 @@ import com.digitalasset.nanobot.healthcare.models.main.provider.ReferralDetails;
 import com.digitalasset.nanobot.healthcare.models.main.treatment.Treatment;
 import com.digitalasset.nanobot.healthcare.models.main.types.DiagnosisCode;
 import com.digitalasset.nanobot.healthcare.models.main.types.ProcedureCode;
+import com.digitalasset.refapps.healthcareclaims.trigger.Builder;
+import com.digitalasset.refapps.healthcareclaims.trigger.Trigger;
 import com.digitalasset.testing.junit4.Sandbox;
 import com.digitalasset.testing.ledger.DefaultLedgerAdapter;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -23,8 +25,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDate;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExternalResource;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 
 public class HealthcareClaimsProcessingIT {
   private static final Path RELATIVE_DAR_PATH =
@@ -45,11 +51,43 @@ public class HealthcareClaimsProcessingIT {
           .parties(
               PROVIDER_PARTY.getValue(), RADIOLOGIST_PARTY.getValue(),
               INSURANCE_COMPANY_PARTY.getValue(), PATIENT_PARTY.getValue())
-          .setupAppCallback(Main::runBots)
           .build();
-
   @ClassRule public static ExternalResource sandboxClassRule = sandbox.getClassRule();
-  @Rule public ExternalResource sandboxRule = sandbox.getRule();
+  private final Builder trigger =
+      Trigger.builder()
+          .ledgerPort(sandbox::getSandboxPort)
+          .dar(RELATIVE_DAR_PATH)
+          .ledgerHost("localhost");
+
+  @Rule
+  public TestRule sandboxRule =
+      RuleChain.outerRule(sandbox.getRule())
+          .around(
+              createTrigger(
+                  "Triggers.AcceptClaimTrigger:acceptClaimTrigger", INSURANCE_COMPANY_PARTY))
+          .around(
+              createTrigger(
+                  "Triggers.EvaluateReferralTrigger:evaluateReferralTrigger", RADIOLOGIST_PARTY))
+          .around(
+              createTrigger(
+                  "Triggers.AcknowledgeAppointmentTrigger:acknowledgeAppointmentTrigger",
+                  INSURANCE_COMPANY_PARTY))
+          .around(
+              createTrigger(
+                  "Triggers.UpdateReferralDetailsTrigger:updateReferralDetailsTrigger",
+                  RADIOLOGIST_PARTY))
+          .around(
+              createTrigger(
+                  "Triggers.AcknowledgeAndDiscloseTrigger:acknowledgeAndDiscloseTriggerWired",
+                  PATIENT_PARTY))
+          .around(
+              createTrigger(
+                  "Triggers.AcceptPatientPaymentRequestTrigger:acceptPatientPaymentRequestTrigger",
+                  PATIENT_PARTY));
+
+  private Trigger createTrigger(String triggerName, Party party) {
+    return trigger.triggerName(triggerName).party(party).build();
+  }
 
   @Test
   public void testHealthcareClaimsProcessingMainWorkflow() throws InvalidProtocolBufferException {

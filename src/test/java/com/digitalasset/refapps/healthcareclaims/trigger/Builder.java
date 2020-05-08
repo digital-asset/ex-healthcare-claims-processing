@@ -15,7 +15,6 @@ public class Builder {
   private String ledgerHost = "localhost";
   private Supplier<String> ledgerPort = () -> "6865";
   private String party;
-  private String timeMode = "--static-time";
 
   public Builder dar(Path path) {
     this.darPath = path.toString();
@@ -32,17 +31,8 @@ public class Builder {
     return this;
   }
 
-  public Builder ledgerPort(int ledgerPort) {
-    return ledgerPort(() -> ledgerPort);
-  }
-
   public Builder ledgerPort(IntSupplier ledgerPort) {
     this.ledgerPort = () -> String.valueOf(ledgerPort.getAsInt());
-    return this;
-  }
-
-  public Builder useWallClockTime() {
-    this.timeMode = "--wall-clock-time";
     return this;
   }
 
@@ -52,6 +42,7 @@ public class Builder {
   }
 
   public Trigger build() {
+    String timeMode = "--static-time";
     return new Trigger(darPath, triggerName, ledgerHost, ledgerPort, party, timeMode);
   }
 }
