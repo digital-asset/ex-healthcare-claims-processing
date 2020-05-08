@@ -20,7 +20,8 @@ acknowledgeAppointmentTrigger = Trigger
   , updateState = \_ _ _ -> ()
   , rule = acknowledgeAppointments
   , registeredTemplates = RegisteredTemplates [
-      registeredTemplate @NotifyPayer
+        registeredTemplate @NotifyPayer
+      , registeredTemplate @InsurancePolicy
     ]
   , heartbeat = None
   }

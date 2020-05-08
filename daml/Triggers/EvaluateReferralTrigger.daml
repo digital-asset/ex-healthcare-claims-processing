@@ -21,7 +21,8 @@ evaluateReferralTrigger = Trigger
   , updateState = \_ _ _ -> ()
   , rule = evaluateReferrals
   , registeredTemplates = RegisteredTemplates [
-      registeredTemplate @ReferralRequest
+        registeredTemplate @ReferralRequest
+      , registeredTemplate @ProviderNetworkContract
     ]
   , heartbeat = None
   }
