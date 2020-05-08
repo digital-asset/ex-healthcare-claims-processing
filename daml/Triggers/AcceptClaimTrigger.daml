@@ -1,0 +1,64 @@
+--
+-- Copyright (c) 2019, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+--
+
+daml 1.2
+
+module Triggers.AcceptClaimTrigger where
+
+import Main.Claim
+import Daml.Trigger
+import DA.Next.Map qualified as Maps
+import DA.Foldable hiding (length)
+import Daml.Trigger.Assert
+import DA.Assert
+import DemoOnboardScenario.Treatment
+import DemoOnboardScenario.ReferenceData
+
+acceptClaimTrigger : Trigger ()
+acceptClaimTrigger = Trigger
+  { initialize = const ()
+  , updateState = \_ _ _ -> ()
+  , rule = acceptClaimRule
+  , registeredTemplates = RegisteredTemplates [
+      registeredTemplate @ClaimRequest
+    ]
+  , heartbeat = None
+  }
+
+acceptClaimRule : Party -> ACS -> Time -> Maps.Map CommandId [Command] -> () -> TriggerA ()
+acceptClaimRule _party activeContracts _ _ () =
+  forA_ claimRequests $ \(claimRequestCid, _claimRequest) ->
+    dedupExercise claimRequestCid AcceptClaimRequest
+ where
+  claimRequests = getContracts @ClaimRequest activeContracts
+
+-- Tests ---------------------------
+
+testClaimIsAccepted: Scenario ()
+testClaimIsAccepted = scenario do
+  payer1 <- payer1_party
+  treatmentScenario <- treatmentTest
+
+  let activeContracts =
+          toACS treatmentScenario.paymentReq11.claimReq
+  commands <-
+    testRule acceptClaimTrigger payer1 activeContracts Maps.empty ()
+
+  let flattenedCommands = flattenCommands commands
+  length flattenedCommands === 1
+  assertExerciseCmd flattenedCommands $ \(cid, choiceArg) -> do
+    assertEq cid treatmentScenario.paymentReq11.claimReq
+    assertEq choiceArg AcceptClaimRequest
+
+testNoClaim: Scenario ()
+testNoClaim = scenario do
+  payer1 <- payer1_party
+
+  let activeContracts = mempty
+  commands <-
+    testRule acceptClaimTrigger payer1 activeContracts Maps.empty ()
+
+  let flattenedCommands = flattenCommands commands
+  length flattenedCommands === 0

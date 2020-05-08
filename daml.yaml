@@ -17,4 +17,5 @@ exposed-modules: []
 dependencies:
   - daml-prim
   - daml-stdlib
+  - daml-trigger
   - daml-script
