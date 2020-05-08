@@ -1,0 +1,18 @@
+--
+-- Copyright (c) 2019, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+--
+
+daml 1.2
+module Triggers.ContractUtils where
+
+import DA.Optional
+import DA.List.Total
+
+type Contract a = (ContractId a, a)
+
+filterContractIds: (a -> Bool) -> [Contract a] -> [ContractId a]
+filterContractIds p contracts = [id | (id, value) <- contracts, p value]
+
+headNote: Text -> [a] -> a
+headNote message = (fromSomeNote message) . head
