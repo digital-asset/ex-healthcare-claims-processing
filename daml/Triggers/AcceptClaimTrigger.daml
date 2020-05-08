@@ -15,6 +15,7 @@ import Daml.Trigger.Assert
 import DA.Assert
 import DemoOnboardScenario.Treatment
 import DemoOnboardScenario.ReferenceData
+import Test.Triggers.TriggerTestUtils
 
 acceptClaimTrigger : Trigger ()
 acceptClaimTrigger = Trigger
@@ -44,11 +45,10 @@ testClaimIsAccepted = scenario do
   let activeContracts =
           toACS treatmentScenario.paymentReq11.claimReq
   commands <-
-    testRule acceptClaimTrigger payer1 activeContracts Maps.empty ()
+    testTrigger acceptClaimTrigger payer1 activeContracts
 
-  let flattenedCommands = flattenCommands commands
-  length flattenedCommands === 1
-  assertExerciseCmd flattenedCommands $ \(cid, choiceArg) -> do
+  length commands === 1
+  assertExerciseCmd commands $ \(cid, choiceArg) -> do
     assertEq cid treatmentScenario.paymentReq11.claimReq
     assertEq choiceArg AcceptClaimRequest
 
@@ -58,7 +58,6 @@ testNoClaim = scenario do
 
   let activeContracts = mempty
   commands <-
-    testRule acceptClaimTrigger payer1 activeContracts Maps.empty ()
+    testTrigger acceptClaimTrigger payer1 activeContracts
 
-  let flattenedCommands = flattenCommands commands
-  length flattenedCommands === 0
+  length commands === 0

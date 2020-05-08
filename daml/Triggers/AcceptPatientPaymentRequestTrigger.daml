@@ -15,6 +15,7 @@ import Daml.Trigger.Assert
 import DA.Assert
 import DemoOnboardScenario.Treatment
 import DemoOnboardScenario.ReferenceData
+import Test.Triggers.TriggerTestUtils
 
 acceptPatientPaymentRequestTrigger : Trigger ()
 acceptPatientPaymentRequestTrigger = Trigger
@@ -44,11 +45,10 @@ testPatientPaymentRequestAccepted = scenario do
   let activeContracts =
           toACS treatmentScenario.paymentReq11.patientReq
   commands <-
-    testRule acceptPatientPaymentRequestTrigger patient1 activeContracts Maps.empty ()
+    testTrigger acceptPatientPaymentRequestTrigger patient1 activeContracts
 
-  let flattenedCommands = flattenCommands commands
-  length flattenedCommands === 1
-  assertExerciseCmd flattenedCommands $ \(cid, choiceArg) -> do
+  length commands === 1
+  assertExerciseCmd commands $ \(cid, choiceArg) -> do
     assertEq cid treatmentScenario.paymentReq11.patientReq
     assertEq choiceArg AcceptPatientObligation
 
@@ -58,7 +58,6 @@ testNoPatientPaymentRequest = scenario do
 
   let activeContracts = mempty
   commands <-
-    testRule acceptPatientPaymentRequestTrigger patient1 activeContracts Maps.empty ()
+    testTrigger acceptPatientPaymentRequestTrigger patient1 activeContracts
 
-  let flattenedCommands = flattenCommands commands
-  length flattenedCommands === 0
+  length commands === 0

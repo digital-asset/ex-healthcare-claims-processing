@@ -19,6 +19,7 @@ import Main.Provider
 import Main.Referral
 import DA.Action
 import Main.RuleTypes
+import Test.Triggers.TriggerTestUtils
 
 updateReferralDetailsTrigger : Trigger ()
 updateReferralDetailsTrigger = Trigger
@@ -59,11 +60,10 @@ testReferralDetailsGetUpdated = scenario do
         toACS referralDetails <>
         toACS referralCid
   commands <-
-    testRule updateReferralDetailsTrigger provider2 activeContracts Maps.empty ()
+    testTrigger updateReferralDetailsTrigger provider2 activeContracts
 
-  let flattenedCommands = flattenCommands commands
-  length flattenedCommands === 1
-  assertExerciseCmd flattenedCommands $ \(cid, choiceArg) -> do
+  length commands === 1
+  assertExerciseCmd commands $ \(cid, choiceArg) -> do
     assertEq cid referralDetails
     assertEq choiceArg $ UpdateReferralDetails with
         referralCid = referralCid
@@ -76,10 +76,9 @@ testNoUpdateIfNoReferral = scenario do
   let activeContracts =
         toACS referralCid
   commands <-
-    testRule updateReferralDetailsTrigger provider2 activeContracts Maps.empty ()
+    testTrigger updateReferralDetailsTrigger provider2 activeContracts
 
-  let flattenedCommands = flattenCommands commands
-  length flattenedCommands === 0
+  length commands === 0
 
 -- Utils
 
@@ -115,9 +114,3 @@ referralTest = scenario do
       networkContractCid = provider2NetworkContract
 
   pure refOutput
-
-    -- case referralOutput of
-    --   Right tuple -> do
-    --     referralDetails <- provider2 `submit` do
-    --       exercise (snd tuple) UpdateReferralDetails with
-    --         referralCid = fst tuple

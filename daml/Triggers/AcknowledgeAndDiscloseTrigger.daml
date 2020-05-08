@@ -20,6 +20,7 @@ import Main.Provider
 import Triggers.ContractUtils
 import DA.List.Total
 import DA.Either
+import Test.Triggers.TriggerTestUtils
 
 acknowledgeAndDiscloseTrigger : [Party] -> Trigger ()
 acknowledgeAndDiscloseTrigger receivers = Trigger
@@ -60,11 +61,10 @@ testNotificationAcknowledgedAndDisclosed = scenario do
           toACS updatedPolicy <>
           toACS notifyPatient
   commands <-
-    testRule testAcknowledgeAndDiscloseTrigger patient1 activeContracts Maps.empty ()
+    testTrigger testAcknowledgeAndDiscloseTrigger patient1 activeContracts
 
-  let flattenedCommands = flattenCommands commands
-  length flattenedCommands === 1
-  assertExerciseCmd flattenedCommands $ \(cid, choiceArg) -> do
+  length commands === 1
+  assertExerciseCmd commands $ \(cid, choiceArg) -> do
     assertEq cid notifyPatient
     assertEq choiceArg $ AcknowledgeAndDisclose with
         policyCid = updatedPolicy
@@ -80,10 +80,9 @@ testNoNotificationAcknowledgedAndDisclosedWhenNoPolicy = scenario do
       activeContracts =
           toACS notifyPatient
   commands <-
-    testRule testAcknowledgeAndDiscloseTrigger patient1 activeContracts Maps.empty ()
+    testTrigger testAcknowledgeAndDiscloseTrigger patient1 activeContracts
 
-  let flattenedCommands = flattenCommands commands
-  length flattenedCommands === 0
+  length commands === 0
 
 testNoNotification: Scenario ()
 testNoNotification = scenario do
@@ -93,10 +92,9 @@ testNoNotification = scenario do
         acknowledgeAndDiscloseTrigger [patient1]
       activeContracts = mempty
   commands <-
-    testRule testAcknowledgeAndDiscloseTrigger patient1 activeContracts Maps.empty ()
+    testTrigger testAcknowledgeAndDiscloseTrigger patient1 activeContracts
 
-  let flattenedCommands = flattenCommands commands
-  length flattenedCommands === 0
+  length commands === 0
 
 -- Utils
 
