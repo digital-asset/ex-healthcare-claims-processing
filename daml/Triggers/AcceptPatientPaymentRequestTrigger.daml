@@ -1,0 +1,64 @@
+--
+-- Copyright (c) 2019, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+--
+
+daml 1.2
+
+module Triggers.AcceptPatientPaymentRequestTrigger where
+
+import Main.Claim
+import Daml.Trigger
+import DA.Next.Map qualified as Maps
+import DA.Foldable hiding (length)
+import Daml.Trigger.Assert
+import DA.Assert
+import DemoOnboardScenario.Treatment
+import DemoOnboardScenario.ReferenceData
+
+acceptPatientPaymentRequestTrigger : Trigger ()
+acceptPatientPaymentRequestTrigger = Trigger
+  { initialize = const ()
+  , updateState = \_ _ _ -> ()
+  , rule = acceptPatientPaymentRequestRule
+  , registeredTemplates = RegisteredTemplates [
+      registeredTemplate @PatientPaymentRequest
+    ]
+  , heartbeat = None
+  }
+
+acceptPatientPaymentRequestRule : Party -> ACS -> Time -> Maps.Map CommandId [Command] -> () -> TriggerA ()
+acceptPatientPaymentRequestRule _party activeContracts _ _ () =
+  forA_ claimRequests $ \(patientPaymentRequestCid, _patientPaymentRequest) ->
+    dedupExercise patientPaymentRequestCid AcceptPatientObligation
+ where
+  claimRequests = getContracts @PatientPaymentRequest activeContracts
+
+-- Tests ---------------------------
+
+testPatientPaymentRequestAccepted: Scenario ()
+testPatientPaymentRequestAccepted = scenario do
+  patient1 <- patient1_party
+  treatmentScenario <- treatmentTest
+
+  let activeContracts =
+          toACS treatmentScenario.paymentReq11.patientReq
+  commands <-
+    testRule acceptPatientPaymentRequestTrigger patient1 activeContracts Maps.empty ()
+
+  let flattenedCommands = flattenCommands commands
+  length flattenedCommands === 1
+  assertExerciseCmd flattenedCommands $ \(cid, choiceArg) -> do
+    assertEq cid treatmentScenario.paymentReq11.patientReq
+    assertEq choiceArg AcceptPatientObligation
+
+testNoPatientPaymentRequest: Scenario ()
+testNoPatientPaymentRequest = scenario do
+  patient1 <- patient1_party
+
+  let activeContracts = mempty
+  commands <-
+    testRule acceptPatientPaymentRequestTrigger patient1 activeContracts Maps.empty ()
+
+  let flattenedCommands = flattenCommands commands
+  length flattenedCommands === 0
