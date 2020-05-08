@@ -1,0 +1,123 @@
+--
+-- Copyright (c) 2019, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+--
+
+daml 1.2
+
+module Triggers.UpdateReferralDetailsTrigger where
+
+import Test.ReferenceData
+import Test.Patient
+import Daml.Trigger
+import DA.Next.Map qualified as Maps
+import DA.Foldable hiding (length)
+import DA.Optional
+import Daml.Trigger.Assert
+import DA.Assert
+import Main.Provider
+import Main.Referral
+import DA.Action
+import Main.RuleTypes
+
+updateReferralDetailsTrigger : Trigger ()
+updateReferralDetailsTrigger = Trigger
+  { initialize = const ()
+  , updateState = \_ _ _ -> ()
+  , rule = updateReferralDetailsRule
+  , registeredTemplates = RegisteredTemplates [
+      registeredTemplate @Referral,
+      registeredTemplate @ReferralDetails
+    ]
+  , heartbeat = None
+  }
+
+updateReferralDetailsRule : Party -> ACS -> Time -> Maps.Map CommandId [Command] -> () -> TriggerA ()
+updateReferralDetailsRule party activeContracts _ _ () =
+  forA_ referralDetailsList $ \(referralDetailsCid, referralDetails) ->
+    when (referralDetails.renderingProvider == party &&
+          isNone referralDetails.referralDetails.referral) $
+      addCommandIfEncounterIdsMatch referralDetailsCid referralDetails
+ where
+  referralList = getContracts @Referral activeContracts
+  referralDetailsList = getContracts @ReferralDetails activeContracts
+  addCommandIfEncounterIdsMatch referralDetailsCid referralDetails =
+    forA_ referralList $ \(referralCid, referral) ->
+      when (referralDetails.referralDetails.encounterDetails.encounterId
+              == referral.encounterDetails.encounterId) $
+        dedupExercise referralDetailsCid $ UpdateReferralDetails with
+          referralCid = referralCid
+
+-- Tests ---------------------------
+
+testReferralDetailsGetUpdated: Scenario ()
+testReferralDetailsGetUpdated = scenario do
+  provider2 <- getParty "Specialist"
+  (referralCid, referralDetails) <- referralTest
+
+  let activeContracts =
+        toACS referralDetails <>
+        toACS referralCid
+  commands <-
+    testRule updateReferralDetailsTrigger provider2 activeContracts Maps.empty ()
+
+  let flattenedCommands = flattenCommands commands
+  length flattenedCommands === 1
+  assertExerciseCmd flattenedCommands $ \(cid, choiceArg) -> do
+    assertEq cid referralDetails
+    assertEq choiceArg $ UpdateReferralDetails with
+        referralCid = referralCid
+
+testNoUpdateIfNoReferral: Scenario ()
+testNoUpdateIfNoReferral = scenario do
+  provider2 <- getParty "Specialist"
+  (referralCid, _referralDetails) <- referralTest
+
+  let activeContracts =
+        toACS referralCid
+  commands <-
+    testRule updateReferralDetailsTrigger provider2 activeContracts Maps.empty ()
+
+  let flattenedCommands = flattenCommands commands
+  length flattenedCommands === 0
+
+-- Utils
+
+referralTest = scenario do
+  patientScenario <- onboardPatient
+  provider1 <- getParty "PrimaryCareProvider"
+  provider2 <- getParty "Specialist"
+
+  let onboard = patientScenario.onboardResult
+      provider1Role = onboard.provider1Role
+      provider2NetworkContract = onboard.provider2NetworkContract
+      policyCid = patientScenario.disclosedPolicyCid
+      ruleParams =
+        RuleParameters with
+          policy = policyCid
+          encounterDetails = patient1Encounter
+          networkContract = provider2NetworkContract
+          referral = None
+
+
+  referralReq <- provider1 `submit` do
+    exercise provider1Role CreateReferral with
+      receiver = provider2
+      policy = ruleParams.policy
+      encounterId = ruleParams.encounterDetails.encounterId
+      procedureCode = ruleParams.encounterDetails.procedureCode
+      diagnosisCode = ruleParams.encounterDetails.diagnosisCode
+      siteServiceCode = ruleParams.encounterDetails.siteServiceCode
+      appointmentPriority = ruleParams.encounterDetails.appointmentPriority
+
+  Right refOutput <- provider2 `submit` do
+    exercise referralReq EvaluateReferral with
+      networkContractCid = provider2NetworkContract
+
+  pure refOutput
+
+    -- case referralOutput of
+    --   Right tuple -> do
+    --     referralDetails <- provider2 `submit` do
+    --       exercise (snd tuple) UpdateReferralDetails with
+    --         referralCid = fst tuple
