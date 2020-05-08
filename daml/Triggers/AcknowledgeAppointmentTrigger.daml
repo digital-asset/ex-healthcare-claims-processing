@@ -12,7 +12,6 @@ import DA.Next.Map qualified as Maps
 
 import Main.Provider
 import Main.Policy
-import Triggers.ContractUtils
 import DA.Foldable (forA_)
 
 acknowledgeAppointmentTrigger : Trigger ()
@@ -33,12 +32,11 @@ acknowledgeAppointments party activeContracts _ _ () = do
     policies = getContracts @InsurancePolicy activeContracts
 
   forA_
-    [ (notification, find (hasSamePatient notification) policies) | notification <- notifications]
+    [ (notification, find (byPatient notification) policies) | notification <- notifications]
     acknowledgeAndLock
   where
     acknowledgeAndLock (notification, Some policy) =
       (fst notification) `dedupExercise` AcknowledgeAndLock (fst policy)
     acknowledgeAndLock _ = pure ()
 
-hasSamePatient: Contract NotifyPayer -> Contract InsurancePolicy -> Bool
-hasSamePatient (_, notification) (_, policy) = notification.patient == policy.patient
+    byPatient (_, notification) (_, policy) = notification.patient == policy.patient
