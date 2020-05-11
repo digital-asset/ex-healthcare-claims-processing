@@ -23,6 +23,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import io.grpc.StatusRuntimeException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import org.junit.ClassRule;
@@ -46,8 +47,8 @@ public class HealthcareClaimsProcessingIT {
   private static Sandbox sandbox =
       Sandbox.builder()
           .dar(RELATIVE_DAR_PATH)
-          .module(TEST_MODULE)
-          .startScript(TEST_SCRIPT)
+          .observationTimeout(Duration.ofSeconds(60))
+          .moduleAndScript(TEST_MODULE, TEST_SCRIPT)
           .parties(
               PROVIDER_PARTY.getValue(), RADIOLOGIST_PARTY.getValue(),
               INSURANCE_COMPANY_PARTY.getValue(), PATIENT_PARTY.getValue())
