@@ -9,26 +9,15 @@ services:
     image: digitalasset/healthcare-claims-processing-sandbox:0.0.1
     build:
       context: .
-      dockerfile: Dockerfile-sandbox
+      dockerfile: sandbox.Dockerfile
     ports:
       - "127.0.0.1:6865:6865"
-  hcp-navigator:
-    image: digitalasset/healthcare-claims-processing-navigator:0.0.1
-    build:
-      context: .
-      dockerfile: Dockerfile-navigator
-    depends_on:
-      - "hcp-sandbox"
-    ports:
       - "127.0.0.1:7500:7500"
-    environment:
-      - SANDBOX_HOST=hcp-sandbox
-      - SANDBOX_PORT=6865
   hcp-bots:
     image: digitalasset/healthcare-claims-processing-bots:0.0.1
     build:
       context: .
-      dockerfile: Dockerfile-bots
+      dockerfile: bots.Dockerfile
     depends_on:
       - "hcp-sandbox"
     environment:
