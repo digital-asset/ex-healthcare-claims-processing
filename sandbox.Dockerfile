@@ -5,20 +5,23 @@
 
 ARG sdk_vsn=1.0.1
 
-FROM digitalasset/daml-sdk:${sdk_vsn}
+FROM digitalasset/daml-sdk:${sdk_vsn} AS source
 
-WORKDIR /home/daml
+WORKDIR /home/daml/
 
-COPY --chown=daml \
-     target/healthcare-claims-processing.dar \
-     scripts/ledger_setup.sh \
-     /home/daml/
-
-USER root
-RUN chown daml healthcare-claims-processing.dar
 USER daml
+COPY --chown=daml daml.yaml ./
+COPY --chown=daml src/main/daml ./src/main/daml
+COPY --chown=daml ui-backend.conf frontend-config.js /home/daml/
 
 EXPOSE 6865
+EXPOSE 7500
 
-CMD ./ledger_setup.sh localhost 6865 healthcare-claims-processing.dar DemoOnboardScenario.StartScript:insurancePoliciesSetSingle & \
-    ~/.daml/bin/daml sandbox -- --static-time --address 0.0.0.0 --port 6865 healthcare-claims-processing.dar
+ENTRYPOINT daml start \
+  --sandbox-option="--address=0.0.0.0" \
+  --sandbox-port=6865 \
+# Cannot explicitly specify, because of: https://github.com/digital-asset/daml/issues/5777
+# Relying on default port behaviour as of now.
+#  --navigator-option="--port=7500" \
+  --open-browser=no \
+  --json-api-port=none
