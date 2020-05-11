@@ -11,7 +11,7 @@ WORKDIR /home/daml/
 
 USER daml
 COPY --chown=daml daml.yaml ./
-COPY --chown=daml src/main/daml ./src/main/daml
+COPY --chown=daml daml daml
 COPY --chown=daml ui-backend.conf frontend-config.js /home/daml/
 
 EXPOSE 6865
