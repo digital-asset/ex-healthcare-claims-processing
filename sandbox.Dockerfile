@@ -19,6 +19,7 @@ EXPOSE 7500
 
 ENTRYPOINT daml start \
   --sandbox-option="--address=0.0.0.0" \
+  --sandbox-option="--static-time" \
   --sandbox-port=6865 \
 # Cannot explicitly specify, because of: https://github.com/digital-asset/daml/issues/5777
 # Relying on default port behaviour as of now.
