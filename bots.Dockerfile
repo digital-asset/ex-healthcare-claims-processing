@@ -3,11 +3,21 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-FROM openjdk:8-jre-alpine
+ARG sdk_vsn=1.0.1
 
-WORKDIR /home/sdk
+FROM digitalasset/daml-sdk:${sdk_vsn}
 
-COPY target/healthcare-claims-processing-docker.jar healthcare-claims-processing.jar
-COPY target/lib/* /home/sdk/lib/
+WORKDIR /home/daml
 
-ENTRYPOINT java -jar healthcare-claims-processing.jar -s ${SANDBOX_HOST} -p ${SANDBOX_PORT}
+USER daml
+COPY --chown=daml daml.yaml ./
+COPY --chown=daml daml daml
+COPY --chown=daml scripts scripts
+COPY --chown=daml ui-backend.conf frontend-config.js ./
+
+RUN daml build -o app.dar
+
+ENV JAVA_TOOL_OPTIONS -Xmx128m
+
+ENTRYPOINT ~/scripts/waitForLedger.sh ${LEDGER_HOST} ${LEDGER_PORT} && \
+           ~/scripts/startTriggers.sh "${LEDGER_HOST}" "${LEDGER_PORT}" app.dar
