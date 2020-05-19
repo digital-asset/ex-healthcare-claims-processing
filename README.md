@@ -21,7 +21,7 @@ Be sure you have the following installed:
 
 Type:
 ```shell
-daml build -o target/app.dar
+daml build
 ```
 **Note:** If you change the DAML models locally, you need to re-run this command before starting the application.
 
