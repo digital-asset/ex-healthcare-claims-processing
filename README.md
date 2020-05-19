@@ -130,9 +130,9 @@ The Healthcare Process workflow involves these steps:
 
 
 
-1. **Referral** 
+1. **Referral**
 
-    The Primary Care Provider creates a referral for Patient 1 in the system, sending the patient to a radiology lab (Radiologist) for an x-ray of a possible fracture. The system checks to verify that the patient is eligible for treatment under their insurance and calculates the cost of the procedure for this patient. 
+    The Primary Care Provider creates a referral for Patient 1 in the system, sending the patient to a radiology lab (Radiologist) for an x-ray of a possible fracture. The system checks to verify that the patient is eligible for treatment under their insurance and calculates the cost of the procedure for this patient.
 
 
     Checks include:
@@ -141,19 +141,19 @@ The Healthcare Process workflow involves these steps:
     *   Network status of the radiologist (whether in or out of the insurance company’s approved provider list)
     *   Verification of eligibility and pre-authorization for the treatment
 
-2. **Appointment** 
+2. **Appointment**
 
-    The Radiologist now creates an appointment for the patient in the system. The system ensures that the treatment is appropriate for the diagnosis and that any necessary pre-authorization has been done. It checks again to ensure that the patient insurance status has not changed since the referral was created. 
+    The Radiologist now creates an appointment for the patient in the system. The system ensures that the treatment is appropriate for the diagnosis and that any necessary pre-authorization has been done. It checks again to ensure that the patient insurance status has not changed since the referral was created.
 
 3. **Check-In**
 
-    The patient goes to the lab and is checked in. Again the system reruns all the previous checks to determine if any parameter has changed, for example, whether the patient has satisfied more of their deductible before this date.  
+    The patient goes to the lab and is checked in. Again the system reruns all the previous checks to determine if any parameter has changed, for example, whether the patient has satisfied more of their deductible before this date.
 
-4. **Check-Out and Claim Creation** 
+4. **Check-Out and Claim Creation**
 
-    The x-ray is done. The patient is checked out, and the claim is automatically created. The system creates an obligation for the patient to pay their portion of the cost (if any) and for the insurance company to pay its portion. 
+    The x-ray is done. The patient is checked out, and the claim is automatically created. The system creates an obligation for the patient to pay their portion of the cost (if any) and for the insurance company to pay its portion.
 
-5. **Payment**  
+5. **Payment**
 
     The insurance company now pays the claim to the lab. The patient pays any required amount as well. The amounts paid are the verified amount established in first steps of the process.
 
@@ -162,9 +162,9 @@ The Healthcare Process workflow involves these steps:
 ## Running the Application
 
 
-### Choosing and Changing Roles 
+### Choosing and Changing Roles
 
-When you launch the application, you will see the Navigator screen with the option to choose your role. 
+When you launch the application, you will see the Navigator screen with the option to choose your role.
 
 To log in:
 
@@ -188,27 +188,29 @@ To create a referral:
 
 
 
-1. Log in as Primary Care Provider. 
+1. Log in as Primary Care Provider.
 
    In the application, Dr. Paige Mattel is the name of the PCP.
-2. Go to **Provider Actions** tab and click on the contract.
-3. Select the **CreateReferral** choice.
-4. Enter Referral values:
+2. Go to **Disclosed Policies** tab. You should see one contract.
+3. Click on the policy contract and copy its contract ID, e.g.: `00dd0fb74c336d1e400036a4b2219fd389f607801e8b2143377a21ee31e3419dfe`
+4. Go to **Provider Actions** tab and click on the contract.
+5. Select the **CreateReferral** choice.
+6. Enter Referral values:
     * Receiver: Radiologist
-    * Policy: #38:11
+    * Policy: [Contract ID from step 3.]
     * Encounter id: 1
     * Procedure code: Preventative_Care
     * Diagnosis code: Pain_in_right_arm_M79_601
     * Site service code: 11
     * Appointment priority: Elective
-5. Choose **Submit**.
+7. Choose **Submit**.
 
-**Note:** The Network contract ID is the policy ID between the Radiologist and the Insurance Company. 
+**Note:** The Network contract ID is the policy ID between the Radiologist and the Insurance Company.
 
 
 ## Scheduling
 
-The next step is scheduling the appointment for the x-ray. 
+The next step is scheduling the appointment for the x-ray.
 
 To schedule:
 
@@ -220,17 +222,17 @@ To schedule:
 4. Choose **Schedule Appointment**.
 5. Select the date and time for the appointment on the New Appointment pane and choose the **Schedule** button.
 
-   The new appointment is now visible to the Radiologist and Patient 1. A confirmation tick mark confirms that the appointment has been scheduled. 
-   
+   The new appointment is now visible to the Radiologist and Patient 1. A confirmation tick mark confirms that the appointment has been scheduled.
+
    The various checks are run again, and the payment requirements are displayed, showing now what payment the lab will receive and what the patient will owe.
 
 **Note:** The PCP does not have any visibility into this part of the workflow, as the appointment scheduling is only disclosed to the patient, the radiologist, and the insurer.
 
 ## Check-In
 
-The next step is for the patient to arrive at the lab for the x-ray and be checked in. 
+The next step is for the patient to arrive at the lab for the x-ray and be checked in.
 
-**Note:** The application checks for match between the current date and the appointment date. To check the patient in, log in as Radiologist, and change the system date to the appointment date in the top right corner. 
+**Note:** The application checks for match between the current date and the appointment date. To check the patient in, log in as Radiologist, and change the system date to the appointment date in the top right corner.
 
 To check the patient in:
 
@@ -256,7 +258,7 @@ To check out the patient:
 3. On the Treatments tab, choose the treatment with the patient’s name and choose **CompleteTreatment.**
 4. Choose **Submit.**
 
-   A confirmation tick will be displayed. 
+   A confirmation tick will be displayed.
 
 
 
@@ -285,11 +287,11 @@ To make payment:
 
     **Note:** In a production system, the patient would likely log in through a patient portal rather than through this application.
 
-6. Choose the open claim and choose the **Pay Patient Obligation** button to pay the patient’s portion of the claim. 
+6. Choose the open claim and choose the **Pay Patient Obligation** button to pay the patient’s portion of the claim.
 7. Choose **Submit**.
 
     Payment will be made to the Radiologist.
-    
+
 
 CONFIDENTIAL © 2019 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 Any unauthorized use, duplication or distribution is strictly prohibited.
