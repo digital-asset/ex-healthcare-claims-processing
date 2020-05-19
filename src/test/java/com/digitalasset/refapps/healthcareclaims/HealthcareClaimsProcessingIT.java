@@ -39,12 +39,12 @@ public class HealthcareClaimsProcessingIT {
   private static final String TEST_MODULE = "DemoOnboardScenario.StartScript";
   private static final String TEST_SCRIPT = "insurancePoliciesSetSingle";
 
-  private static Party PROVIDER_PARTY = new Party("PrimaryCareProvider");
-  private static Party RADIOLOGIST_PARTY = new Party("Radiologist");
-  private static Party INSURANCE_COMPANY_PARTY = new Party("InsuranceCompany");
-  private static Party PATIENT_PARTY = new Party("Patient1");
+  private static final Party PROVIDER_PARTY = new Party("PrimaryCareProvider");
+  private static final Party RADIOLOGIST_PARTY = new Party("Radiologist");
+  private static final Party INSURANCE_COMPANY_PARTY = new Party("InsuranceCompany");
+  private static final Party PATIENT_PARTY = new Party("Patient1");
 
-  private static Sandbox sandbox =
+  private static final Sandbox sandbox =
       Sandbox.builder()
           .dar(RELATIVE_DAR_PATH)
           .observationTimeout(Duration.ofSeconds(60))
@@ -113,9 +113,8 @@ public class HealthcareClaimsProcessingIT {
                 "11",
                 "Elective"));
 
-    ReferralDetails.ContractId initialReferral =
-        ledgerAdapter.getCreatedContractId(
-            RADIOLOGIST_PARTY, ReferralDetails.TEMPLATE_ID, ReferralDetails.ContractId::new);
+    ledgerAdapter.getCreatedContractId(
+        RADIOLOGIST_PARTY, ReferralDetails.TEMPLATE_ID, ReferralDetails.ContractId::new);
     ReferralDetails.ContractId updatedReferral =
         ledgerAdapter.getCreatedContractId(
             RADIOLOGIST_PARTY, ReferralDetails.TEMPLATE_ID, ReferralDetails.ContractId::new);
@@ -184,9 +183,8 @@ public class HealthcareClaimsProcessingIT {
                 "11",
                 "Elective"));
 
-    ReferralDetails.ContractId initialReferral =
-        ledgerAdapter.getCreatedContractId(
-            RADIOLOGIST_PARTY, ReferralDetails.TEMPLATE_ID, ReferralDetails.ContractId::new);
+    ledgerAdapter.getCreatedContractId(
+        RADIOLOGIST_PARTY, ReferralDetails.TEMPLATE_ID, ReferralDetails.ContractId::new);
     ReferralDetails.ContractId updatedReferral =
         ledgerAdapter.getCreatedContractId(
             RADIOLOGIST_PARTY, ReferralDetails.TEMPLATE_ID, ReferralDetails.ContractId::new);
