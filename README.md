@@ -16,25 +16,24 @@ Be sure you have the following installed:
 - [DAML SDK](https://docs.daml.com/)
 - Docker
 - Java
-- Maven
 
-#### Build with Maven
+#### Build the App
 
 Type:
 ```shell
-mvn clean package
+daml build -o target/app.dar
 ```
 **Note:** If you change the DAML models locally, you need to re-run this command before starting the application.
 
 ### Starting the App
 
-**Note:** Make sure you have built the application with Maven (see: [Build with Maven](#build-with-maven)).
+**Note:** Make sure you have built the application (see: [Build the App](#build-the-app)).
 
 There are two options:
 
 #### Option 1: Start App with Docker
 
-Note: make sure to have at least 8gb of memory allocated to Docker.
+Note: make sure to have at least 8 GBs of memory allocated to Docker.
 
 1. Type:
     ```shell
@@ -50,9 +49,9 @@ Note: make sure to have at least 8gb of memory allocated to Docker.
     daml start --sandbox-option --address=localhost
     ```
     The navigator will automatically open in new browser tab at http://localhost:7500.
-2. Start the automation logic by starting bots. Type:
+2. Once the sandbox has started start the automation logic by starting bots. Type:
     ```shell
-    java -jar target/healthcare-claims-processing-0.0.1-SNAPSHOT.jar
+    scripts/startTriggers.sh localhost 6865 target/app.dar
     ```
 
 ### Stopping the App
@@ -68,7 +67,7 @@ Note: make sure to have at least 8gb of memory allocated to Docker.
 
 Reset the application by following these steps:
 1.  Stop the app by following the steps in [Stopping the App](#stopping-the-app) section.
-2.  Start the app in [Docker](#using-docker) or [Standalone](#standalone-mode) by following the steps in the relevant section.
+2.  Start the app in [Docker](#option-1-start-app-with-docker) or [Standalone](#option-2-start-app-in-standalone) by following the steps in the relevant section.
 
 ## User Guide
 
