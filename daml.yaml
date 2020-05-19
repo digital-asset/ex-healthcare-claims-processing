@@ -19,4 +19,3 @@ dependencies:
   - daml-stdlib
   - daml-trigger
   - daml-script
-build-options: ["--output", "target/app.dar"]
