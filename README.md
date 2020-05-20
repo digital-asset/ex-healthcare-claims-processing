@@ -15,10 +15,11 @@ This application simulates processing a healthcare claim, starting with the refe
 Be sure you have the following installed.
 
 There are two options to run the app:
-- Option 1: with Docker
-  - Requires: Docker
-- Option 2: in standalone mode
-  - Requires: [DAML SDK](https://docs.daml.com/)
+- Option 1: with Docker. Requires: 
+  - Docker
+- Option 2: in standalone mode. Requires: 
+  - [DAML SDK](https://docs.daml.com/)
+  - Java 8 or higher
 
 ### Starting the App
 
