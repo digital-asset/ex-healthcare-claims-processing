@@ -43,7 +43,7 @@ Note: make sure to have at least 8 GBs of memory allocated to Docker.
     The navigator will automatically open in new browser tab at http://localhost:7500.
 2. Once the sandbox has started start the automation logic by starting bots. Type:
     ```shell
-    scripts/startTriggers.sh localhost 6865 target/app.dar
+    scripts/startTriggers.sh localhost 6865 .daml/dist/*.dar
     ```
 
 ### Stopping the App
