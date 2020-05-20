@@ -22,58 +22,13 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <daml-sdk.version>1.1.1</daml-sdk.version>
         <daml-plugin.version>0.1.4</daml-plugin.version>
-        <slf4j.version>1.7.26</slf4j.version>
-        <logback.version>1.2.3</logback.version>
-        <args4j.version>2.33</args4j.version>
         <junit.version>4.12</junit.version>
-        <netty.version>4.1.45.Final</netty.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>com.daml</groupId>
             <artifactId>bindings-rxjava</artifactId>
             <version>${daml-sdk.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>args4j</groupId>
-            <artifactId>args4j</artifactId>
-            <version>${args4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-        <!-- force the version of some third-party transitive dependencies -->
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-            <version>${netty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http2</artifactId>
-            <version>${netty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http</artifactId>
-            <version>${netty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler-proxy</artifactId>
-            <version>${netty.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -213,6 +168,7 @@
                     </excludes>
                     <mapping>
                         <daml>DOUBLEDASHES_STYLE</daml>
+                        <java>SLASHSTAR_STYLE</java>
                         <Dockerfile>SCRIPT_STYLE</Dockerfile>
                     </mapping>
                 </configuration>
