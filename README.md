@@ -12,26 +12,17 @@ This application simulates processing a healthcare claim, starting with the refe
 
 #### Prerequisites
 
-Be sure you have the following installed:
-- [DAML SDK](https://docs.daml.com/)
-- Docker
-- Java
+Be sure you have the following installed.
 
-#### Build the App
-
-Type:
-```shell
-daml build -o target/app.dar
-```
-**Note:** If you change the DAML models locally, you need to re-run this command before starting the application.
+There are two options to run the app:
+- Option 1: with Docker
+  - Requires: Docker
+- Option 2: in standalone mode
+  - Requires: [DAML SDK](https://docs.daml.com/)
 
 ### Starting the App
 
-**Note:** Make sure you have built the application (see: [Build the App](#build-the-app)).
-
-There are two options:
-
-#### Option 1: Start App with Docker
+#### Start App with Docker
 
 Note: make sure to have at least 8 GBs of memory allocated to Docker.
 
@@ -42,7 +33,7 @@ Note: make sure to have at least 8 GBs of memory allocated to Docker.
 2. Open UI with a browser at http://localhost:7500.
 
 
-#### Option 2: Start App in Standalone
+#### Start App in Standalone
 
 1. Start the DAML Sandbox and Navigator. Type:
     ```shell
@@ -67,7 +58,7 @@ Note: make sure to have at least 8 GBs of memory allocated to Docker.
 
 Reset the application by following these steps:
 1.  Stop the app by following the steps in [Stopping the App](#stopping-the-app) section.
-2.  Start the app in [Docker](#option-1-start-app-with-docker) or [Standalone](#option-2-start-app-in-standalone) by following the steps in the relevant section.
+2.  Start the app in [Docker](#start-app-with-docker) or [Standalone](#start-app-in-standalone) by following the steps in the relevant section.
 
 ## User Guide
 
