@@ -11,9 +11,6 @@
         </encoder>
     </appender>
 
-    <logger name="com.digitalasset.nanobot" level="INFO" />
-    <logger name="com.digitalasset.nanobot.sample" level="INFO" />
-    <logger name="com.digitalasset.ledger" level="INFO"/>
     <logger name="test-akka" level="ERROR"/>
 
     <!-- STDOUT and FILE appender both have different log levels, see above -->
