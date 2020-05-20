@@ -36,7 +36,7 @@ Note: make sure to have at least 8 GBs of memory allocated to Docker.
 
 #### Start App in Standalone
 
-1. Start the DAML Sandbox and Navigator. Type:
+1. Build, then start the DAML Sandbox and Navigator. Type:
     ```shell
     daml start --sandbox-option --address=localhost
     ```
