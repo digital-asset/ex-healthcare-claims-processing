@@ -13,11 +13,11 @@ services:
     ports:
       - "127.0.0.1:6865:6865"
       - "127.0.0.1:7500:7500"
-  hcp-bots:
-    image: digitalasset/healthcare-claims-processing-bots:0.0.1
+  hcp-triggers:
+    image: digitalasset/healthcare-claims-processing-triggers:0.0.1
     build:
       context: .
-      dockerfile: bots.Dockerfile
+      dockerfile: triggers.Dockerfile
     depends_on:
       - "hcp-sandbox"
     environment:
