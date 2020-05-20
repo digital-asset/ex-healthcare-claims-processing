@@ -41,7 +41,7 @@ Note: make sure to have at least 8 GBs of memory allocated to Docker.
     daml start --sandbox-option --address=localhost
     ```
     The navigator will automatically open in new browser tab at http://localhost:7500.
-2. Once the sandbox has started start the automation logic by starting bots. Type:
+2. Once the sandbox has started start the automation logic by starting triggers. Type:
     ```shell
     scripts/startTriggers.sh localhost 6865 .daml/dist/*.dar
     ```
@@ -49,10 +49,10 @@ Note: make sure to have at least 8 GBs of memory allocated to Docker.
 ### Stopping the App
 
 #### Stopping Dockerized Run
-1. Stop the Docker containers or bots by pressing **Ctrl+C**. (Alternatively, you can also stop it by typing `docker-compose down`.)
+1. Stop the Docker containers or triggers by pressing **Ctrl+C**. (Alternatively, you can also stop it by typing `docker-compose down`.)
 
 #### Stopping Standalone Run
-1. Stop the bots by pressing **Ctrl+C**.
+1. Stop the triggers by pressing **Ctrl+C**.
 1. Stop the Sandbox and the Navigator by pressing **Ctrl+C** in the DAML assistant.
 
 ### Resetting the Prototype
