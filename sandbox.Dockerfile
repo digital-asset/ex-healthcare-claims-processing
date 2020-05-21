@@ -7,8 +7,13 @@ ARG sdk_vsn=1.1.1
 
 FROM digitalasset/daml-sdk:${sdk_vsn} AS source
 
+USER root
+
+RUN echo 'hosts: files dns' > /etc/nsswitch.conf
+
 WORKDIR /home/daml/
 
+USER daml
 COPY --chown=daml daml.yaml ./
 COPY --chown=daml daml daml
 COPY --chown=daml ui-backend.conf frontend-config.js /home/daml/
