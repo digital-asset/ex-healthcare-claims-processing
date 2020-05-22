@@ -9,6 +9,7 @@ FROM digitalasset/daml-sdk:${sdk_vsn} AS source
 
 USER root
 
+# TODO: Remove this when SDK's Docker container gets fixed.
 RUN echo 'hosts: files dns' > /etc/nsswitch.conf
 
 WORKDIR /home/daml/

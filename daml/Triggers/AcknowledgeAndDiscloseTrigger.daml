@@ -37,8 +37,8 @@ acknowledgeAndDiscloseTrigger = Trigger
 
 acknowledgeAndDiscloseRule : Party -> ACS -> Time -> Maps.Map CommandId [Command] -> () -> TriggerA ()
 acknowledgeAndDiscloseRule _party activeContracts _ _ () =
-  whenSome dRuleOpt $
-    \(_, dRule) ->
+  whenSome maybeDisclosureRule $
+    \(_, disclosureRule) ->
       forA_ notifyPatientContracts $ \(npCid, notifyPatient) -> do
         let selectedPolicyOpt =
               head $ filterContractIds
@@ -47,11 +47,11 @@ acknowledgeAndDiscloseRule _party activeContracts _ _ () =
         whenSome selectedPolicyOpt $ \selectedPolicy ->
           dedupExercise npCid $ AcknowledgeAndDisclose with
             policyCid = selectedPolicy
-            receivers = dRule.receivers
+            receivers = disclosureRule.receivers
  where
   insurancePolicies = getContracts @InsurancePolicy activeContracts
   notifyPatientContracts = getContracts @NotifyPatient activeContracts
-  dRuleOpt = head $ getContracts @DisclosureRule activeContracts
+  maybeDisclosureRule = head $ getContracts @DisclosureRule activeContracts
 
 -- Tests ---------------------------
 
