@@ -9,7 +9,9 @@ FROM digitalasset/daml-sdk:${sdk_vsn} AS source
 
 USER root
 
-# TODO: Remove this when SDK's Docker container gets fixed.
+# TODO: Remove this when upgrading to SDK 1.2
+# That version will have a fix for this problem.
+# See https://github.com/digital-asset/daml/pull/5882
 RUN echo 'hosts: files dns' > /etc/nsswitch.conf
 
 WORKDIR /home/daml/
