@@ -19,6 +19,7 @@ import Daml.Script
 
 insurancePoliciesSetSingle : Script ()
 insurancePoliciesSetSingle = do
+    debug "Starting ledger initialization..."
     let provider1 = fromSome (partyFromText "PrimaryCareProvider")
         provider2 = fromSome (partyFromText "Radiologist")
         patient1 = fromSome (partyFromText "Patient1")
