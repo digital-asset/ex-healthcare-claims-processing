@@ -5,6 +5,7 @@
 
 daml 1.2 module DemoOnboardScenario.Referral where
 
+import Daml.Script
 import DemoOnboardScenario.InsurancePolicies
 import DemoOnboardScenario.ReferenceData
 import Main.Provider
@@ -47,10 +48,10 @@ data PatientReferralData3 = PatientReferralData3
     referralDetails3: ContractId ReferralDetails
   deriving (Eq, Show)
 
-processReferral : Party -> ContractId Provider -> Party -> RuleParameters -> ContractId ProviderNetworkContract -> Scenario (ContractId Referral, ContractId ReferralDetails)
+processReferral : Party -> ContractId Provider -> Party -> RuleParameters -> ContractId ProviderNetworkContract -> Script (ContractId Referral, ContractId ReferralDetails)
 processReferral provider providerRole receiver ruleParams providerNetworkContract = do
   referralRequest <- provider `submit` do
-    exercise providerRole CreateReferral with
+    exerciseCmd providerRole CreateReferral with
       receiver = receiver
       policy = ruleParams.policy
       encounterId = ruleParams.encounterDetails.encounterId
@@ -60,26 +61,25 @@ processReferral provider providerRole receiver ruleParams providerNetworkContrac
       appointmentPriority = ruleParams.encounterDetails.appointmentPriority
 
   errOrResult <- receiver `submit` do
-      exercise referralRequest EvaluateReferral with networkContractCid = providerNetworkContract
+      exerciseCmd referralRequest EvaluateReferral with networkContractCid = providerNetworkContract
 
   case errOrResult of
     Left failedReferralCid ->  do
-      failedRef <- receiver `submit` do fetch failedReferralCid
+      Some failedRef <- queryContractId receiver failedReferralCid
       abort failedRef.reason
     Right res -> return res
 
-updateRefDetails : Party -> (ContractId Referral, ContractId ReferralDetails) -> Scenario (ContractId ReferralDetails, ContractId DisclosedPolicy)
+updateRefDetails : Party -> (ContractId Referral, ContractId ReferralDetails) -> Script (ContractId ReferralDetails, ContractId DisclosedPolicy)
 updateRefDetails provider (referralCid, referralDetailsCid) = do
-  refDetailsCid <- provider `submit` do exercise referralDetailsCid UpdateReferralDetails with referralCid = referralCid
-  refDetails <- provider `submit` fetch refDetailsCid
+  refDetailsCid <- provider `submit` do exerciseCmd referralDetailsCid UpdateReferralDetails with referralCid = referralCid
+  Some refDetails <- queryContractId provider refDetailsCid
 
   return (refDetailsCid, refDetails.referralDetails.policy)
 
-referral = scenario
+referral' = referralSet =<< allocateParties
+referralSet parties@Parties{..} = script
   do
-    provider1 <- provider1_party
-    provider2 <- provider2_party
-    ip <- insurancePoliciesSet
+    ip <- insurancePoliciesSet parties
     let
       provider1Role = ip.networkContracts.onboard.provider1Role
       provider2Role = ip.networkContracts.onboard.provider2Role

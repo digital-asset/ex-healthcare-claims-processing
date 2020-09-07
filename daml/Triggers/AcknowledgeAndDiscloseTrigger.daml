@@ -20,7 +20,10 @@ import Main.Provider
 import Triggers.ContractUtils
 import DA.List.Total
 import DA.Either
+import Test.Onboard
 import Test.Triggers.TriggerTestUtils
+import Daml.Script (Script, script, allocateParty)
+import qualified Daml.Script as Script
 
 acknowledgeAndDiscloseTrigger : Trigger ()
 acknowledgeAndDiscloseTrigger = Trigger
@@ -55,12 +58,10 @@ acknowledgeAndDiscloseRule _party activeContracts _ _ () =
 
 -- Tests ---------------------------
 
-testNotificationAcknowledgedAndDisclosed: Scenario ()
-testNotificationAcknowledgedAndDisclosed = scenario do
-  patient1 <- getParty "John Doe"
-  provider1 <- getParty "PrimaryCareProvider"
-  provider2 <- getParty "Specialist"
-  (updatedPolicy, notifyPatient, dRule) <- appointmentTest
+testNotificationAcknowledgedAndDisclosed: Script ()
+testNotificationAcknowledgedAndDisclosed = script do
+  parties@Parties{..} <- allocateParties
+  (updatedPolicy, notifyPatient, dRule) <- appointmentTest parties
 
   let activeContracts =
           toACS updatedPolicy <>
@@ -76,10 +77,10 @@ testNotificationAcknowledgedAndDisclosed = scenario do
         policyCid = updatedPolicy
         receivers = [provider1, provider2]
 
-testNoNotificationAcknowledgedAndDisclosedWhenNoPolicy: Scenario ()
-testNoNotificationAcknowledgedAndDisclosedWhenNoPolicy = scenario do
-  patient1 <- getParty "John Doe"
-  (_updatedPolicy, notifyPatient, dRule) <- appointmentTest
+testNoNotificationAcknowledgedAndDisclosedWhenNoPolicy: Script ()
+testNoNotificationAcknowledgedAndDisclosedWhenNoPolicy = script do
+  parties@Parties{..} <- allocateParties
+  (_updatedPolicy, notifyPatient, dRule) <- appointmentTest parties
 
   let activeContracts =
           toACS notifyPatient <>
@@ -89,12 +90,12 @@ testNoNotificationAcknowledgedAndDisclosedWhenNoPolicy = scenario do
 
   length commands === 0
 
-testNoNotification: Scenario ()
-testNoNotification = scenario do
-  patient1 <- getParty "John Doe"
+testNoNotification: Script ()
+testNoNotification = script do
+  patient1 <- allocateParty "John Doe"
 
   dRule <- patient1 `submit`
-      create DisclosureRule with
+      Script.createCmd DisclosureRule with
           operator = patient1
           owner = patient1
           receivers = []
@@ -107,13 +108,8 @@ testNoNotification = scenario do
 
 -- Utils
 
-appointmentTest = scenario do
-  referralScenario <- referralTest
-  operator <- getParty "Operator"
-  payer1 <- getParty "Insurance Company"
-  provider1 <- getParty "PrimaryCareProvider"
-  provider2 <- getParty "Specialist"
-  patient1 <- getParty "John Doe"
+appointmentTest parties@Parties{..} = script do
+  referralScenario <- referralTest parties
 
   let provider2Role = referralScenario.provider2Role
       appointmentDetails = referralScenario.ruleParameters
@@ -122,17 +118,17 @@ appointmentTest = scenario do
       disclosureList = [provider1, provider2]
 
   dRule <- patient1 `submit`
-      create DisclosureRule with
+      Script.createCmd DisclosureRule with
           operator = operator
           owner = patient1
           receivers = disclosureList
 
-  appointmentCid <- provider2 `submit` do
-    scheduleResult <- exercise referralDetails ScheduleAppointment with
+  scheduleResult <- provider2 `submit` do
+    Script.exerciseCmd referralDetails ScheduleAppointment with
       appointmentDate = patient1_appointmentTime
-    return $ fromSome $ eitherToOptional $ scheduleResult
+  let appointmentCid = fromSome $ eitherToOptional $ scheduleResult
 
   (updatePolicy, notifyPatient) <- payer1 `submit`
-    exercise (snd appointmentCid) AcknowledgeAndLock with policyCid = originalPolicy
+    Script.exerciseCmd (snd appointmentCid) AcknowledgeAndLock with policyCid = originalPolicy
 
   pure (updatePolicy, notifyPatient, dRule)

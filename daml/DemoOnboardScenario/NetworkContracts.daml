@@ -5,6 +5,7 @@
 
 daml 1.2 module DemoOnboardScenario.NetworkContracts where
 
+import Daml.Script
 import Main.Provider
 import Main.Payer
 import Main.NetworkContract
@@ -13,20 +14,20 @@ import DemoOnboardScenario.ReferenceData qualified as Ref
 
 
 requestNetworkContract
+    (payer1 : Party)
     (provider: Party)
     (providerRole: ContractId Provider)
-    : Scenario (ContractId ProviderRequestsPayer) = do
-  payer1 <- Ref.payer1_party
+    : Script (ContractId ProviderRequestsPayer) = do
   provider `submit` do
-    exercise providerRole RequestNetworkContract with payer = payer1
+    exerciseCmd providerRole RequestNetworkContract with payer = payer1
 
 acceptNetworkContractRequest
+    (payer1 : Party)
     (payerRole: ContractId Payer)
     (providerRequest: ContractId ProviderRequestsPayer)
-    : Scenario (ContractId ProviderNetworkContract) = do
-  payer1 <- Ref.payer1_party
+    : Script (ContractId ProviderNetworkContract)= do
   payer1 `submit` do
-    exercise providerRequest AcceptNetworkContractRequest with
+    exerciseCmd providerRequest AcceptNetworkContractRequest with
       payerCid = payerRole
       feeSchedule = Ref.feeSchedule
 
@@ -37,18 +38,18 @@ data NetworkContractSet = NetworkContractSet
     provider2NetworkContract: ContractId ProviderNetworkContract
   deriving (Eq, Show)
 
-networkContractsSet = scenario
+networkContractsSet' = networkContractsSet =<< Ref.allocateParties
+
+networkContractsSet parties@Ref.Parties{..} = script
   do
-    onb <- O.onboard
+    onb <- O.onboard parties
 
-    provider1 <- Ref.provider1_party      
-    provider1Request <- requestNetworkContract provider1 onb.provider1Role
+    provider1Request <- requestNetworkContract payer1 provider1 onb.provider1Role
     provider1NetworkContract <-
-      acceptNetworkContractRequest onb.payerRole provider1Request
+      acceptNetworkContractRequest payer1 onb.payerRole provider1Request
 
-    provider2 <- Ref.provider2_party
-    provider2Request <- requestNetworkContract provider2 onb.provider2Role
+    provider2Request <- requestNetworkContract payer1 provider2 onb.provider2Role
     provider2NetworkContract <-
-      acceptNetworkContractRequest onb.payerRole provider2Request
+      acceptNetworkContractRequest payer1 onb.payerRole provider2Request
 
     return $ NetworkContractSet onb provider1NetworkContract provider2NetworkContract

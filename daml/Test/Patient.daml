@@ -12,6 +12,7 @@ import Test.ReferenceData
 import Main.Procedure
 import Main.Policy
 import DA.Next.Map
+import Daml.Script
 
 
 data PatientScenarioOutput =
@@ -21,52 +22,48 @@ data PatientScenarioOutput =
     disclosedPolicyCid : ContractId DisclosedPolicy
     originalPolicyCid : ContractId InsurancePolicy
 
-onboardPatient = scenario
+onboardPatient parties@Parties{..} = script
   do
 
-    onboard <- onboard
-    operator <- getParty "Operator"
-    payer1 <- getParty "Insurance Company"
-    provider1 <- getParty "PrimaryCareProvider"
-    provider2 <- getParty "Specialist"
-    patient1 <- getParty "John Doe"
-
+    onboard <- onboard parties
     let
       payerRole = onboard.payerRole
       patient1Role = onboard.patient1Role
       _provider1Role = onboard.provider1Role
 
     policyReq <- patient1 `submit` do
-      exercise patient1Role RequestInsurancePolicy with
+      exerciseCmd patient1Role RequestInsurancePolicy with
         payer = payer1
         policyType = patient1_PolicyType
 
+
+    procedures <- payer1 `submit` do
+      createProcedureList payer1 patient1_PolicyType procedureCodeList
     policyAcceptOutput <- payer1 `submit` do
-      procedures <- createProcedureList payer1 patient1_PolicyType procedureCodeList
       let procedureMap = fromList $ zip procedureCodeList procedures
-      exercise policyReq AcceptMember with
+      exerciseCmd policyReq AcceptMember with
         payerCid = payerRole
         insuranceID = patient1_InsuranceId
         undisclosedProcedureList = procedureMap
 
     patient1RoleWithPolicy <- patient1 `submit` do
-      exercise patient1Role SetInsurancePolicy with
+      exerciseCmd patient1Role SetInsurancePolicy with
         notifyCid = snd policyAcceptOutput
 
     pcpReq <- patient1 `submit` do
-      exercise patient1RoleWithPolicy RequestPrimaryCareProvider with
+      exerciseCmd patient1RoleWithPolicy RequestPrimaryCareProvider with
         primaryCareProvider = provider1
 
     pcpNotifyCid <- provider1 `submit` do
-      exercise pcpReq AcceptPatient with
+      exerciseCmd pcpReq AcceptPatient with
         providerID = provider1_HIN
 
     patient1Role <- patient1 `submit` do
-      exercise patient1RoleWithPolicy SetPrimaryCareProvider with
+      exerciseCmd patient1RoleWithPolicy SetPrimaryCareProvider with
         notifyCid = pcpNotifyCid
 
     disclosedPolicyCid <- patient1 `submit` do
-      exercise (fst policyAcceptOutput) DisclosePolicy with
+      exerciseCmd (fst policyAcceptOutput) DisclosePolicy with
         receivers = [provider1]
 
     return PatientScenarioOutput with

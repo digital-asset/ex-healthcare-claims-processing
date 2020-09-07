@@ -6,14 +6,16 @@
 daml 1.2
 module Test.Treatment where
 
-import DA.Date
+import DA.Time
 import DA.Either
 import DA.Optional
 import Main.Appointment
 import Test.Appointment
+import Test.Onboard
 import Main.Treatment
 import Main.Provider
 import Main.Policy
+import Daml.Script
 
 data TreatmentScenarioOutput =
   TreatmentScenarioOutput with
@@ -22,26 +24,22 @@ data TreatmentScenarioOutput =
     paymentReq : TreatmentOutput
     originalPolicy : ContractId InsurancePolicy
 
-treatmentTest = scenario do
+treatmentTest' = treatmentTest =<< allocateParties
 
-    apptScenario <- appointmentTest
-    operator <- getParty "Operator"
-    payer1 <- getParty "Insurance Company"
-    provider1 <- getParty "PrimaryCareProvider"
-    provider2 <- getParty "Specialist"
-    patient1 <- getParty "John Doe"
+treatmentTest parties@Parties{..} = script do
+    apptScenario <- appointmentTest parties
 
-    passToDate apptScenario.appointmentDate
+    setTime (time apptScenario.appointmentDate 0 0 0)
 
     let
       provider2Role = apptScenario.provider2Role
       appointmentCid = apptScenario.appointmentCid
       originalPolicy = apptScenario.originalPolicy
 
-    treatmentCid <- provider2 `submit` do
-      checkInResult <- exercise (fst appointmentCid) CheckInPatient
-      return $ fromSome $ eitherToOptional $ checkInResult
+    checkInResult <- provider2 `submit` do
+      exerciseCmd (fst appointmentCid) CheckInPatient
+    let treatmentCid = fromSome $ eitherToOptional $ checkInResult
     paymentReq <- provider2 `submit`
-      exercise treatmentCid CompleteTreatment
+      exerciseCmd treatmentCid CompleteTreatment
 
     return TreatmentScenarioOutput with ..

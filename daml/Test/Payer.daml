@@ -6,10 +6,10 @@
 daml 1.2 module Test.Payer where
 
 
+import Daml.Script
 import Test.Onboard
 
-
-
-payerOnboard = scenario
+payerOnboard = script
   do
-    onboard
+    parties <- allocateParties
+    onboard parties

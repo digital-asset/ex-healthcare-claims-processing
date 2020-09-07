@@ -9,6 +9,7 @@ module Main.Procedure where
 import DA.List
 import DA.Next.Map
 import Main.Types
+import Daml.Script
 
 type ProcedureMap = Map ProcedureCode (ContractId Procedure)
 
@@ -59,7 +60,7 @@ template Procedure
           do create this with observers = newObservers ++ observers
 
  -- Populate procedure list
-createProcedure : Party -> PolicyType -> ProcedureCode -> Update (ContractId Procedure)
+createProcedure : Party -> PolicyType -> ProcedureCode -> Commands (ContractId Procedure)
 createProcedure owner policyType procedureCode =
   let
     result =
@@ -68,16 +69,15 @@ createProcedure owner policyType procedureCode =
         Bronze -> ProcedureFields with copay = 40.0; maxProcedures = 10; scheduledProcedures = 0; receivedProcedures = 0
   in
     do
-      proc <- create Procedure
+      createCmd Procedure
         with
           copay = result.copay
           maxProcedures = result.maxProcedures
           scheduledProcedures = result.scheduledProcedures
           receivedProcedures = result.receivedProcedures
           observers = [owner], ..
-      return proc
 
-createProcedureList : Party -> PolicyType -> [ProcedureCode] -> Update ([(ContractId Procedure)])
+createProcedureList : Party -> PolicyType -> [ProcedureCode] -> Commands ([(ContractId Procedure)])
 createProcedureList owner policyType procedureList =
   let work = createProcedure owner policyType
   in

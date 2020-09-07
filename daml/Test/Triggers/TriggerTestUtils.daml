@@ -11,7 +11,8 @@ import DA.Next.Map qualified as Maps
 import Daml.Trigger.Assert
 import Daml.Trigger.LowLevel (Command)
 import Daml.Trigger (Trigger)
+import Daml.Script
 
-testTrigger : Trigger () -> Party -> ACSBuilder -> Scenario [Command]
+testTrigger : Trigger () -> Party -> ACSBuilder -> Script [Command]
 testTrigger trigger party acs =
   flattenCommands <$> testRule trigger party acs Maps.empty ()

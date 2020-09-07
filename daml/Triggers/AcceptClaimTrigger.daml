@@ -8,6 +8,7 @@ daml 1.2
 module Triggers.AcceptClaimTrigger where
 
 import Main.Claim
+import Daml.Script (Script, script)
 import Daml.Trigger
 import DA.Next.Map qualified as Maps
 import DA.Foldable hiding (length)
@@ -37,10 +38,10 @@ acceptClaimRule _party activeContracts _ _ () =
 
 -- Tests ---------------------------
 
-testClaimIsAccepted: Scenario ()
-testClaimIsAccepted = scenario do
-  payer1 <- payer1_party
-  treatmentScenario <- treatmentTest
+testClaimIsAccepted: Script ()
+testClaimIsAccepted = script do
+  parties@Parties{payer1} <- allocateParties
+  treatmentScenario <- treatmentTest parties
 
   let activeContracts =
           toACS treatmentScenario.paymentReq11.claimReq
@@ -52,9 +53,9 @@ testClaimIsAccepted = scenario do
     assertEq cid treatmentScenario.paymentReq11.claimReq
     assertEq choiceArg AcceptClaimRequest
 
-testNoClaim: Scenario ()
-testNoClaim = scenario do
-  payer1 <- payer1_party
+testNoClaim: Script ()
+testNoClaim = script do
+  Parties{payer1} <- allocateParties
 
   let activeContracts = mempty
   commands <-

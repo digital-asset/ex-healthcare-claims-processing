@@ -9,6 +9,7 @@ module Triggers.UpdateReferralDetailsTrigger where
 
 import Test.ReferenceData
 import Test.Patient
+import Test.Onboard (allocateParties, Parties(..))
 import Daml.Trigger
 import DA.Next.Map qualified as Maps
 import DA.Foldable hiding (length)
@@ -20,6 +21,8 @@ import Main.Referral
 import DA.Action
 import Main.RuleTypes
 import Test.Triggers.TriggerTestUtils
+import Daml.Script (Script, script)
+import qualified Daml.Script as Script
 
 updateReferralDetailsTrigger : Trigger ()
 updateReferralDetailsTrigger = Trigger
@@ -51,10 +54,10 @@ updateReferralDetailsRule party activeContracts _ _ () =
 
 -- Tests ---------------------------
 
-testReferralDetailsGetUpdated: Scenario ()
-testReferralDetailsGetUpdated = scenario do
-  provider2 <- getParty "Specialist"
-  (referralCid, referralDetails) <- referralTest
+testReferralDetailsGetUpdated: Script ()
+testReferralDetailsGetUpdated = script do
+  parties@Parties{..} <- allocateParties
+  (referralCid, referralDetails) <- referralTest parties
 
   let activeContracts =
         toACS referralDetails <>
@@ -68,10 +71,10 @@ testReferralDetailsGetUpdated = scenario do
     assertEq choiceArg $ UpdateReferralDetails with
         referralCid = referralCid
 
-testNoUpdateIfNoReferral: Scenario ()
-testNoUpdateIfNoReferral = scenario do
-  provider2 <- getParty "Specialist"
-  (referralCid, _referralDetails) <- referralTest
+testNoUpdateIfNoReferral: Script ()
+testNoUpdateIfNoReferral = script do
+  parties@Parties{..} <- allocateParties
+  (referralCid, _referralDetails) <- referralTest parties
 
   let activeContracts =
         toACS referralCid
@@ -82,10 +85,10 @@ testNoUpdateIfNoReferral = scenario do
 
 -- Utils
 
-referralTest = scenario do
-  patientScenario <- onboardPatient
-  provider1 <- getParty "PrimaryCareProvider"
-  provider2 <- getParty "Specialist"
+referralTest' = referralTest =<< allocateParties
+
+referralTest parties@Parties{..} = script do
+  patientScenario <- onboardPatient parties
 
   let onboard = patientScenario.onboardResult
       provider1Role = onboard.provider1Role
@@ -100,7 +103,7 @@ referralTest = scenario do
 
 
   referralReq <- provider1 `submit` do
-    exercise provider1Role CreateReferral with
+    Script.exerciseCmd provider1Role CreateReferral with
       receiver = provider2
       policy = ruleParams.policy
       encounterId = ruleParams.encounterDetails.encounterId
@@ -110,7 +113,7 @@ referralTest = scenario do
       appointmentPriority = ruleParams.encounterDetails.appointmentPriority
 
   Right refOutput <- provider2 `submit` do
-    exercise referralReq EvaluateReferral with
+    Script.exerciseCmd referralReq EvaluateReferral with
       networkContractCid = provider2NetworkContract
 
   pure refOutput

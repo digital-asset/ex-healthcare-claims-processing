@@ -6,34 +6,29 @@
 daml 1.2
 module Test.Claim where
 
+import Test.Onboard
 import Test.Treatment
 import Main.Claim
+import Daml.Script
 
+claimTest = script do
+    parties@Parties{..} <- allocateParties
 
-claimTest = scenario do
-
-    treatmentScenario <- treatmentTest
-    operator <- getParty "Operator"
-    payer1 <- getParty "Insurance Company"
-    provider1 <- getParty "PrimaryCareProvider"
-    provider2 <- getParty "Specialist"
-    patient1 <- getParty "John Doe"
-
+    treatmentScenario <- treatmentTest parties
     let
       paymentReq = treatmentScenario.paymentReq
       originalPolicy = treatmentScenario.originalPolicy
 
     claim <- payer1 `submit`
-      exercise paymentReq.claimReq AcceptClaimRequest
+      exerciseCmd paymentReq.claimReq AcceptClaimRequest
 
     _claimReceipt <- payer1 `submit` do
-      _c <- fetch claim
-      exercise claim PayClaim
+      exerciseCmd claim PayClaim
 
     patientObligation <- patient1 `submit`
-      exercise paymentReq.patientReq AcceptPatientObligation
+      exerciseCmd paymentReq.patientReq AcceptPatientObligation
 
     _patientReceipt <- patient1 `submit`
-      exercise patientObligation PayPatientObligation
+      exerciseCmd patientObligation PayPatientObligation
 
     return ()

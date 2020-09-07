@@ -9,10 +9,42 @@ import Main.Types
 import DA.Next.Map
 import DA.Date
 import DA.Optional
+import Daml.Script
 
-operator_party = getParty "ClearingHouse"
+data Parties = Parties with
+  operator : Party
+  payer1 : Party
+  provider1 : Party
+  provider2 : Party
+  patient1 : Party
+  patient2 : Party
+  patient3 : Party
+  patient4 : Party
+  patient5 : Party
+  patient6 : Party
+  patient7 : Party
+  patient8 : Party
+  patient9 : Party
+  patient10 : Party
 
-provider1_party = getParty "PrimaryCareProvider"
+allocateParties : Script Parties
+allocateParties = do
+    operator <- allocateParty "ClearingHouse"
+    payer1 <- allocateParty "InsuranceCompany"
+    provider1 <- allocateParty "PrimaryCareProvider"
+    provider2 <- allocateParty "Radiologist"
+    patient1 <- allocateParty "Patient1"
+    patient2 <- allocateParty "Patient2"
+    patient3 <- allocateParty "Patient3"
+    patient4 <- allocateParty "Patient4"
+    patient5 <- allocateParty "Patient5"
+    patient6 <- allocateParty "Patient6"
+    patient7 <- allocateParty "Patient7"
+    patient8 <- allocateParty "Patient8"
+    patient9 <- allocateParty "Patient9"
+    patient10 <- allocateParty "Patient10"
+    pure Parties{..}
+
 provider1_name = "Dr. Paige Mattel"
 provider1_HIN = "1678917567"
 provider1_type = "Primary Care"
@@ -38,7 +70,6 @@ provider1Demographics = ProviderDemographics
     providerState = provider1_providerState
     providerZipCode = provider1_providerZipCode
 
-provider2_party = getParty "Radiologist"
 provider2_name = "Beta Imaging Labs"
 provider2_HIN = "3451287342"
 provider2_type = "Radiologist"
@@ -64,7 +95,6 @@ provider2Demographics = ProviderDemographics
     providerState = provider2_providerState
     providerZipCode = provider2_providerZipCode
 
-payer1_party = getParty "InsuranceCompany"
 payer1_payerHIN = "79152"
 payer1_payerName = "Insurance Company"
 payer1_payerTaxID = "55-6666666"
@@ -89,7 +119,6 @@ payer1Demographics = PayerDemographics
     payerZipCode = payer1_payerZipCode
 
 -- Patient1
-patient1_party = getParty "Patient1"
 patient1_Name = "John Doe"
 patient1_InsuranceId = "AXB-45-6789"
 patient1_PolicyType = Gold
@@ -108,7 +137,6 @@ patient1_appointmentTime2 = date 2018 Jan 2
 patient1_appointmentTime3 = date 2018 Jan 3
 patient1_appointmentTime4 = date 2018 Jan 4
 -- Patient2
-patient2_party = getParty "Patient2"
 patient2_Name = "Jim Smith"
 patient2_InsuranceId = "GDR-53-7245"
 patient2_PolicyType = Gold
@@ -126,7 +154,6 @@ patient2_appointmentTime1 = date 2018 Feb 1
 patient2_appointmentTime2 = date 2018 Feb 2
 patient2_appointmentTime3 = date 2018 Feb 3
 -- Patient3
-patient3_party = getParty "Patient3"
 patient3_Name = "Sally Smith"
 patient3_InsuranceId = "QEW-22-9999"
 patient3_PolicyType = Gold
@@ -144,7 +171,6 @@ patient3_appointmentTime1 = date 2018 Mar 1
 patient3_appointmentTime2 = date 2018 Mar 2
 patient3_appointmentTime3 = date 2018 Mar 3
 -- Patient4
-patient4_party = getParty "Patient4"
 patient4_Name = "Kim Chao"
 patient4_InsuranceId = "LKV-65-3434"
 patient4_PolicyType = Gold
@@ -162,7 +188,6 @@ patient4_appointmentTime1 = date 2018 Apr 1
 patient4_appointmentTime2 = date 2018 Apr 2
 patient4_appointmentTime3 = date 2018 Apr 3
 -- Patient5
-patient5_party = getParty "Patient5"
 patient5_Name = "Ted Walker"
 patient5_InsuranceId = "NVU-12-1345"
 patient5_PolicyType = Gold
@@ -180,7 +205,6 @@ patient5_appointmentTime1 = date 2018 May 1
 patient5_appointmentTime2 = date 2018 May 2
 patient5_appointmentTime3 = date 2018 May 3
 -- Patient6
-patient6_party = getParty "Patient6"
 patient6_Name = "Richard Jones"
 patient6_InsuranceId = "PLK-90-9090"
 patient6_PolicyType = Gold
@@ -198,7 +222,6 @@ patient6_appointmentTime1 = date 2018 Jun 1
 patient6_appointmentTime2 = date 2018 Jun 2
 patient6_appointmentTime3 = date 2018 Jun 3
 -- Patient7
-patient7_party = getParty "Patient7"
 patient7_Name = "Kate Andrews"
 patient7_InsuranceId = "ZRX-34-3456"
 patient7_PolicyType = Gold
@@ -216,7 +239,6 @@ patient7_appointmentTime1 = date 2018 Jul 1
 patient7_appointmentTime2 = date 2018 Jul 2
 patient7_appointmentTime3 = date 2018 Jul 3
 -- Patient8
-patient8_party = getParty "Patient8"
 patient8_Name = "Bill Richards"
 patient8_InsuranceId = "ADT-34-3256"
 patient8_PolicyType = Gold
@@ -231,7 +253,6 @@ patient8Demographics = PatientDemographics
     patientState = "OH"
     patientZipCode = "43236"
 -- Patient9
-patient9_party = getParty "Patient9"
 patient9_Name = "Lucy Wang"
 patient9_InsuranceId = "VDG-67-9807"
 patient9_PolicyType = Gold
@@ -246,7 +267,6 @@ patient9Demographics = PatientDemographics
     patientState = "OH"
     patientZipCode = "43006"
 -- Patient10
-patient10_party = getParty "Patient10"
 patient10_Name = "George Jacobs"
 patient10_InsuranceId = "YGH-67-2323"
 patient10_PolicyType = Gold
@@ -512,8 +532,3 @@ patientEncounter73 = EncounterDetails
     patientResponsibility = None
     siteServiceCode = "11"
     appointmentPriority = "Elective"
-
-disclosureList = do
-  p1 <-provider1_party
-  p2 <- provider2_party
-  return [p1, p2]

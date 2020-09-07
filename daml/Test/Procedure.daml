@@ -6,6 +6,7 @@
 daml 1.2
 module Test.Procedure where
 
+import Daml.Script
 import DA.Next.Map
 import Main.Procedure
 import Main.Types
@@ -32,28 +33,30 @@ template Display2
           newProcedureMap <- discloseProcedureMap newObservers procedureMap
           create this with procedureMap = newProcedureMap
 
-testProcedureList = scenario
+testProcedureList = script
   do
-    owner <- getParty "Owner"
+    owner <- allocateParty "Owner"
     let
       procedureList = [Preventative_Care , Physicals , Sick_Visits]
+    newProcedureList <- owner `submit` do
+      createProcedureList owner Bronze procedureList
     owner `submit` do
-      newProcedureList <- createProcedureList owner Bronze procedureList
-      create Display
+      createCmd Display
         with
           procedureList = newProcedureList, ..
 
-test2ProcedureList = scenario
+test2ProcedureList = script
   do
-    owner <- getParty "Owner"
-    newObserver <- getParty "New One"
+    owner <- allocateParty "Owner"
+    newObserver <- allocateParty "New One"
     let newObservers = [newObserver]
     let
       procedureList = [Preventative_Care , Physicals , Sick_Visits]
+    newProcedureList <- owner `submit` do
+      createProcedureList owner Bronze procedureList
     display2 <- owner `submit` do
-      newProcedureList <- createProcedureList owner Bronze procedureList
       let
         procedureMap = fromList $ zip procedureList newProcedureList
-      create Display2 with ..
+      createCmd Display2 with ..
     owner `submit` do
-      exercise display2 DisclosePM with newObservers
+      exerciseCmd display2 DisclosePM with newObservers

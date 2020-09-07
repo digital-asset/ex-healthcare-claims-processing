@@ -12,35 +12,29 @@ import Main.Policy
 import DemoOnboardScenario.Treatment
 import DemoOnboardScenario.ReferenceData
 
-payerAccept : Party -> TreatmentOutput -> Scenario (ContractId Claim)
+import Daml.Script
+
+payerAccept : Party -> TreatmentOutput -> Script (ContractId Claim)
 payerAccept payer paymentReq =
-  payer `submit` exercise paymentReq.claimReq AcceptClaimRequest
+  payer `submit` exerciseCmd paymentReq.claimReq AcceptClaimRequest
 
-payerPay : Party -> ContractId Claim -> ContractId InsurancePolicy -> Scenario (ContractId PaymentReceipt, ContractId InsurancePolicy)
-payerPay payer claim policy =
+payerPay : Party -> ContractId Claim -> ContractId InsurancePolicy -> Script (ContractId PaymentReceipt, ContractId InsurancePolicy)
+payerPay payer claim policy = do
   payer `submit` do
-    fetch claim
-    exercise claim PayClaim
+    exerciseCmd claim PayClaim
 
-patientAccept : Party -> TreatmentOutput -> Scenario (ContractId PatientObligation)
+patientAccept : Party -> TreatmentOutput -> Script (ContractId PatientObligation)
 patientAccept patient paymentReq =
-  patient `submit` exercise paymentReq.patientReq AcceptPatientObligation
+  patient `submit` exerciseCmd paymentReq.patientReq AcceptPatientObligation
 
-patientPay : Party -> ContractId PatientObligation -> Scenario (ContractId PaymentReceipt)
+patientPay : Party -> ContractId PatientObligation -> Script (ContractId PaymentReceipt)
 patientPay patient obligation =
-  patient `submit` exercise obligation PayPatientObligation
+  patient `submit` exerciseCmd obligation PayPatientObligation
 
-claimTest = scenario
+claimTest = script
   do
-    payer1 <- payer1_party
-    patient1 <- patient1_party
-    patient2 <- patient2_party
-    patient3 <- patient3_party
-    patient4 <- patient4_party
-    patient5 <- patient5_party
-    patient6 <- patient6_party
-    patient7 <- patient7_party
-    treatmentScenario <- treatmentTest
+    parties@Parties{..} <- allocateParties
+    treatmentScenario <- treatmentTest parties
     let
       paymentReq11 = treatmentScenario.paymentReq11
       paymentReq12 = treatmentScenario.paymentReq12

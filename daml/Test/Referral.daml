@@ -7,10 +7,12 @@ daml 1.2
 module Test.Referral where
 
 import Main.Provider
+import Test.Onboard
 import Test.Patient
 import Test.ReferenceData
 import Main.RuleTypes
 import Main.Policy
+import Daml.Script
 
 data ReferralScenarioOutput =
   ReferralScenarioOutput with
@@ -20,16 +22,11 @@ data ReferralScenarioOutput =
     ruleParameters : RuleParameters
     originalPolicy : ContractId InsurancePolicy
 
-referralTest = scenario
+referralTest' parties = referralTest =<< allocateParties
+
+referralTest parties@Parties{..} = script
   do
-
-    patientScenario <- onboardPatient
-    operator <- getParty "Operator"
-    payer1 <- getParty "Insurance Company"
-    provider1 <- getParty "PrimaryCareProvider"
-    provider2 <- getParty "Specialist"
-    patient1 <- getParty "John Doe"
-
+    patientScenario <- onboardPatient parties
     let
       _patient1Role = patientScenario.patient1Role
       onboard = patientScenario.onboardResult
@@ -48,7 +45,7 @@ referralTest = scenario
 
 
     referralReq <- provider1 `submit` do
-      exercise provider1Role CreateReferral with
+      exerciseCmd provider1Role CreateReferral with
         receiver = provider2
         policy = ruleParams.policy
         encounterId = ruleParams.encounterDetails.encounterId
@@ -58,13 +55,13 @@ referralTest = scenario
         appointmentPriority = ruleParams.encounterDetails.appointmentPriority
 
     referralOutput <- provider2 `submit` do
-      exercise referralReq EvaluateReferral with
+      exerciseCmd referralReq EvaluateReferral with
         networkContractCid = provider2NetworkContract
 
     case referralOutput of
       Right tuple -> do
         referralDetails <- provider2 `submit` do
-          exercise (snd tuple) UpdateReferralDetails with
+          exerciseCmd (snd tuple) UpdateReferralDetails with
             referralCid = fst tuple
 
         let

@@ -5,6 +5,7 @@
 
 daml 1.2 module Test.Onboard where
 
+import Daml.Script
 import Test.ReferenceData
 import Main.Onboard
 import Main.Payer
@@ -21,69 +22,79 @@ data OnboardResult =
     provider1NetworkContract : ContractId NC.ProviderNetworkContract
     provider2NetworkContract : ContractId NC.ProviderNetworkContract
 
-onboard = scenario
-  do
-    operator <- getParty "Operator"
-    payer1 <- getParty "Insurance Company"
-    provider1 <- getParty "PrimaryCareProvider"
-    provider2 <- getParty "Specialist"
-    patient1 <- getParty "John Doe"
+data Parties = Parties with
+  operator : Party
+  payer1 : Party
+  provider1 : Party
+  provider2 : Party
+  patient1 : Party
 
+allocateParties : Script Parties
+allocateParties = do
+    operator <- allocateParty "Operator"
+    payer1 <- allocateParty "Insurance Company"
+    provider1 <- allocateParty "PrimaryCareProvider"
+    provider2 <- allocateParty "Specialist"
+    patient1 <- allocateParty "John Doe"
+    pure Parties{..}
+
+onboard Parties{..} = script
+  do
     entityMaster <- operator `submit` do
-      create OnboardEntityMaster with ..
+      createCmd OnboardEntityMaster with ..
 
     payerInvitation <- operator `submit` do
-      exercise entityMaster InvitePayer with
+      exerciseCmd entityMaster InvitePayer with
         payer = payer1
 
     payerRole <- payer1 `submit` do
-      exercise payerInvitation AcceptPayerInvitation with
+      exerciseCmd payerInvitation AcceptPayerInvitation with
         payerName = payer1_payerName
         demographics = payerDemographics
 
     provider1Invitation <- operator `submit` do
-      exercise entityMaster InviteProvider with
+      exerciseCmd entityMaster InviteProvider with
         provider = provider1
 
     provider1Role <- provider1 `submit` do
-      exercise provider1Invitation P.AcceptProviderInvitation with
+      exerciseCmd provider1Invitation P.AcceptProviderInvitation with
         providerName = provider1_name
         demographics = provider1Demographics
 
     provider2Invitation <- operator `submit` do
-      exercise entityMaster InviteProvider with
+      exerciseCmd entityMaster InviteProvider with
         provider = provider2
 
     provider2Role <- provider2 `submit` do
-      exercise provider2Invitation P.AcceptProviderInvitation with
+      exerciseCmd provider2Invitation P.AcceptProviderInvitation with
         providerName = provider2_name
         demographics = provider2Demographics
 
     patient1Invitation <- operator `submit` do
-      exercise entityMaster InvitePatient with
+      exerciseCmd entityMaster InvitePatient with
         patient = patient1
 
     patient1Role <- patient1 `submit` do
-      exercise patient1Invitation AcceptPatientInvitation with
+      exerciseCmd patient1Invitation AcceptPatientInvitation with
         patientName = patient1_Name
         demographics = patient1Demographics
 
     --Provider 1 Network Contract Setup
     provider1Request <- provider1 `submit` do
-      exercise provider1Role P.RequestNetworkContract with
+      exerciseCmd provider1Role P.RequestNetworkContract with
         payer = payer1
 
     provider1NetworkContract <- payer1 `submit` do
-      exercise provider1Request P.AcceptNetworkContractRequest with
+      exerciseCmd provider1Request P.AcceptNetworkContractRequest with
         payerCid = payerRole, feeSchedule
 
     --Provider 2 Network Contract Setup
     provider2Request <- provider2 `submit` do
-      exercise provider2Role P.RequestNetworkContract with
+      exerciseCmd provider2Role P.RequestNetworkContract with
         payer = payer1
 
     provider2NetworkContract <- payer1 `submit` do
-      exercise provider2Request P.AcceptNetworkContractRequest with
+      exerciseCmd provider2Request P.AcceptNetworkContractRequest with
         payerCid = payerRole, feeSchedule
 
     return OnboardResult with ..

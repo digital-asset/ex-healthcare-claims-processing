@@ -10,10 +10,12 @@ import DA.Either
 import DA.Optional
 import Main.Provider
 import Main.Appointment
+import Test.Onboard
 import Test.ReferenceData
 import Test.Referral
 import Main.RuleTypes
 import Main.Policy
+import Daml.Script
 
 data AppointmentScenarioOutput =
   AppointmentScenarioOutput with
@@ -23,15 +25,11 @@ data AppointmentScenarioOutput =
     originalPolicy : ContractId InsurancePolicy
     appointmentDate: Date
 
-appointmentTest = scenario
-  do
-    referralScenario <- referralTest
-    operator <- getParty "Operator"
-    payer1 <- getParty "Insurance Company"
-    provider1 <- getParty "PrimaryCareProvider"
-    provider2 <- getParty "Specialist"
-    patient1 <- getParty "John Doe"
+appointmentTest' = appointmentTest =<< allocateParties
 
+appointmentTest parties@Parties{..} = script
+  do
+    referralScenario <- referralTest parties
 
     let
       provider2Role = referralScenario.provider2Role
@@ -40,16 +38,16 @@ appointmentTest = scenario
       originalPolicy = referralScenario.originalPolicy
       disclosureList = [provider1, provider2]
 
-    appointmentCid <- provider2 `submit` do
-      scheduleResult <- exercise referralDetails ScheduleAppointment with
+    scheduleResult <- provider2 `submit` do
+      exerciseCmd referralDetails ScheduleAppointment with
         appointmentDate = patient1_appointmentTime
-      return $ fromSome $ eitherToOptional $ scheduleResult
+    let appointmentCid = fromSome $ eitherToOptional $ scheduleResult
 
     (updatedPolicy, notifyPatient) <- payer1 `submit`
-      exercise (snd appointmentCid) AcknowledgeAndLock with policyCid = originalPolicy
+      exerciseCmd (snd appointmentCid) AcknowledgeAndLock with policyCid = originalPolicy
 
     newDisclosedPolicy <- patient1 `submit`
-      exercise notifyPatient AcknowledgeAndDisclose
+      exerciseCmd notifyPatient AcknowledgeAndDisclose
         with
           policyCid = updatedPolicy
           receivers = disclosureList

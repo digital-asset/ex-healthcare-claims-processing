@@ -6,38 +6,36 @@
 daml 1.2 module DemoOnboardScenario.Onboard where
 
 import Main.Onboard
-import Main.Payer 
+import Main.Payer
 import Main.Provider
 import Main.Patient
 import Main.Types
 import DemoOnboardScenario.ReferenceData
+import Daml.Script
 
+providerInvitation : Party -> Party -> ContractId OnboardEntityMaster -> Script (ContractId ProviderInvitation)
+providerInvitation operator provider entityMaster = do
+  operator `submit` do exerciseCmd entityMaster InviteProvider with provider = provider
 
-providerInvitation : Party -> ContractId OnboardEntityMaster -> Scenario (ContractId ProviderInvitation)
-providerInvitation provider entityMaster = do
-  operator <- operator_party
-  operator `submit` do exercise entityMaster InviteProvider with provider = provider
-
-providerRole : Party -> ContractId ProviderInvitation -> Text -> ProviderDemographics -> Scenario (ContractId Provider)
+providerRole : Party -> ContractId ProviderInvitation -> Text -> ProviderDemographics -> Script (ContractId Provider)
 providerRole provider providerInvitation providerName demographics = do
   provider `submit` do
-    exercise providerInvitation AcceptProviderInvitation with
+    exerciseCmd providerInvitation AcceptProviderInvitation with
       providerName
       demographics
 
-patientInvitation : Party -> ContractId OnboardEntityMaster -> Scenario (ContractId PatientInvitation)
-patientInvitation patient entityMaster = do
-  operator <- operator_party
-  operator `submit` do exercise entityMaster InvitePatient with patient = patient 
+patientInvitation : Party -> Party -> ContractId OnboardEntityMaster -> Script (ContractId PatientInvitation)
+patientInvitation operator patient entityMaster = do
+  operator `submit` do exerciseCmd entityMaster InvitePatient with patient = patient
 
-patientRole : Party -> Text -> PatientDemographics -> ContractId PatientInvitation -> Scenario (ContractId Patient)
+patientRole : Party -> Text -> PatientDemographics -> ContractId PatientInvitation -> Script (ContractId Patient)
 patientRole patient patientName patientDemographics patientInvitation =
   patient `submit` do
-    exercise patientInvitation AcceptPatientInvitation with
+    exerciseCmd patientInvitation AcceptPatientInvitation with
       patientName = patientName
       demographics = patientDemographics
 
-data OnboardData = OnboardData 
+data OnboardData = OnboardData
   with
     payerRole: ContractId Payer
     provider1Role: ContractId Provider
@@ -54,78 +52,67 @@ data OnboardData = OnboardData
     patient10Role: ContractId Patient
   deriving (Eq, Show)
 
-onboard = scenario 
-  do
-    operator <- operator_party
-    payer1 <- payer1_party
-    provider1 <- provider1_party
-    provider2 <- provider2_party
-    patient1 <- patient1_party
-    patient2 <- patient2_party
-    patient3 <- patient3_party
-    patient4 <- patient4_party
-    patient5 <- patient5_party
-    patient6 <- patient6_party
-    patient7 <- patient7_party
-    patient8 <- patient8_party
-    patient9 <- patient9_party
-    patient10 <- patient10_party
+onboard' = onboard =<< allocateParties
 
-    entityMaster <- operator `submit` do 
-      create OnboardEntityMaster with 
+onboard parties@Parties{..} = script
+  do
+
+
+    entityMaster <- operator `submit` do
+      createCmd OnboardEntityMaster with
         operator
 
     payerInvitation <- operator `submit` do
-      exercise entityMaster InvitePayer with 
+      exerciseCmd entityMaster InvitePayer with
         payer = payer1
-    payerRole <- payer1 `submit` do 
-      exercise payerInvitation AcceptPayerInvitation with
+    payerRole <- payer1 `submit` do
+      exerciseCmd payerInvitation AcceptPayerInvitation with
         payerName = payer1_payerName
         demographics = payer1Demographics
 
-    provider1Invitation <- providerInvitation provider1 entityMaster
+    provider1Invitation <- providerInvitation operator provider1 entityMaster
     provider1Role <- providerRole provider1 provider1Invitation provider1_name provider1Demographics
 
-    provider2Invitation <- providerInvitation provider2 entityMaster
+    provider2Invitation <- providerInvitation operator provider2 entityMaster
     provider2Role <- providerRole provider2 provider2Invitation provider2_name provider2Demographics
 
-    patient1Invitation <- patientInvitation patient1 entityMaster
+    patient1Invitation <- patientInvitation operator patient1 entityMaster
     patient1Role <-
       patientRole patient1 patient1_Name patient1Demographics patient1Invitation
 
-    patient2Invitation <- patientInvitation patient2 entityMaster
+    patient2Invitation <- patientInvitation operator patient2 entityMaster
     patient2Role <-
       patientRole patient2 patient2_Name patient2Demographics patient2Invitation
 
-    patient3Invitation <- patientInvitation patient3 entityMaster
+    patient3Invitation <- patientInvitation operator patient3 entityMaster
     patient3Role <-
       patientRole patient3 patient3_Name patient3Demographics patient3Invitation
 
-    patient4Invitation <- patientInvitation patient4 entityMaster
+    patient4Invitation <- patientInvitation operator patient4 entityMaster
     patient4Role <-
       patientRole patient4 patient4_Name patient4Demographics patient4Invitation
 
-    patient5Invitation <- patientInvitation patient5 entityMaster
+    patient5Invitation <- patientInvitation operator patient5 entityMaster
     patient5Role <-
       patientRole patient5 patient5_Name patient5Demographics patient5Invitation
 
-    patient6Invitation <- patientInvitation patient6 entityMaster
+    patient6Invitation <- patientInvitation operator patient6 entityMaster
     patient6Role <-
       patientRole patient6 patient6_Name patient6Demographics patient6Invitation
 
-    patient7Invitation <- patientInvitation patient7 entityMaster
+    patient7Invitation <- patientInvitation operator patient7 entityMaster
     patient7Role <-
       patientRole patient7 patient7_Name patient7Demographics patient7Invitation
 
-    patient8Invitation <- patientInvitation patient8 entityMaster
+    patient8Invitation <- patientInvitation operator patient8 entityMaster
     patient8Role <-
       patientRole patient8 patient8_Name patient8Demographics patient8Invitation
 
-    patient9Invitation <- patientInvitation patient9 entityMaster
+    patient9Invitation <- patientInvitation operator patient9 entityMaster
     patient9Role <-
       patientRole patient9 patient9_Name patient9Demographics patient9Invitation
 
-    patient10Invitation <- patientInvitation patient10 entityMaster
+    patient10Invitation <- patientInvitation operator patient10 entityMaster
     patient10Role <-
       patientRole patient10 patient10_Name patient10Demographics patient10Invitation
 
@@ -143,4 +130,4 @@ onboard = scenario
         patient8Role
         patient9Role
         patient10Role
-      
+

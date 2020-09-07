@@ -16,19 +16,21 @@ import DA.Either
 import Triggers.AcknowledgeAppointmentTrigger
 import Daml.Trigger.Assert (assertExerciseCmd, toACS)
 import DA.Assert ((===))
+import Daml.Script
 
 import Test.Triggers.TriggerTestUtils
+import Test.Onboard
 
-testAppointmentAcknowledgedAndLocked: Scenario ()
-testAppointmentAcknowledgedAndLocked = scenario do
-  payer <- getParty "Insurance Company"
-  (updatedPolicy, notifyPatient) <- appointmentTest
+testAppointmentAcknowledgedAndLocked: Script ()
+testAppointmentAcknowledgedAndLocked = script do
+  parties@Parties{..} <- allocateParties
+  (updatedPolicy, notifyPatient) <- appointmentTest parties
 
   let activeContracts =
         toACS updatedPolicy <>
         toACS notifyPatient
 
-  commands <- testTrigger acknowledgeAppointmentTrigger payer activeContracts
+  commands <- testTrigger acknowledgeAppointmentTrigger payer1 activeContracts
 
   1 === length commands
   let expectedChoice = AcknowledgeAndLock with policyCid = updatedPolicy
@@ -36,20 +38,20 @@ testAppointmentAcknowledgedAndLocked = scenario do
     notifyPatient === contract
     expectedChoice === actualChoice
 
-testNoAcknowledgedAndLockWhenNoPolicy: Scenario ()
-testNoAcknowledgedAndLockWhenNoPolicy = scenario do
-  payer <- getParty "Insurance Company"
-  (_, notifyPatient) <- appointmentTest
+testNoAcknowledgedAndLockWhenNoPolicy: Script ()
+testNoAcknowledgedAndLockWhenNoPolicy = script do
+  parties <- allocateParties
+  (_, notifyPatient) <- appointmentTest parties
 
   let activeContracts = toACS notifyPatient
 
-  commands <- testTrigger acknowledgeAppointmentTrigger payer activeContracts
+  commands <- testTrigger acknowledgeAppointmentTrigger parties.payer1 activeContracts
 
   assertMsg "Expected no commands." $ null commands
 
-testNoNotification: Scenario ()
-testNoNotification = scenario do
-  payer <- getParty "Insurance Company"
+testNoNotification: Script ()
+testNoNotification = script do
+  payer <- allocateParty "Insurance Company"
 
   let activeContracts = mempty
 
@@ -57,13 +59,8 @@ testNoNotification = scenario do
 
   assertMsg "Expected no commands." $ null commands
 
-appointmentTest = scenario do
-  referralScenario <- referralTest
-  operator <- getParty "Operator"
-  payer1 <- getParty "Insurance Company"
-  provider1 <- getParty "PrimaryCareProvider"
-  provider2 <- getParty "Specialist"
-  payer <- getParty "John Doe"
+appointmentTest parties@Parties{..} = script do
+  referralScenario <- referralTest parties
 
   let provider2Role = referralScenario.provider2Role
       appointmentDetails = referralScenario.ruleParameters
@@ -71,9 +68,9 @@ appointmentTest = scenario do
       originalPolicy = referralScenario.originalPolicy
       disclosureList = [provider1, provider2]
 
-  appointmentCid <- provider2 `submit` do
-    scheduleResult <- exercise referralDetails ScheduleAppointment with
+  scheduleResult <- provider2 `submit` do
+    exerciseCmd referralDetails ScheduleAppointment with
       appointmentDate = patient1_appointmentTime
-    return $ fromSome $ eitherToOptional $ scheduleResult
+  let appointmentCid = fromSome $ eitherToOptional $ scheduleResult
 
   pure (originalPolicy, snd appointmentCid)
