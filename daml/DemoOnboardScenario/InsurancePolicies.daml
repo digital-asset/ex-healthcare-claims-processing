@@ -95,6 +95,7 @@ disclosePolicy patient provider insurancePolicy = do
   patient `submit` do
     exerciseCmd insurancePolicy DisclosePolicy with receivers = [provider]
 
+-- standalone version to view it in DAML Studio
 insurancePoliciesSet' = insurancePoliciesSet =<< allocateParties
 
 insurancePoliciesSet parties@Parties{..} = script

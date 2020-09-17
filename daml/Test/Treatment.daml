@@ -24,6 +24,7 @@ data TreatmentScenarioOutput =
     paymentReq : TreatmentOutput
     originalPolicy : ContractId InsurancePolicy
 
+-- standalone version to view it in DAML Studio
 treatmentTest' = treatmentTest =<< allocateParties
 
 treatmentTest parties@Parties{..} = script do

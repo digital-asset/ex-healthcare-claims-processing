@@ -76,6 +76,7 @@ updateRefDetails provider (referralCid, referralDetailsCid) = do
 
   return (refDetailsCid, refDetails.referralDetails.policy)
 
+-- standalone version to view it in DAML Studio
 referral' = referralSet =<< allocateParties
 referralSet parties@Parties{..} = script
   do

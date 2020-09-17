@@ -38,6 +38,7 @@ data NetworkContractSet = NetworkContractSet
     provider2NetworkContract: ContractId ProviderNetworkContract
   deriving (Eq, Show)
 
+-- standalone version to view it in DAML Studio
 networkContractsSet' = networkContractsSet =<< Ref.allocateParties
 
 networkContractsSet parties@Ref.Parties{..} = script

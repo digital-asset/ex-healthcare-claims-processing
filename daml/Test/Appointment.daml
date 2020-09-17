@@ -25,6 +25,7 @@ data AppointmentScenarioOutput =
     originalPolicy : ContractId InsurancePolicy
     appointmentDate: Date
 
+-- standalone version to view it in DAML Studio
 appointmentTest' = appointmentTest =<< allocateParties
 
 appointmentTest parties@Parties{..} = script

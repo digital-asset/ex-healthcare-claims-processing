@@ -22,6 +22,7 @@ data ReferralScenarioOutput =
     ruleParameters : RuleParameters
     originalPolicy : ContractId InsurancePolicy
 
+-- standalone version to view it in DAML Studio
 referralTest' parties = referralTest =<< allocateParties
 
 referralTest parties@Parties{..} = script

@@ -52,6 +52,7 @@ data OnboardData = OnboardData
     patient10Role: ContractId Patient
   deriving (Eq, Show)
 
+-- standalone version to view it in DAML Studio
 onboard' = onboard =<< allocateParties
 
 onboard parties@Parties{..} = script
