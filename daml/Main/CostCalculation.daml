@@ -9,7 +9,6 @@ module Main.CostCalculation where
 import Main.Types
 import Main.RuleTypes
 import DA.Next.Map qualified as M
-import DA.Optional
 
 -- Encounter stage on which the cost calculation depends on
 data EncounterStage = Referral|Appointment|Treatment deriving Eq
@@ -44,7 +43,7 @@ calculateCosts ruleParams encounterStage =
             let
               feeSchedule = networkContract.feeSchedule
               maybeAmt = M.lookup procedureCode feeSchedule
-              copayAmount = fromSome (Some procedure.copay)
+              copayAmount = procedure.copay
             case maybeAmt of
               Some allowedAmount ->
                 let updatedEncounter = EncounterDetails with
