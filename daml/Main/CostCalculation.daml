@@ -86,13 +86,12 @@ calculateCosts ruleParams encounterStage =
 
 calculatePatientResp : Decimal -> Decimal -> Decimal -> Decimal
 calculatePatientResp deductible allowedAmount copay
-  =
-  if deductible >= allowedAmount
-    then copay + allowedAmount
-  else if deductible > 0.0 && deductible < allowedAmount
-    then copay + deductible
-  else
-    copay
+  | deductible >= allowedAmount
+    = copay + allowedAmount
+  | deductible > 0.0 && deductible < allowedAmount
+    = copay + deductible
+  | otherwise
+    = copay
 
 calculatePayerPayment : Decimal -> Decimal -> Decimal
 calculatePayerPayment allowedAmount patientResp
