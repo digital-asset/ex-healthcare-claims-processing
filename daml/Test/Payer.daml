@@ -3,7 +3,7 @@
 -- SPDX-License-Identifier: Apache-2.0
 --
 
-daml 1.2 module Test.Payer where
+module Test.Payer where
 
 
 import Daml.Script
