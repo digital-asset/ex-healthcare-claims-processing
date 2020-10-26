@@ -3,7 +3,7 @@
 -- SPDX-License-Identifier: Apache-2.0
 --
 
-daml 1.2
+
 module Triggers.ContractUtils where
 
 type Contract a = (ContractId a, a)

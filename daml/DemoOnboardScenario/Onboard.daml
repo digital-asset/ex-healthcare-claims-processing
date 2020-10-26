@@ -3,7 +3,7 @@
 -- SPDX-License-Identifier: Apache-2.0
 --
 
-daml 1.2 module DemoOnboardScenario.Onboard where
+module DemoOnboardScenario.Onboard where
 
 import Main.Onboard
 import Main.Payer

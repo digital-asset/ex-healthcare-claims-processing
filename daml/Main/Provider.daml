@@ -3,7 +3,7 @@
 -- SPDX-License-Identifier: Apache-2.0
 --
 
-daml 1.2 module Main.Provider where
+module Main.Provider where
 
 import Main.Payer
 import Main.Policy

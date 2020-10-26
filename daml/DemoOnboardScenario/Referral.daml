@@ -3,7 +3,7 @@
 -- SPDX-License-Identifier: Apache-2.0
 --
 
-daml 1.2 module DemoOnboardScenario.Referral where
+module DemoOnboardScenario.Referral where
 
 import Daml.Script
 import DemoOnboardScenario.InsurancePolicies

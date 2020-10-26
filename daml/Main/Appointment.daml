@@ -5,7 +5,7 @@
 
 {-# LANGUAGE LambdaCase #-}
 
-daml 1.2
+
 module Main.Appointment where
 
 import DA.Date

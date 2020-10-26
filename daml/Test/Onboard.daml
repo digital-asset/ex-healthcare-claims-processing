@@ -3,7 +3,7 @@
 -- SPDX-License-Identifier: Apache-2.0
 --
 
-daml 1.2 module Test.Onboard where
+module Test.Onboard where
 
 import Daml.Script
 import Test.ReferenceData
