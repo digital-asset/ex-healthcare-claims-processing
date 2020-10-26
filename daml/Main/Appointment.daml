@@ -3,6 +3,8 @@
 -- SPDX-License-Identifier: Apache-2.0
 --
 
+{-# LANGUAGE LambdaCase #-}
+
 daml 1.2
 module Main.Appointment where
 
@@ -38,12 +40,12 @@ template Appointment
           rulesCheck <- create RulesCheck with
             requestingParty = provider
             ruleParams = encounterDetails
-          rulesResult <- do exercise rulesCheck CheckAdjudication
-          case rulesResult of
+          exercise rulesCheck CheckAdjudication >>= 
+           \case
             None ->
               do
-                p <- fetch encounterDetails.policy
-                assert (elem provider p.receivers == True)
+                disclosedPolicy <- fetch encounterDetails.policy
+                assert $ provider `elem` disclosedPolicy.receivers
                 newEncounterDetails <- (CC.calculateCosts encounterDetails CC.Treatment)
                 apptReq <- create Treatment with
                   policy = encounterDetails.policy
