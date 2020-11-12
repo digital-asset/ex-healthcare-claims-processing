@@ -8,9 +8,11 @@ module Main.CostCalculation where
 
 import Main.Types
 import Main.RuleTypes
+import Main.Procedure(Procedure)
+
 import DA.Next.Map qualified as M
 
--- Encounter stage on which the cost calculation depends on
+-- Encounter stage on which the cost calculation depends
 data EncounterStage = Referral|Appointment|Treatment deriving Eq
 
 calculateCosts : RuleParameters -> EncounterStage -> Update EncounterDetails
@@ -22,76 +24,57 @@ calculateCosts ruleParams encounterStage =
       encounterDetails = ruleParams.encounterDetails
       procedureCode = encounterDetails.procedureCode
       maybeProcedureCid = M.lookup procedureCode policy.procedureList
-    case maybeProcedureCid of
-      Some procedureCid ->
-        if encounterStage == Referral then
+      buildEncounterDetail allowedAmount patientResponsibility coPay = pure $ EncounterDetails with
+                        patient = policy.patient
+                        encounterId = encounterDetails.encounterId
+                        diagnosisCode = encounterDetails.diagnosisCode
+                        siteServiceCode = encounterDetails.siteServiceCode
+                        appointmentPriority = encounterDetails.appointmentPriority, ..
+      baseEncounterDetail = buildEncounterDetail None None None
+      optionalPatientResponsibilityAmount proc = calculatePatientResp policy.currentDeductible proc.copay -- <--  switched to calculatePatientResp'
+      getEncounterDetail procedure allowedAmount =
+         buildEncounterDetail (Some allowedAmount) (Some $ optionalPatientResponsibilityAmount procedure allowedAmount) (Some procedure.copay)
+
+      -- optionalPatientResponsibilityAmount = Some . calculatePatientResp policy.currentDeductible copayAmount
+      -- getEncounterDetail coPay allowedAmount = 
+      --  buildEncounterDetail (Some allowedAmount) (optionalPatientResponsibilityAmount allowedAmount) (Some copayAmount)
+
+    case (maybeProcedureCid, encounterStage) of
+      (Some procedureCid, Referral) ->
           do
             procedure <- fetch procedureCid
-            let updatedEncounter = EncounterDetails with
-                    patient = policy.patient
-                    encounterId = encounterDetails.encounterId
-                    diagnosisCode = encounterDetails.diagnosisCode
-                    allowedAmount = None
-                    coPay = Some procedure.copay
-                    patientResponsibility = None
-                    siteServiceCode = encounterDetails.siteServiceCode
-                    appointmentPriority = encounterDetails.appointmentPriority, ..
-            return updatedEncounter
-        else
+            buildEncounterDetail None None (Some procedure.copay)
+
+      (Some procedureCid, _) ->
           do
             procedure <- fetch procedureCid
             let
               feeSchedule = networkContract.feeSchedule
               maybeAmt = M.lookup procedureCode feeSchedule
               copayAmount = procedure.copay
-            case maybeAmt of
-              Some allowedAmount ->
-                let updatedEncounter = EncounterDetails with
-                        patient = policy.patient
-                        encounterId = encounterDetails.encounterId
-                        diagnosisCode = encounterDetails.diagnosisCode
-                        allowedAmount = Some allowedAmount
-                        coPay = Some procedure.copay
-                        patientResponsibility = Some (calculatePatientResp policy.currentDeductible allowedAmount copayAmount)
-                        siteServiceCode = encounterDetails.siteServiceCode
-                        appointmentPriority = encounterDetails.appointmentPriority, ..
-                in
-                return updatedEncounter
-              None ->
-                let updatedEncounter = EncounterDetails with
-                        patient = policy.patient
-                        encounterId = encounterDetails.encounterId
-                        procedureCode
-                        diagnosisCode = encounterDetails.diagnosisCode
-                        allowedAmount = None
-                        coPay = Some procedure.copay
-                        patientResponsibility = None
-                        siteServiceCode = encounterDetails.siteServiceCode
-                        appointmentPriority = encounterDetails.appointmentPriority
-                in
-                return updatedEncounter
-      None ->
-        let updatedEncounter = EncounterDetails with
-                patient = policy.patient
-                encounterId = encounterDetails.encounterId
-                procedureCode
-                diagnosisCode = encounterDetails.diagnosisCode
-                allowedAmount = None
-                coPay = None
-                patientResponsibility = None
-                siteServiceCode = encounterDetails.siteServiceCode
-                appointmentPriority = encounterDetails.appointmentPriority
-        in
-        return updatedEncounter
+            optional (buildEncounterDetail None None (Some procedure.copay)) (getEncounterDetail procedure) maybeAmt   
+
+      (None, _) -> baseEncounterDetail
 
 calculatePatientResp : Decimal -> Decimal -> Decimal -> Decimal
-calculatePatientResp deductible allowedAmount copay
+calculatePatientResp deductible copay allowedAmount
   | deductible >= allowedAmount
     = copay + allowedAmount
   | deductible > 0.0 && deductible < allowedAmount
     = copay + deductible
   | otherwise
     = copay
+
+-- could be wrong way around 
+calculatePatientResp' : Decimal -> Decimal -> Procedure -> Decimal
+calculatePatientResp' deductible copay allowedAmount
+  | deductible >= allowedAmount.copay
+    = copay + allowedAmount.copay
+  | deductible > 0.0 && deductible < allowedAmount.copay
+    = copay + deductible
+  | otherwise
+    = copay
+
 
 calculatePayerPayment : Decimal -> Decimal -> Decimal
 calculatePayerPayment allowedAmount patientResp
