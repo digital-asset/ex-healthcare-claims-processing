@@ -20,8 +20,8 @@ import Test.Triggers.TriggerTestUtils
 
 acceptPatientPaymentRequestTrigger : Trigger ()
 acceptPatientPaymentRequestTrigger = Trigger
-  { initialize = const ()
-  , updateState = \_ _ _ -> ()
+  { initialize = pure ()
+  , updateState = \_ -> pure ()
   , rule = acceptPatientPaymentRequestRule
   , registeredTemplates = RegisteredTemplates [
       registeredTemplate @PatientPaymentRequest
@@ -29,12 +29,11 @@ acceptPatientPaymentRequestTrigger = Trigger
   , heartbeat = None
   }
 
-acceptPatientPaymentRequestRule : Party -> ACS -> Time -> Maps.Map CommandId [Command] -> () -> TriggerA ()
-acceptPatientPaymentRequestRule _party activeContracts _ _ () =
+acceptPatientPaymentRequestRule : Party -> TriggerA () ()
+acceptPatientPaymentRequestRule _party = do
+  claimRequests <- query @PatientPaymentRequest
   forA_ claimRequests $ \(patientPaymentRequestCid, _patientPaymentRequest) ->
     dedupExercise patientPaymentRequestCid AcceptPatientObligation
- where
-  claimRequests = getContracts @PatientPaymentRequest activeContracts
 
 -- Tests ---------------------------
 

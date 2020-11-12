@@ -27,8 +27,8 @@ import qualified Daml.Script as Script
 
 acknowledgeAndDiscloseTrigger : Trigger ()
 acknowledgeAndDiscloseTrigger = Trigger
-  { initialize = const ()
-  , updateState = \_ _ _ -> ()
+  { initialize = pure ()
+  , updateState = \_ -> pure ()
   , rule = acknowledgeAndDiscloseRule
   , registeredTemplates = RegisteredTemplates [
       registeredTemplate @DisclosureRule,
@@ -38,9 +38,12 @@ acknowledgeAndDiscloseTrigger = Trigger
   , heartbeat = None
   }
 
-acknowledgeAndDiscloseRule : Party -> ACS -> Time -> Maps.Map CommandId [Command] -> () -> TriggerA ()
-acknowledgeAndDiscloseRule _party activeContracts _ _ () =
-  whenSome maybeDisclosureRule $
+acknowledgeAndDiscloseRule : Party -> TriggerA () ()
+acknowledgeAndDiscloseRule _party = do
+  insurancePolicies <- query @InsurancePolicy
+  notifyPatientContracts <- query @NotifyPatient
+  maybeDisclosureRules <- query @DisclosureRule
+  whenSome (head maybeDisclosureRules) $
     \(_, disclosureRule) ->
       forA_ notifyPatientContracts $ \(npCid, notifyPatient) -> do
         let selectedPolicyOpt =
@@ -51,10 +54,6 @@ acknowledgeAndDiscloseRule _party activeContracts _ _ () =
           dedupExercise npCid $ AcknowledgeAndDisclose with
             policyCid = selectedPolicy
             receivers = disclosureRule.receivers
- where
-  insurancePolicies = getContracts @InsurancePolicy activeContracts
-  notifyPatientContracts = getContracts @NotifyPatient activeContracts
-  maybeDisclosureRule = head $ getContracts @DisclosureRule activeContracts
 
 -- Tests ---------------------------
 

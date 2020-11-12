@@ -8,7 +8,6 @@ daml 1.2
 module Triggers.EvaluateReferralTrigger where
 
 import Daml.Trigger
-import DA.Next.Map qualified as Maps
 
 import Main.Provider
 import Main.NetworkContract
@@ -18,8 +17,8 @@ import DA.Optional
 
 evaluateReferralTrigger : Trigger ()
 evaluateReferralTrigger = Trigger
-  { initialize = const ()
-  , updateState = \_ _ _ -> ()
+  { initialize = pure ()
+  , updateState = \_ -> pure ()
   , rule = evaluateReferrals
   , registeredTemplates = RegisteredTemplates [
         registeredTemplate @ReferralRequest
@@ -28,12 +27,11 @@ evaluateReferralTrigger = Trigger
   , heartbeat = None
   }
 
-evaluateReferrals : Party -> ACS -> Time -> Maps.Map CommandId [Command] -> () -> TriggerA ()
-evaluateReferrals party activeContracts _ _ () = do
-  let requests = map fst $ getContracts @ReferralRequest activeContracts
-      networkContractOpt =
-        head $ getContracts @ProviderNetworkContract activeContracts
+evaluateReferrals : Party -> TriggerA () ()
+evaluateReferrals party = do
+  requests <- query @ReferralRequest
+  networkContracts <- query @ProviderNetworkContract
 
-  whenSome networkContractOpt $
+  whenSome (head networkContracts) $
     \(networkContract, _) ->
-      forA_ requests (`dedupExercise` EvaluateReferral networkContract)
+      forA_ requests $ \(cid, _) -> dedupExercise cid $ EvaluateReferral networkContract

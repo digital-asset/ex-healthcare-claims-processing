@@ -26,8 +26,8 @@ import qualified Daml.Script as Script
 
 updateReferralDetailsTrigger : Trigger ()
 updateReferralDetailsTrigger = Trigger
-  { initialize = const ()
-  , updateState = \_ _ _ -> ()
+  { initialize = pure ()
+  , updateState = \_ -> pure ()
   , rule = updateReferralDetailsRule
   , registeredTemplates = RegisteredTemplates [
       registeredTemplate @Referral,
@@ -36,16 +36,16 @@ updateReferralDetailsTrigger = Trigger
   , heartbeat = None
   }
 
-updateReferralDetailsRule : Party -> ACS -> Time -> Maps.Map CommandId [Command] -> () -> TriggerA ()
-updateReferralDetailsRule party activeContracts _ _ () =
+updateReferralDetailsRule : Party -> TriggerA () ()
+updateReferralDetailsRule party = do
+  referralList <- query @Referral
+  referralDetailsList <- query @ReferralDetails
   forA_ referralDetailsList $ \(referralDetailsCid, referralDetails) ->
     when (referralDetails.renderingProvider == party &&
           isNone referralDetails.referralDetails.referral) $
-      addCommandIfEncounterIdsMatch referralDetailsCid referralDetails
+      addCommandIfEncounterIdsMatch referralList referralDetailsCid referralDetails
  where
-  referralList = getContracts @Referral activeContracts
-  referralDetailsList = getContracts @ReferralDetails activeContracts
-  addCommandIfEncounterIdsMatch referralDetailsCid referralDetails =
+  addCommandIfEncounterIdsMatch referralList referralDetailsCid referralDetails =
     forA_ referralList $ \(referralCid, referral) ->
       when (referralDetails.referralDetails.encounterDetails.encounterId
               == referral.encounterDetails.encounterId) $

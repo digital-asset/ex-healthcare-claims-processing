@@ -13,6 +13,7 @@ import Daml.Trigger.LowLevel (Command)
 import Daml.Trigger (Trigger)
 import Daml.Script
 
-testTrigger : Trigger () -> Party -> ACSBuilder -> Script [Command]
-testTrigger trigger party acs =
-  flattenCommands <$> testRule trigger party acs Maps.empty ()
+testTrigger : Trigger () -> Party -> ACSBuilder -> Script ([Command])
+testTrigger trigger party acs = do
+  ((), commands) <- testRule trigger party acs Maps.empty ()
+  pure $ flattenCommands commands

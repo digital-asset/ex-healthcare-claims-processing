@@ -8,7 +8,6 @@ daml 1.2
 module Triggers.AcknowledgeAppointmentTrigger where
 
 import Daml.Trigger
-import DA.Next.Map qualified as Maps
 
 import Main.Provider
 import Main.Policy
@@ -16,8 +15,8 @@ import DA.Foldable (forA_)
 
 acknowledgeAppointmentTrigger : Trigger ()
 acknowledgeAppointmentTrigger = Trigger
-  { initialize = const ()
-  , updateState = \_ _ _ -> ()
+  { initialize = pure ()
+  , updateState = \_ -> pure ()
   , rule = acknowledgeAppointments
   , registeredTemplates = RegisteredTemplates [
         registeredTemplate @NotifyPayer
@@ -26,11 +25,10 @@ acknowledgeAppointmentTrigger = Trigger
   , heartbeat = None
   }
 
-acknowledgeAppointments : Party -> ACS -> Time -> Maps.Map CommandId [Command] -> () -> TriggerA ()
-acknowledgeAppointments party activeContracts _ _ () = do
-  let
-    notifications = getContracts @NotifyPayer activeContracts
-    policies = getContracts @InsurancePolicy activeContracts
+acknowledgeAppointments : Party -> TriggerA () ()
+acknowledgeAppointments party = do
+  notifications <- query @NotifyPayer
+  policies <- query @InsurancePolicy
 
   forA_
     [ (notification, find (byPatient notification) policies) | notification <- notifications]

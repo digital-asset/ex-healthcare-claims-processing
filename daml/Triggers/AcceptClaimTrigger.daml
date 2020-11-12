@@ -20,8 +20,8 @@ import Test.Triggers.TriggerTestUtils
 
 acceptClaimTrigger : Trigger ()
 acceptClaimTrigger = Trigger
-  { initialize = const ()
-  , updateState = \_ _ _ -> ()
+  { initialize = pure ()
+  , updateState = \_ -> pure ()
   , rule = acceptClaimRule
   , registeredTemplates = RegisteredTemplates [
       registeredTemplate @ClaimRequest
@@ -29,12 +29,11 @@ acceptClaimTrigger = Trigger
   , heartbeat = None
   }
 
-acceptClaimRule : Party -> ACS -> Time -> Maps.Map CommandId [Command] -> () -> TriggerA ()
-acceptClaimRule _party activeContracts _ _ () =
+acceptClaimRule : Party -> TriggerA () ()
+acceptClaimRule _party = do
+  claimRequests <- query @ClaimRequest
   forA_ claimRequests $ \(claimRequestCid, _claimRequest) ->
     dedupExercise claimRequestCid AcceptClaimRequest
- where
-  claimRequests = getContracts @ClaimRequest activeContracts
 
 -- Tests ---------------------------
 
