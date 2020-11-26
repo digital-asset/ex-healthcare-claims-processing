@@ -11,7 +11,6 @@ import Test.ReferenceData
 import Test.Patient
 import Test.Onboard (allocateParties, Parties(..))
 import Daml.Trigger
-import DA.Next.Map qualified as Maps
 import DA.Foldable hiding (length)
 import DA.Optional
 import Daml.Trigger.Assert
@@ -102,7 +101,7 @@ referralTest parties@Parties{..} = script do
           referral = None
 
 
-  referralReq <- provider1 `submit` do
+  referralReq <- provider1 `submit`
     Script.exerciseCmd provider1Role CreateReferral with
       receiver = provider2
       policy = ruleParams.policy
@@ -112,7 +111,7 @@ referralTest parties@Parties{..} = script do
       siteServiceCode = ruleParams.encounterDetails.siteServiceCode
       appointmentPriority = ruleParams.encounterDetails.appointmentPriority
 
-  Right refOutput <- provider2 `submit` do
+  Right refOutput <- provider2 `submit`
     Script.exerciseCmd referralReq EvaluateReferral with
       networkContractCid = provider2NetworkContract
 

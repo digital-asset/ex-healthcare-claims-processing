@@ -10,7 +10,6 @@ module Triggers.AcknowledgeAndDiscloseTrigger where
 import Test.ReferenceData
 import Test.Referral
 import Daml.Trigger
-import DA.Next.Map qualified as Maps
 import DA.Foldable hiding (length)
 import DA.Optional
 import Daml.Trigger.Assert
@@ -122,10 +121,10 @@ appointmentTest parties@Parties{..} = script do
           owner = patient1
           receivers = disclosureList
 
-  scheduleResult <- provider2 `submit` do
+  scheduleResult <- provider2 `submit`
     Script.exerciseCmd referralDetails ScheduleAppointment with
       appointmentDate = patient1_appointmentTime
-  let appointmentCid = fromSome $ eitherToOptional $ scheduleResult
+  let appointmentCid = fromSome $ eitherToOptional scheduleResult
 
   (updatePolicy, notifyPatient) <- payer1 `submit`
     Script.exerciseCmd (snd appointmentCid) AcknowledgeAndLock with policyCid = originalPolicy

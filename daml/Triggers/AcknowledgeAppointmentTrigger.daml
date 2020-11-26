@@ -35,7 +35,7 @@ acknowledgeAppointments party = do
     acknowledgeAndLock
   where
     acknowledgeAndLock (notification, Some policy) =
-      (fst notification) `dedupExercise` AcknowledgeAndLock (fst policy)
+      fst notification `dedupExercise` AcknowledgeAndLock (fst policy)
     acknowledgeAndLock _ = pure ()
 
     byPatient (_, notification) (_, policy) = notification.patient == policy.patient

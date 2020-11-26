@@ -10,7 +10,6 @@ module Triggers.AcceptClaimTrigger where
 import Main.Claim
 import Daml.Script (Script, script)
 import Daml.Trigger
-import DA.Next.Map qualified as Maps
 import DA.Foldable hiding (length)
 import Daml.Trigger.Assert
 import DA.Assert
