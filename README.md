@@ -43,7 +43,8 @@ Note: make sure to have at least 8 GBs of memory allocated to Docker.
     The navigator will automatically open in new browser tab at http://localhost:7500.
 2. Once the sandbox has started, start the automation logic by starting triggers. Type:
     ```shell
-    scripts/startTriggers.sh localhost 6865 .daml/dist/*.dar
+    DAML_PROJECT=triggers daml build && \
+    scripts/startTriggers.sh localhost 6865 triggers/.daml/dist/*.dar
     ```
 
 ### Stopping the App
