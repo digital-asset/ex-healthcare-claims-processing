@@ -101,7 +101,8 @@ public class Trigger extends ExternalResource {
             new TailerListenerAdapter() {
               @Override
               public void handle(String line) {
-                if (line != null && line.contains("Trigger is running")) {
+                // FIXME: Trigger is broken, mind the double space.
+                if (line != null && line.contains("Trigger  is running")) {
                   hasStarted.countDown();
                 } else {
                   logger.debug("Waiting for trigger...");

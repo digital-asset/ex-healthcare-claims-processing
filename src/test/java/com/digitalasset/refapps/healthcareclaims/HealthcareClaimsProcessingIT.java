@@ -79,9 +79,10 @@ public class HealthcareClaimsProcessingIT {
               createTrigger(
                   "Triggers.UpdateReferralDetailsTrigger:updateReferralDetailsTrigger",
                   RADIOLOGIST_PARTY))
+          // TODO: There are no code that would actually test this trigger.
           .around(
               createTrigger(
-                  "Triggers.AcknowledgeAndDiscloseTrigger:acknowledgeAndDiscloseTriggerWired",
+                  "Triggers.AcknowledgeAndDiscloseTrigger:acknowledgeAndDiscloseTrigger",
                   PATIENT_PARTY))
           .around(
               createTrigger(
