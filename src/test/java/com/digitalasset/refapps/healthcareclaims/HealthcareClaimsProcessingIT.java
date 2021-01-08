@@ -35,7 +35,9 @@ import org.junit.rules.TestRule;
 
 public class HealthcareClaimsProcessingIT {
   private static final Path RELATIVE_DAR_PATH =
-      Paths.get("./target/healthcare-claims-processing.dar");
+      Paths.get(".daml/dist/healthcare-claims-processing-2.0.0.dar");
+  private static final Path TRIGGER_DAR_PATH =
+      Paths.get("triggers/.daml/dist/healthcare-claims-processing-triggers-2.0.0.dar");
   private static final String TEST_MODULE = "DemoOnboardScenario.StartScript";
   private static final String TEST_SCRIPT = "insurancePoliciesSetSingle";
 
@@ -57,7 +59,7 @@ public class HealthcareClaimsProcessingIT {
   private final Builder trigger =
       Trigger.builder()
           .ledgerPort(sandbox::getSandboxPort)
-          .dar(RELATIVE_DAR_PATH)
+          .dar(TRIGGER_DAR_PATH)
           .ledgerHost("localhost");
 
   @Rule

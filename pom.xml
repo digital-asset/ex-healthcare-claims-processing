@@ -23,6 +23,8 @@
         <daml-sdk.version>1.8.0</daml-sdk.version>
         <daml-plugin.version>0.1.4</daml-plugin.version>
         <junit.version>4.13.1</junit.version>
+        <daml-models-dar>${project.basedir}/.daml/dist/${project.artifactId}-2.0.0.dar</daml-models-dar>
+        <daml-triggers-dar>${project.basedir}/triggers/.daml/dist/${project.artifactId}-triggers-2.0.0.dar</daml-triggers-dar>
     </properties>
     <dependencies>
         <dependency>
@@ -103,6 +105,9 @@
                         <goals>
                             <goal>damlcompile</goal>
                         </goals>
+                        <configuration>
+                            <darName>${daml-models-dar}</darName>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>daml-codegen</id>
@@ -110,7 +115,31 @@
                             <goal>codegen</goal>
                         </goals>
                         <configuration>
-                            <darName>${project.build.directory}/healthcare-claims-processing.dar=com.digitalasset.nanobot.healthcare.models</darName>
+                            <darName>${daml-models-dar}=com.digitalasset.nanobot.healthcare.models</darName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>daml-build-triggers</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>daml</executable>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument>-o</argument>
+                                <argument>${daml-triggers-dar}</argument>
+                            </arguments>
+                            <environmentVariables>
+                                <DAML_PROJECT>${project.basedir}/triggers</DAML_PROJECT>
+                            </environmentVariables>
                         </configuration>
                     </execution>
                 </executions>
