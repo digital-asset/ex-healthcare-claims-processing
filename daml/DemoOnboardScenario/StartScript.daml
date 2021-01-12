@@ -17,14 +17,29 @@ import DA.Optional
 import DA.List
 import Daml.Script
 
-insurancePoliciesSetSingle : Script ()
-insurancePoliciesSetSingle = do
+
+data LedgerParties = LedgerParties
+    with
+        provider1 : Party
+        provider2 : Party
+        patient1 : Party
+        operator : Party
+        payer1 : Party
+
+
+data SetupConfig = SetupConfig
+    with
+        parties : LedgerParties
+
+
+setupLedger : SetupConfig -> Script ()
+setupLedger config = do
     debug "Starting ledger initialization..."
-    let provider1 = fromSome (partyFromText "PrimaryCareProvider")
-        provider2 = fromSome (partyFromText "Radiologist")
-        patient1 = fromSome (partyFromText "Patient1")
-        operator = fromSome (partyFromText "Operator")
-        payer1 = fromSome (partyFromText "InsuranceCompany")
+    let provider1 = config.parties.provider1
+        provider2 = config.parties.provider2
+        patient1 = config.parties.provider1
+        operator = config.parties.operator
+        payer1 = config.parties.payer1
 
     entityMaster <- operator `submit`
       createCmd OnboardEntityMaster with
@@ -129,3 +144,16 @@ insurancePoliciesSetSingle = do
             owner = patient1
             receivers = [provider1, provider2]
     debug "Ledger initialized."
+
+
+insurancePoliciesSetSingle : Script ()
+insurancePoliciesSetSingle = do
+    let provider1 = fromSome (partyFromText "PrimaryCareProvider")
+        provider2 = fromSome (partyFromText "Radiologist")
+        patient1 = fromSome (partyFromText "Patient1")
+        operator = fromSome (partyFromText "Operator")
+        payer1 = fromSome (partyFromText "InsuranceCompany")
+        config = SetupConfig
+            with
+                parties = LedgerParties with ..
+    setupLedger config
