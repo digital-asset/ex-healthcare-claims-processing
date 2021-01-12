@@ -1,5 +1,27 @@
 # Reference Application: Healthcare Claims Processing
 
+- [Introduction](#introduction)
+- [Getting Started](#getting-started)
+  - [Installing](#installing)
+    - [Prerequisites](#prerequisites)
+  - [Starting the App](#starting-the-app)
+    - [Start App with Docker](#start-app-with-docker)
+    - [Start App in Standalone](#start-app-in-standalone)
+  - [Stopping the App](#stopping-the-app)
+    - [Stopping Dockerized Run](#stopping-dockerized-run)
+    - [Stopping Standalone Run](#stopping-standalone-run)
+  - [Resetting the Prototype](#resetting-the-prototype)
+- [Working with DAML Hub](#working-with-daml-hub)
+- [User Guide](#user-guide)
+- [Workflow](#workflow)
+- [Running the Application](#running-the-application)
+  - [Choosing and Changing Roles](#choosing-and-changing-roles)
+- [Referral](#referral)
+- [Scheduling](#scheduling)
+- [Check-In](#check-in)
+- [Check-Out and Claim Creation](#check-out-and-claim-creation)
+- [Payment](#payment)
+
 ## Introduction
 
 This application simulates processing a healthcare claim, starting with the referral from the Primary Care Provider (PCP) and including the creation of an appointment with the radiologist, checking in the patient on the date of the appointment, checking out the patient after service delivery, generation of the claim, and finally, payment for the procedure.
