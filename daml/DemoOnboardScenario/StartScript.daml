@@ -99,10 +99,10 @@ setupLedger config = do
       exerciseCmd patient1Role RequestInsurancePolicy with
         payer = payer1
         policyType = Ref.patient1_PolicyType
-  procedures <-
-    payer1 `submit`
-      let p = head Ref.procedureCodeList in
-      forA Ref.procedureCodeList $ \procedureCode ->
+  procedures <- do
+    let p = head Ref.procedureCodeList
+    forA Ref.procedureCodeList $ \procedureCode ->
+      payer1 `submit`
         createCmd Procedure with
           copay = 15.0
           maxProcedures = 20
