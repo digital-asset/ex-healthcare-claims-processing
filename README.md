@@ -113,8 +113,7 @@ Reset the application by following these steps:
         "operator": "ledger-party-01328c4d-a7b1-49d4-92cc-400badcb46c2",
         "patient1": "ledger-party-841214e1-cb38-42fa-88a9-08710592f74d",
         "provider1": "ledger-party-5292e717-bbd6-43d5-8cdc-67b463427ee9",
-        "provider2": "ledger-party-bd952624-9142-412d-ae39-f6025cd94ac8",
-        "undefined": "ledger-party-13892b38-2aa8-4abb-883e-91223a6443d4"
+        "provider2": "ledger-party-bd952624-9142-412d-ae39-f6025cd94ac8"
       }
     }
     ```
