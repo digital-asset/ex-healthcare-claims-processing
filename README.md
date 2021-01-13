@@ -65,8 +65,8 @@ Note: make sure to have at least 8 GBs of memory allocated to Docker.
     The navigator will automatically open in new browser tab at http://localhost:7500.
 2. Once the sandbox has started, start the automation logic by starting triggers. Type:
     ```shell
-    DAML_PROJECT=triggers daml build && \
-    scripts/startTriggers.sh localhost 6865 target/healthcare-claims-processing-triggers-2.0.0.dar
+    daml build --project-root=triggers && \
+    scripts/startTriggers.sh localhost 6865 triggers/.daml/dist/*.dar
     ```
 
 ### Stopping the App
@@ -88,13 +88,11 @@ Reset the application by following these steps:
 
 1. As a first step, build the whole project
     ```shell
-    daml build
-    DAML_PROJECT=triggers daml build
+    daml build --output models.dar
+    daml build --project-root=triggers --output triggers.dar
     ```
 2. Create a project and a ledger in DAML Hub
 3. Upload the DARs
-   - `target/healthcare-claims-processing-2.0.0.dar`
-   - `target/healthcare-claims-processing-triggers-2.0.0.dar`
 4. Add the parties to the ledger
    - PrimaryCareProvider
    - Radiologist
@@ -134,7 +132,7 @@ Reset the application by following these steps:
     daml script \
       --participant-config participants.json \
       --json-api \
-      --dar target/healthcare-claims-processing-2.0.0.dar \
+      --dar models.dar \
       --script-name DemoOnboardScenario.StartScript:setupLedger \
       --input-file ledger-setup.json
     ```
