@@ -181,6 +181,7 @@
                         <exclude>**/*.hi</exclude>
                         <exclude>**/*.hie</exclude>
                         <exclude>**/.daml/**</exclude>
+                        <exclude>.gitattributes</exclude>
                     </excludes>
                     <mapping>
                         <daml>DOUBLEDASHES_STYLE</daml>
