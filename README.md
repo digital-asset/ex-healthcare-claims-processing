@@ -92,7 +92,7 @@ Reset the application by following these steps:
     daml build --project-root=triggers --output triggers.dar
     ```
 2. Create a project and a ledger in DAML Hub
-3. Upload the DARs to the ledger and deploy a ledger instance
+3. Upload the DARs
 4. Add the parties to the ledger
    - PrimaryCareProvider
    - Radiologist
