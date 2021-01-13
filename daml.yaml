@@ -18,3 +18,6 @@ dependencies:
   - daml-stdlib
   - daml-trigger
   - daml-script
+build-options:
+  - '--output'
+  - 'target/healthcare-claims-processing-2.0.0.dar'
