@@ -5,11 +5,7 @@
   - [Installing](#installing)
     - [Prerequisites](#prerequisites)
   - [Starting the App](#starting-the-app)
-    - [Start App with Docker](#start-app-with-docker)
-    - [Start App in Standalone](#start-app-in-standalone)
   - [Stopping the App](#stopping-the-app)
-    - [Stopping Dockerized Run](#stopping-dockerized-run)
-    - [Stopping Standalone Run](#stopping-standalone-run)
   - [Resetting the Prototype](#resetting-the-prototype)
 - [Working with DAML Hub](#working-with-daml-hub)
 - [User Guide](#user-guide)
@@ -35,28 +31,10 @@ This application simulates processing a healthcare claim, starting with the refe
 #### Prerequisites
 
 Be sure you have the following installed.
-
-There are two options to run the app:
-- Option 1: with Docker. Requires:
-  - Docker
-- Option 2: in standalone mode. Requires:
-  - [DAML SDK](https://docs.daml.com/)
-  - Java 8 or higher
+- [DAML SDK](https://docs.daml.com/)
+- Java 8 or higher
 
 ### Starting the App
-
-#### Start App with Docker
-
-Note: make sure to have at least 8 GBs of memory allocated to Docker.
-
-1. Type:
-    ```shell
-    docker-compose up --build
-    ```
-2. Open UI with a browser at http://localhost:7500.
-
-
-#### Start App in Standalone
 
 1. Build, then start the DAML Sandbox and Navigator. Type:
     ```shell
@@ -71,18 +49,14 @@ Note: make sure to have at least 8 GBs of memory allocated to Docker.
 
 ### Stopping the App
 
-#### Stopping Dockerized Run
-1. Stop the Docker containers or triggers by pressing **Ctrl+C**. (Alternatively, you can also stop it by typing `docker-compose down`.)
-
-#### Stopping Standalone Run
 1. Stop the triggers by pressing **Ctrl+C**.
-1. Stop the Sandbox and the Navigator by pressing **Ctrl+C** in the DAML assistant.
+2. Stop the Sandbox and the Navigator by pressing **Ctrl+C** in the DAML assistant.
 
 ### Resetting the Prototype
 
 Reset the application by following these steps:
 1.  Stop the app by following the steps in [Stopping the App](#stopping-the-app) section.
-2.  Start the app in [Docker](#start-app-with-docker) or [Standalone](#start-app-in-standalone) by following the steps in the relevant section.
+2.  Start the app by following the steps in [Starting the App](#starting-the-app) by following the steps in the relevant section.
 
 ## Working with DAML Hub
 
