@@ -180,7 +180,7 @@
                         <exclude>ui-backend.conf</exclude>
                         <exclude>**/*.hi</exclude>
                         <exclude>**/*.hie</exclude>
-                        <exclude>**/.daml/package-database/**/*.*</exclude>
+                        <exclude>**/.daml/**</exclude>
                     </excludes>
                     <mapping>
                         <daml>DOUBLEDASHES_STYLE</daml>
