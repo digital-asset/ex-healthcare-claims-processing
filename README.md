@@ -56,7 +56,7 @@ Be sure you have the following installed.
 
 Reset the application by following these steps:
 1.  Stop the app by following the steps in [Stopping the App](#stopping-the-app) section.
-2.  Start the app by following the steps in [Starting the App](#starting-the-app) by following the steps in the relevant section.
+2.  Start the app by following the steps in [Starting the App](#starting-the-app) section.
 
 ## Working with DAML Hub
 
