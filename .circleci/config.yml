@@ -5,83 +5,39 @@
 
 version: 2.1
 
+orbs:
+  slack: circleci/slack@3.4.2
+
 executors:
   daml-executor:
     docker:
-      - image: circleci/openjdk:11.0-jdk
+      - image: cimg/openjdk:11.0-node
   mvn-executor:
     docker:
-      - image: circleci/openjdk:11.0-jdk
+      - image: cimg/openjdk:11.0
     resource_class: large
-  docker_buildpack:
-    docker:
-      - image: circleci/buildpack-deps:xenial
-
-only-release-tags: &only-release-tags
-  filters:
-    tags:
-      only: /^v.*/
-    branches:
-      ignore: /.*/
 
 commands:
   install_sdk:
-    description: "Install the DAML SDK"
+    description: "Install Daml SDK"
     parameters:
       version:
         type: string
     steps:
       - run:
+          name: Install Daml SDK
           command: |
-            ./scripts/install-daml.sh << parameters.version >>
-
-jobs:
-  mvn_test:
-    parameters:
-      daml_sdk_version:
-        type: string
-    executor: mvn-executor
+            curl -sSL https://get.daml.com/ | sh /dev/stdin << parameters.version >>
+            # idea from https://circleci.com/docs/2.0/env-vars/
+            >> $BASH_ENV echo 'export PATH="$HOME/.daml/bin:$PATH"'
+  slack_notification:
+    description: "Notify about failure on Slack"
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - m2-{{ checksum "pom.xml" }}-{{ checksum "daml.yaml" }}
-            - m2
-      - install_sdk:
-          version: << parameters.daml_sdk_version >>
-      - run:
-          command: |
-            export PATH=${HOME}/.daml/bin:${PATH}
-            mvn verify
-      - save_cache:
-          paths:
-            - ~/.m2
-            - ~/.daml
-          key: m2-{{ checksum "pom.xml" }}-{{ checksum "daml.yaml" }}
-      - store_test_results:
-          path: target/surefire-reports
-      - store_artifacts:
-          path: target/surefire-reports
-      - store_test_results:
-          path: target/failsafe-reports
-      - store_artifacts:
-          path: target/failsafe-reports
-      - run:
-          name: Moving log files so they can be stored
-          command: |
-            mkdir logs
-            mv *.log logs
-          when: always
-      - store_artifacts:
-          path: logs
-      - persist_to_workspace:
-          root: target
-          paths:
-            - "*.jar"
-            - "*.dar"
-            - "lib"
-            - "NOTICE"
-
+      - slack/status:
+          fail_only: true
+          only_for_branches: master
+          webhook: '${SLACK_WEBHOOK}'
+jobs:
   daml_test:
     parameters:
       daml_sdk_version:
@@ -95,10 +51,13 @@ jobs:
       - install_sdk:
           version: << parameters.daml_sdk_version >>
       - run:
+          name: Build Daml
           command: |
-            export PATH=${HOME}/.daml/bin:${PATH}
-            daml build -o target/healthcare-claims-processing.dar
-            daml test --junit target/daml-test-reports/daml-test.xml --files daml/LibraryModules.daml
+            make build-dars
+      - run:
+          name: Daml tests
+          command: |
+            make test-dars
       - save_cache:
           paths:
             - ~/.daml
@@ -107,19 +66,61 @@ jobs:
           path: target/daml-test-reports
       - store_artifacts:
           path: target/daml-test-reports
+      - slack_notification
 
-  github_release:
-    executor: docker_buildpack
+  integration_test:
+    parameters:
+      daml_sdk_version:
+        type: string
+    executor: mvn-executor
     steps:
       - checkout
-      - attach_workspace:
-          at: /tmp/workspace
+      - restore_cache:
+          keys:
+            - m2-{{ checksum "pom.xml" }}-{{ checksum "daml.yaml" }}
+            - m2
+      - install_sdk:
+          version: << parameters.daml_sdk_version >>
       - run:
-          name: Push a new github release
+          name: Integration tests
           command: |
-            ./scripts/release.sh ex-healthcare-claims-processing
+            mvn verify
+      - run:
+          command: |
+            echo "Moving log files so they can be stored."
+            mkdir -p logs
+            mv *.log logs
+          when: always
+      - store_artifacts:
+          path: logs
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/.daml
+          key: m2-{{ checksum "pom.xml" }}-{{ checksum "daml.yaml" }}
+      - store_test_results:
+          path: target/failsafe-reports
+      - store_artifacts:
+          path: target/failsafe-reports
+      - store_test_results:
+          path: target/surefire-reports
+      - store_artifacts:
+          path: target/surefire-reports
+      - run:
+          command: |
+            mkdir -p logs
+            mv target/pmd.xml logs
+          when: always
+      - persist_to_workspace:
+          root: target
+          paths:
+            - "*.jar"
+            - "*.dar"
+            - "lib"
+            - "NOTICE"
+      - slack_notification
 
-  blackduck:
+  blackduck_check:
     parameters:
       daml_sdk_version:
         type: string
@@ -132,53 +133,55 @@ jobs:
             - m2
       - install_sdk:
           version: << parameters.daml_sdk_version >>
-      - run:
-          command: |
-            export PATH=${HOME}/.daml/bin:${PATH}
-            mvn clean package
       - save_cache:
           paths:
             - ~/.m2
             - ~/.daml
           key: m2-{{ checksum "pom.xml" }}-{{ checksum "daml.yaml" }}
       - run:
-          name: Run Blackduck Detect
+          name: Maven build
           command: |
-            bash <(curl -s https://raw.githubusercontent.com/DACH-NY/security-blackduck/master/synopsys-detect) ci-build digitalasset_ex-healthcare-claims-processing master --logging.level.com.synopsys.integration=DEBUG  --detect.notices.report=true --detect.report.timeout=480
+            mvn clean package
+      - run:
+          name: Blackduck detect
+          command: |
+            bash <(curl -s https://raw.githubusercontent.com/DACH-NY/security-blackduck/master/synopsys-detect) \
+            ci-build digitalasset_ex-healthcare-claims-processing master \
+            --logging.level.com.synopsys.integration=DEBUG \
+            --detect.notices.report=true \
+            --detect.report.timeout=480
       - run:
           command: cp digitalasset_ex_healthcare_claims_processing_master_Black_Duck_Notices_Report.txt target/NOTICE
       - persist_to_workspace:
           root: target
           paths:
-            - "*.jar"
-            - "*.dar"
-            - "lib"
             - "NOTICE"
 
 workflows:
   version: 2
-  build_and_test:
+  test:
     jobs:
       - daml_test:
-          daml_sdk_version: "1.9.0"
-      - mvn_test:
           daml_sdk_version: "1.9.0"
           context: refapps
-      - blackduck:
+      - integration_test:
           daml_sdk_version: "1.9.0"
-          context: blackduck
-  build_and_release:
+          context: refapps
+  scheduled_test:
+    triggers:
+      - schedule:
+          cron: "0 1 * * *"
+          filters:
+            branches:
+              only:
+                - master
     jobs:
       - daml_test:
-          <<: *only-release-tags
           daml_sdk_version: "1.9.0"
-      - mvn_test:
-          <<: *only-release-tags
+          context: refapps
+      - integration_test:
+          daml_sdk_version: "1.9.0"
+          context: refapps
+      - blackduck_check:
           daml_sdk_version: "1.9.0"
           context: blackduck
-      - github_release:
-          context: github-refapp-repo-context
-          requires:
-            - daml_test
-            - mvn_test
-          <<: *only-release-tags
