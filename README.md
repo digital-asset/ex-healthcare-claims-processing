@@ -1,24 +1,6 @@
 # Reference Application: Healthcare Claims Processing
 
-- [Introduction](#introduction)
-- [Getting Started](#getting-started)
-  - [Installing](#installing)
-    - [Prerequisites](#prerequisites)
-  - [Starting the App](#starting-the-app)
-  - [Stopping the App](#stopping-the-app)
-  - [Resetting the Prototype](#resetting-the-prototype)
-- [Working with DAML Hub](#working-with-daml-hub)
-- [User Guide](#user-guide)
-- [Workflow](#workflow)
-- [Running the Application](#running-the-application)
-  - [Choosing and Changing Roles](#choosing-and-changing-roles)
-- [Referral](#referral)
-- [Scheduling](#scheduling)
-- [Check-In](#check-in)
-- [Check-Out and Claim Creation](#check-out-and-claim-creation)
-- [Payment](#payment)
-
-## Introduction
+## Overview
 
 This application simulates processing a healthcare claim, starting with the referral from the Primary Care Provider (PCP) and including the creation of an appointment with the radiologist, checking in the patient on the date of the appointment, checking out the patient after service delivery, generation of the claim, and finally, payment for the procedure.
 
@@ -34,6 +16,14 @@ Be sure you have the following installed.
 - [DAML SDK](https://docs.daml.com/)
 - Java 8 or higher
 
+#### Build the App
+
+Type:
+```shell
+make build
+```
+**Note:** If you change the DAML models locally, you need to re-run this command before starting the application.
+
 ### Starting the App
 
 1. Build, then start the DAML Sandbox and Navigator. Type:
@@ -43,7 +33,6 @@ Be sure you have the following installed.
     The navigator will automatically open in new browser tab at http://localhost:7500.
 2. Once the sandbox has started, start the automation logic by starting triggers. Type:
     ```shell
-    daml build --project-root=triggers && \
     scripts/startTriggers.sh localhost 6865 triggers/.daml/dist/*.dar
     ```
 
@@ -62,8 +51,7 @@ Reset the application by following these steps:
 
 1. As a first step, build the whole project
     ```shell
-    daml build --output models.dar
-    daml build --project-root=triggers --output triggers.dar
+    make clean build
     ```
 2. Create a project and a ledger in DAML Hub
 3. Upload the DARs
