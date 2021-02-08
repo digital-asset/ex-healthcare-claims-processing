@@ -1,5 +1,5 @@
 MODELS_DAR=target/healthcare-claims-processing.dar
-TRIGGERS_DAR=target/triggers.dar
+TRIGGERS_DAR=target/healthcare-claims-processing-triggers.dar
 
 .PHONY: build
 build: build-dars
