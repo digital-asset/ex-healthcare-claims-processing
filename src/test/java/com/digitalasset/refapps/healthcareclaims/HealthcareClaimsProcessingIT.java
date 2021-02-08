@@ -36,7 +36,8 @@ import org.junit.rules.TestRule;
 public class HealthcareClaimsProcessingIT {
   private static final Path RELATIVE_DAR_PATH =
       Paths.get("target/healthcare-claims-processing.dar");
-  private static final Path TRIGGER_DAR_PATH = Paths.get("target/healthcare-claims-processing-triggers.dar");
+  private static final Path TRIGGER_DAR_PATH =
+      Paths.get("target/healthcare-claims-processing-triggers.dar");
   private static final String TEST_MODULE = "DemoOnboardScenario.StartScript";
   private static final String TEST_SCRIPT = "insurancePoliciesSetSingle";
 
