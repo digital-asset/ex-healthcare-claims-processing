@@ -37,6 +37,7 @@ commands:
           fail_only: true
           only_for_branches: master
           webhook: '${SLACK_WEBHOOK}'
+
 jobs:
   daml_test:
     parameters:
@@ -156,6 +157,7 @@ jobs:
           root: target
           paths:
             - "NOTICE"
+      - slack_notification
 
 workflows:
   version: 2
