@@ -24,8 +24,7 @@
         <daml-sdk.version>1.9.0</daml-sdk.version>
         <daml-plugin.version>0.1.4</daml-plugin.version>
         <junit.version>4.13.1</junit.version>
-        <daml-models-dar>${project.basedir}/.daml/dist/${project.artifactId}-2.0.0.dar</daml-models-dar>
-        <daml-triggers-dar>${project.basedir}/triggers/.daml/dist/${project.artifactId}-triggers-2.0.0.dar</daml-triggers-dar>
+        <daml-models-dar>${project.build.directory}/${project.artifactId}.dar</daml-models-dar>
     </properties>
     <dependencies>
         <dependency>
@@ -63,51 +62,37 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>daml-build</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>make</executable>
+                            <arguments>
+                                <argument>build-dars</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+               </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.digitalasset</groupId>
                 <artifactId>daml-maven-plugin</artifactId>
                 <version>${daml-plugin.version}</version>
                 <executions>
-                    <execution>
-                        <id>daml-compile</id>
-                        <goals>
-                            <goal>damlcompile</goal>
-                        </goals>
-                        <configuration>
-                            <darName>${daml-models-dar}</darName>
-                        </configuration>
-                    </execution>
-                    <execution>
+                   <execution>
                         <id>daml-codegen</id>
                         <goals>
                             <goal>codegen</goal>
                         </goals>
                         <configuration>
                             <darName>${daml-models-dar}=com.digitalasset.nanobot.healthcare.models</darName>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <id>daml-build-triggers</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>daml</executable>
-                            <arguments>
-                                <argument>build</argument>
-                                <argument>-o</argument>
-                                <argument>${daml-triggers-dar}</argument>
-                            </arguments>
-                            <environmentVariables>
-                                <DAML_PROJECT>${project.basedir}/triggers</DAML_PROJECT>
-                            </environmentVariables>
                         </configuration>
                     </execution>
                 </executions>
@@ -196,7 +181,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>
