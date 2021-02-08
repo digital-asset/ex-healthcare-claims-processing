@@ -15,7 +15,6 @@ executors:
   mvn-executor:
     docker:
       - image: cimg/openjdk:11.0
-    resource_class: large
 
 commands:
   install_sdk:
