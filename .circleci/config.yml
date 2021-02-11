@@ -153,7 +153,7 @@ jobs:
       - run:
           command: cp digitalasset_ex_healthcare_claims_processing_master_Black_Duck_Notices_Report.txt target/NOTICE
       - persist_to_workspace:
-          root: target
+          root: .
           paths:
             - "NOTICE"
       - slack_notification
