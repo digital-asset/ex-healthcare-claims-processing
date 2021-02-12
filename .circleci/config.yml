@@ -171,7 +171,9 @@ workflows:
   scheduled_test:
     triggers:
       - schedule:
-          cron: "0 1 * * *"
+          # need to scatter jobs to reduce Blackduck load
+          # see also https://digitalasset.atlassian.net/browse/ERA-913
+          cron: "30 2 * * *"
           filters:
             branches:
               only:
