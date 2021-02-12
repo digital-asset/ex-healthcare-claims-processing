@@ -151,7 +151,7 @@ jobs:
             --detect.notices.report=true \
             --detect.report.timeout=480
       - run:
-          command: cp digitalasset_ex_healthcare_claims_processing_master_Black_Duck_Notices_Report.txt target/NOTICE
+          command: cp digitalasset_ex_healthcare_claims_processing_master_Black_Duck_Notices_Report.txt NOTICE
       - persist_to_workspace:
           root: .
           paths:
