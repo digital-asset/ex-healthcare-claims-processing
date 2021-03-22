@@ -34,7 +34,7 @@ commands:
     steps:
       - slack/status:
           fail_only: true
-          only_for_branches: master
+          only_for_branches: main
           webhook: '${SLACK_WEBHOOK}'
 
 jobs:
