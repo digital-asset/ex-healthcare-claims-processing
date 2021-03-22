@@ -146,12 +146,12 @@ jobs:
           name: Blackduck detect
           command: |
             bash <(curl -s https://raw.githubusercontent.com/DACH-NY/security-blackduck/master/synopsys-detect) \
-            ci-build digitalasset_ex-healthcare-claims-processing master \
+            ci-build digitalasset_ex-healthcare-claims-processing main \
             --logging.level.com.synopsys.integration=DEBUG \
             --detect.notices.report=true \
             --detect.timeout=3600
       - run:
-          command: cp digitalasset_ex_healthcare_claims_processing_master_Black_Duck_Notices_Report.txt NOTICE
+          command: cp digitalasset_ex_healthcare_claims_processing_main_Black_Duck_Notices_Report.txt NOTICE
       - persist_to_workspace:
           root: .
           paths:
