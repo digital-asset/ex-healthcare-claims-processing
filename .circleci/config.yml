@@ -177,7 +177,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
     jobs:
       - daml_test:
           daml_sdk_version: "1.10.0"
