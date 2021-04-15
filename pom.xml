@@ -22,7 +22,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <daml-sdk.version>1.12.0</daml-sdk.version>
-        <daml-plugin.version>0.1.4</daml-plugin.version>
+        <daml-plugin.version>0.1.5</daml-plugin.version>
         <junit.version>4.13.1</junit.version>
         <daml-models-dar>${project.build.directory}/${project.artifactId}.dar</daml-models-dar>
     </properties>
@@ -82,7 +82,7 @@
                </executions>
             </plugin>
             <plugin>
-                <groupId>com.digitalasset</groupId>
+                <groupId>com.daml.extensions</groupId>
                 <artifactId>daml-maven-plugin</artifactId>
                 <version>${daml-plugin.version}</version>
                 <executions>
