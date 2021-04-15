@@ -14,7 +14,7 @@ clean:
 .PHONY: build-dars
 build-dars: $(MODELS_DAR) $(TRIGGERS_DAR)
 
-DAML_SRC=$(shell find src/ -name '*.daml')
+DAML_SRC=$(shell find daml/ -name '*.daml')
 
 $(MODELS_DAR): $(DAML_SRC) daml.yaml
 	daml build --output $@
