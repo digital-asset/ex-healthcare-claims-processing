@@ -6,7 +6,7 @@
 module DemoOnboardScenario.ReferenceData where
 
 import Main.Types
-import DA.Next.Map
+import DA.Map
 import DA.Date
 import DA.Optional
 import Daml.Script

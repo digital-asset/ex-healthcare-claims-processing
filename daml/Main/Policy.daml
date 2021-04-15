@@ -7,7 +7,7 @@
 module Main.Policy where
 
 import DA.List qualified as L
-import DA.Next.Map qualified as M
+import DA.Map qualified as M
 import Main.Types
 import Main.Procedure
 

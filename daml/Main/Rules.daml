@@ -7,7 +7,7 @@
 module Main.Rules where
 
 import DA.Date
-import DA.Next.Map qualified as M
+import DA.Map qualified as M
 import Main.Types
 import Main.RuleTypes
 import Main.Mapping

@@ -6,7 +6,7 @@
 module Test.ReferenceData where
 
 import Main.Types
-import DA.Next.Map
+import DA.Map
 import DA.Date
 import DA.Optional
 

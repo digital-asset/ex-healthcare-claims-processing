@@ -7,7 +7,7 @@
 module Main.Procedure where
 
 import DA.List
-import DA.Next.Map
+import DA.Map
 import Main.Types
 import Daml.Script
 

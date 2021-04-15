@@ -7,7 +7,7 @@
 
 module Test.Triggers.TriggerTestUtils where
 
-import DA.Next.Map qualified as Maps
+import DA.Map qualified as Maps
 import Daml.Trigger.Assert
 import Daml.Trigger.LowLevel (Command)
 import Daml.Trigger (Trigger)

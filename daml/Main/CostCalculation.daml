@@ -10,7 +10,7 @@ import Main.Types
 import Main.RuleTypes
 import Main.Procedure(Procedure)
 
-import DA.Next.Map qualified as M
+import DA.Map qualified as M
 
 -- Encounter stage on which the cost calculation depends
 data EncounterStage = Referral|Appointment|Treatment deriving Eq

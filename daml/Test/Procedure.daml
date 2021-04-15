@@ -7,7 +7,7 @@
 module Test.Procedure where
 
 import Daml.Script
-import DA.Next.Map
+import DA.Map
 import Main.Procedure
 import Main.Types
 

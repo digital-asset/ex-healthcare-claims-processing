@@ -12,7 +12,7 @@ import Main.Policy
 import DemoOnboardScenario.ReferenceData qualified as Ref
 import Main.Onboard
 import Main.Provider
-import DA.Next.Map
+import DA.Map
 import DA.Optional
 import DA.List
 import Daml.Script

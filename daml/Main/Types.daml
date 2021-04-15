@@ -7,7 +7,7 @@
 module Main.Types where
 
 import DA.Optional
-import DA.Next.Map
+import DA.Map
 
 -- In the workflow, a primary provider creates referral for the patient
 -- and sending them to a specialist
@@ -60,10 +60,6 @@ type FeeSchedule = Map ProcedureCode Decimal
 
 data ProcedureCode = Preventative_Care | Physicals | Sick_Visits | X_Ray_Wrist_2_Views | X_Ray_Wrist_3_Views
   deriving (Enum, Eq, Show, Ord)
-
-instance MapKey ProcedureCode where
-   keyToText = show
-   keyFromText = readEnum "ProcedureCode" [Preventative_Care .. ]
 
 readEnum: Show a => Text -> [a] -> Text -> a
 readEnum name enum t = fromSomeNote err $ Prelude.lookup t textsWithProcCodes

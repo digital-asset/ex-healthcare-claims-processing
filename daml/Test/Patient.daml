@@ -11,7 +11,7 @@ import Main.Patient
 import Test.ReferenceData
 import Main.Procedure
 import Main.Policy
-import DA.Next.Map
+import DA.Map
 import Daml.Script
 
 
