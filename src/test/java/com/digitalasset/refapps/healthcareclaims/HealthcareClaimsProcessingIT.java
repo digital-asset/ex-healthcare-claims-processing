@@ -4,6 +4,8 @@
  */
 package com.digitalasset.refapps.healthcareclaims;
 
+import com.daml.extensions.testing.junit4.Sandbox;
+import com.daml.extensions.testing.ledger.DefaultLedgerAdapter;
 import com.daml.ledger.javaapi.data.Party;
 import com.digitalasset.nanobot.healthcare.models.main.appointment.Appointment;
 import com.digitalasset.nanobot.healthcare.models.main.claim.Claim;
@@ -17,8 +19,6 @@ import com.digitalasset.nanobot.healthcare.models.main.types.DiagnosisCode;
 import com.digitalasset.nanobot.healthcare.models.main.types.ProcedureCode;
 import com.digitalasset.refapps.healthcareclaims.trigger.Builder;
 import com.digitalasset.refapps.healthcareclaims.trigger.Trigger;
-import com.daml.extensions.testing.junit4.Sandbox;
-import com.daml.extensions.testing.ledger.DefaultLedgerAdapter;
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.grpc.StatusRuntimeException;
 import java.nio.file.Path;
