@@ -39,9 +39,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.digitalasset</groupId>
-            <artifactId>functest-java_2.12</artifactId>
-            <version>0.1.19</version>
+            <groupId>com.daml.extensions</groupId>
+            <artifactId>junit4-support_2.12</artifactId>
+            <version>0.1.21</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
