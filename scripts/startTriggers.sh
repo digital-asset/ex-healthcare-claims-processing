@@ -35,7 +35,7 @@ run_trigger() {
       --ledger-party "$party"
 }
 
-scripts/waitForLedger.sh
+scripts/waitForLedger.sh "$LEDGER_HOST" "$LEDGER_PORT"
 
 run_trigger Triggers.AcceptClaimTrigger:acceptClaimTrigger InsuranceCompany &
 run_trigger Triggers.EvaluateReferralTrigger:evaluateReferralTrigger Radiologist &
