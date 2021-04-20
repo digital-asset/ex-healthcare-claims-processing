@@ -4,4 +4,4 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-scripts/startTriggers.sh localhost 6865 triggers/.daml/dist/*.dar
+scripts/startTriggers.sh localhost 6865 target/healthcare-claims-processing-triggers.dar
