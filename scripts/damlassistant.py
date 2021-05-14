@@ -50,7 +50,7 @@ def run_script(dar, script_name, sandbox_port = DEFAULT_SANDBOX_PORT):
     ])
 
 
-def kill_background_process(process):
+def kill_process(process):
     log.debug("Killing subprocess...")
     try:
         # https://stackoverflow.com/questions/4789837/how-to-terminate-a-python-subprocess-launched-with-shell-true

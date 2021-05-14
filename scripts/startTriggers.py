@@ -8,7 +8,7 @@ import logging
 import sys
 import time
 
-from damlassistant import get_package_id, start_trigger_service_in_background, kill_background_process, \
+from damlassistant import get_package_id, start_trigger_service_in_background, kill_process, \
     add_trigger_to_service, wait_for_port, catch_signals, DEFAULT_TRIGGER_SERVICE_PORT, DEFAULT_SANDBOX_PORT
 
 
@@ -44,4 +44,4 @@ try:
     service.wait()
     logging.error(f"Trigger service died unexpectedly:\n{service.stderr}")
 finally:
-    kill_background_process(service)
+    kill_process(service)
