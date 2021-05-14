@@ -6,11 +6,10 @@
 
 import argparse
 import logging
-import sys
 import time
 
 from damlassistant import get_package_id, start_trigger_service_in_background, kill_process, \
-    add_trigger_to_service, wait_for_port, catch_signals, DEFAULT_TRIGGER_SERVICE_PORT, DEFAULT_SANDBOX_PORT
+    add_trigger_to_service, wait_for_port, catch_signals, DEFAULT_TRIGGER_SERVICE_PORT
 
 
 dar = 'target/healthcare-claims-processing-triggers.dar'
@@ -32,7 +31,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 wait_for_port(port=args.ledger_port, timeout=30)
 
-service = start_trigger_service_in_background(dar = dar, ledger_port = args.ledger_port)
+service = start_trigger_service_in_background(dar=dar, ledger_port=args.ledger_port)
 try:
     catch_signals()
     package_id = get_package_id(dar)

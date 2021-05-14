@@ -36,13 +36,13 @@ def get_package_id(dar):
     return dar_properties["main_package_id"]
 
 
-def start_trigger_service_in_background(dar, ledger_port = DEFAULT_SANDBOX_PORT):
+def start_trigger_service_in_background(dar, ledger_port=DEFAULT_SANDBOX_PORT):
     return _start_process_in_background(
         ["daml", "trigger-service", "--ledger-host", "localhost", "--ledger-port", f'{ledger_port}',
          "--wall-clock-time", "--dar", dar])
 
 
-def run_script(dar, script_name, ledger_port = DEFAULT_SANDBOX_PORT):
+def run_script(dar, script_name, ledger_port=DEFAULT_SANDBOX_PORT):
     log.debug("Running script...")
     return subprocess.run([
         "daml", "script", "--ledger-host", "localhost", "--ledger-port", f'{ledger_port}', "--dar", dar,
