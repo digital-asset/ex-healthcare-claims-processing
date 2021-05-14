@@ -32,7 +32,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 wait_for_port(port=args.ledger_port, timeout=30)
 
-service = start_trigger_service_in_background(dar = dar, sandbox_port = args.ledger_port)
+service = start_trigger_service_in_background(dar = dar, ledger_port = args.ledger_port)
 try:
     catch_signals()
     package_id = get_package_id(dar)
