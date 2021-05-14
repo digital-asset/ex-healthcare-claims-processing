@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+import argparse
 import logging
 import sys
 import time
@@ -23,16 +24,15 @@ triggers_with_parties = [
     ("Patient1", "Triggers.AcceptPatientPaymentRequestTrigger:acceptPatientPaymentRequestTrigger"),
 ]
 
-if len(sys.argv) < 2:
-    print(f"Usage: startTriggers.py SANDBOX_PORT")
-    exit(1)
-sandbox_port = sys.argv[1]
+parser = argparse.ArgumentParser()
+parser.add_argument('ledger_port')
+args = parser.parse_args()
 
 logging.basicConfig(level=logging.DEBUG)
 
-wait_for_port(port=sandbox_port, timeout=30)
+wait_for_port(port=args.ledger_port, timeout=30)
 
-service = start_trigger_service_in_background(dar = dar, sandbox_port = sandbox_port)
+service = start_trigger_service_in_background(dar = dar, sandbox_port = args.ledger_port)
 try:
     catch_signals()
     package_id = get_package_id(dar)
