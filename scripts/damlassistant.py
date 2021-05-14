@@ -47,7 +47,7 @@ def run_script(dar, script_name, ledger_port = DEFAULT_SANDBOX_PORT):
     return subprocess.run([
         "daml", "script", "--ledger-host", "localhost", "--ledger-port", f'{ledger_port}', "--dar", dar,
         "--script-name", script_name
-    ])
+    ], check=True)
 
 
 def kill_process(process):
