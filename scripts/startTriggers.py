@@ -39,8 +39,12 @@ try:
     wait_for_port(port=DEFAULT_TRIGGER_SERVICE_PORT, timeout=30)
     for party, triggerName in triggers_with_parties:
         add_trigger_to_service(party=party, package_id=package_id, trigger=triggerName)
-    time.sleep(3)
-    print('\nPress Ctrl+C to stop...')
+
+    def print_message_after_triggers_started(m: str):
+        time.sleep(3)
+        print(m)
+
+    print_message_after_triggers_started('\nPress Ctrl+C to stop...')
     service.wait()
     logging.error(f"Trigger service died unexpectedly:\n{service.stderr}")
 finally:
