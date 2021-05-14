@@ -33,12 +33,8 @@ import org.junit.Test;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class HealthcareClaimsProcessingIT {
-  private final Logger logger = LoggerFactory.getLogger(getClass().getCanonicalName());
-
   private static final Path RELATIVE_DAR_PATH =
       Paths.get("target/healthcare-claims-processing.dar");
   private static final String TEST_MODULE = "DemoOnboardScenario.StartScript";
@@ -69,7 +65,6 @@ public class HealthcareClaimsProcessingIT {
     // Therefore trigger has to be configured at the point where this can be guaranteed.
     File log = new File("integration-triggers.log");
     File errLog = new File("integration-triggers.err.log");
-    logger.debug("starting triggers");
     triggers =
         new ProcessBuilder()
             // need to call Python directly for proper subprocess cleanup (not sure why though)
