@@ -31,9 +31,7 @@ def add_trigger_to_service(party, package_id, trigger):
 
 
 def get_package_id(dar):
-    result = subprocess.run(['daml', 'damlc', 'inspect-dar', '--json', dar], stdout=subprocess.PIPE)
-    if result.returncode != 0:
-        raise RuntimeError(result.stderr)
+    result = subprocess.run(['daml', 'damlc', 'inspect-dar', '--json', dar], capture_output=True, check=True)
     inspect = json.loads(result.stdout)
     return inspect["main_package_id"]
 
