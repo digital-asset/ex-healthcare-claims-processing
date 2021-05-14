@@ -32,14 +32,14 @@ def add_trigger_to_service(party, package_id, trigger):
 
 def get_package_id(dar):
     result = subprocess.run(['daml', 'damlc', 'inspect-dar', '--json', dar], capture_output=True, check=True)
-    inspect = json.loads(result.stdout)
-    return inspect["main_package_id"]
+    dar_properties = json.loads(result.stdout)
+    return dar_properties["main_package_id"]
 
 
 def start_trigger_service_in_background(dar, sandbox_port = DEFAULT_SANDBOX_PORT):
     return _start_process_in_background(
         ["daml", "trigger-service", "--ledger-host", "localhost", "--ledger-port", f'{sandbox_port}',
-         "--wall-clock-time", "--dar", dar, ])
+         "--wall-clock-time", "--dar", dar])
 
 
 def run_script(dar, script_name, sandbox_port = DEFAULT_SANDBOX_PORT):
@@ -56,7 +56,7 @@ def kill_background_process(process):
         # https://stackoverflow.com/questions/4789837/how-to-terminate-a-python-subprocess-launched-with-shell-true
         os.killpg(os.getpgid(process.pid), signal.SIGTERM)
     except ProcessLookupError:
-        logger.warning(f'Could not found subprocess to kill')
+        logger.warning(f'Could not found process {process.pid} to kill')
 
 
 def wait_for_port(port: int, host: str = 'localhost', timeout: float = 5.0):
