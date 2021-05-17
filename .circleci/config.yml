@@ -157,6 +157,7 @@ jobs:
             bash <(curl -s https://raw.githubusercontent.com/DACH-NY/security-blackduck/master/synopsys-detect) \
             ci-build digitalasset_ex-healthcare-claims-processing main \
             --logging.level.com.synopsys.integration=DEBUG \
+            --detect.excluded.detector.types=pip \
             --detect.notices.report=true \
             --detect.timeout=3600
       - run:
