@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-sdk-version: 1.13.0
+sdk-version: 1.13.1
 name: healthcare-claims-processing
 source: daml/
 init-script: DemoOnboardScenario.StartScript:insurancePoliciesSetSingle
