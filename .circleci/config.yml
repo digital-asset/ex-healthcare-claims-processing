@@ -154,6 +154,11 @@ jobs:
             - ~/.daml
           key: m2-{{ checksum "pom.xml" }}-{{ checksum "daml.yaml" }}
       - run:
+          name: Install Python dependencies
+          working_directory: scripts
+          command: |
+            pipenv install --ignore-pipfile
+      - run:
           name: Maven build
           command: |
             mvn clean package
