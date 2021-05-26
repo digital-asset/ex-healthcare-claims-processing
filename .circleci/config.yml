@@ -107,6 +107,7 @@ jobs:
       - run:
           name: Integration tests
           command: |
+            make install-python-dependencies
             mvn verify
       - run:
           command: |
