@@ -16,6 +16,7 @@ Be sure you have the following installed.
 - [DAML SDK](https://docs.daml.com/)
 - Java 8 or higher
 - Make
+- [Python Pipenv](https://pipenv.pypa.io/)
 
 ### Starting the App
 
