@@ -4,5 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-cd scripts || exit 1
+set -e
+cd scripts
 pipenv run ./startTriggers.py 6865
