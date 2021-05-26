@@ -101,8 +101,8 @@ jobs:
             flake8 --max-line-length=120 $(find -name \*.py)
       - run:
           name: Pipenv check
+          working_directory: scripts
           command: |
-            cd scripts
             pipenv check
       - run:
           name: Integration tests
