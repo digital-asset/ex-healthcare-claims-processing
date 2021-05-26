@@ -68,7 +68,7 @@ public class HealthcareClaimsProcessingIT {
     triggers =
         new ProcessBuilder()
             // need to call Python directly for proper subprocess cleanup (not sure why though)
-            .command("scripts/startTriggers.py", Integer.toString(sandbox.getSandboxPort()))
+            .command("launchers/automation", Integer.toString(sandbox.getSandboxPort()))
             .redirectOutput(ProcessBuilder.Redirect.appendTo(log))
             .redirectError(ProcessBuilder.Redirect.appendTo(errLog))
             .start();
