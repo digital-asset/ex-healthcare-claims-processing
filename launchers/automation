@@ -6,5 +6,4 @@
 
 PORT=${1:-6865}
 
-export PIPENV_PIPFILE=scripts/Pipfile
-pipenv run scripts/startTriggers.py "$PORT"
+PIPENV_PIPFILE=scripts/Pipfile pipenv run scripts/startTriggers.py "$PORT"
