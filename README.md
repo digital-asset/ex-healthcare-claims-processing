@@ -43,7 +43,7 @@ Be sure you have the following installed.
 
 1. As a first step, build the whole project
     ```shell
-    make clean build
+    make build
     ```
 2. Create a project and a ledger in DAML Hub
 3. Upload the DARs
