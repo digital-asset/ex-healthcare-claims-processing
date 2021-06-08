@@ -50,6 +50,7 @@ commands:
     steps:
       - install_sdk:
           version: << parameters.daml_sdk_version >>
+      - install_python_dependencies
       - run:
           name: install npm v7
           command: |
