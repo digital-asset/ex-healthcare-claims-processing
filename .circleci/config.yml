@@ -42,19 +42,6 @@ commands:
           name: Install flake8
           command: |
             pip3 install flake8
-  install_yq:
-    description: "Install yq"
-    steps:
-      - run:
-          name: Install pipenv
-          command: |
-            sudo apt-get update || sudo apt-get update
-            sudo apt-get install python3-pip
-            pip3 install pipenv
-      - run:
-          name: Install yq
-          command: |
-            pip3 install yq
   install_prerequisites:
     description: "Install all prerequisites"
     parameters:
@@ -63,7 +50,6 @@ commands:
     steps:
       - install_sdk:
           version: << parameters.daml_sdk_version >>
-      - install_yq
       - update_npm
   update_npm:
     description: "Upgrade npm to v7"
