@@ -33,74 +33,12 @@ Be sure you have the following installed.
     ```shell
     launchers/sandbox+populate
     launchers/automation
-    launchers/healthcareUI
+    launchers/ui
     ```
 
 ### Stopping the App
 
-1. Stop the every running command by pressing **Ctrl+C**.
-
-## Working with Daml Hub
-
-1. As a first step, build the whole project
-    ```shell
-    make clean build
-    ```
-2. Create a project and a ledger in Daml Hub
-3. Upload the DARs
-4. Add the parties to the ledger
-   - PrimaryCareProvider
-   - Radiologist
-   - Patient1
-   - Operator
-   - InsuranceCompany
-5. Download `participants.json` from the ledger settings
-6. Create the `ledger-setup.json` file manually or by running
-    ```shell
-    node scripts/create-ledger-setup.js participants.json ledger-setup.json
-    ```
-
-    The resulting file should like this:
-    ```json
-    {
-      "parties": {
-        "payer1": "ledger-party-92d3fc64-a589-4a18-9e47-30541fdc7824",
-        "operator": "ledger-party-01328c4d-a7b1-49d4-92cc-400badcb46c2",
-        "patient1": "ledger-party-841214e1-cb38-42fa-88a9-08710592f74d",
-        "provider1": "ledger-party-5292e717-bbd6-43d5-8cdc-67b463427ee9",
-        "provider2": "ledger-party-bd952624-9142-412d-ae39-f6025cd94ac8"
-      }
-    }
-    ```
-
-    The following table contains the necessary name mapping:
-
-    | Daml Hub name (in `participants.json`) | Ledger Setup name |
-    | :------------------------------------: | :---------------: |
-    |          primaryCareProvider           |     provider1     |
-    |              radiologist               |     provider2     |
-    |                patient1                |     patient1      |
-    |                operator                |     operator      |
-    |            insuranceCompany            |      payer1       |
-7. Run the ledger setup
-    ```shell
-    daml script \
-      --participant-config participants.json \
-      --json-api \
-      --dar models.dar \
-      --script-name DemoOnboardScenario.StartScript:setupLedger \
-      --input-file ledger-setup.json
-    ```
-8. Run the triggers from the Daml Hub UI
-
-   | Party            | Trigger                                                                        |
-   | :--------------- | :----------------------------------------------------------------------------- |
-   | InsuranceCompany | Triggers.AcceptClaimTrigger:acceptClaimTrigger                                 |
-   | InsuranceCompany | Triggers.AcknowledgeAppointmentTrigger:acknowledgeAppointmentTrigger           |
-   | Radiologist      | Triggers.EvaluateReferralTrigger:evaluateReferralTrigger                       |
-   | Radiologist      | Triggers.UpdateReferralDetailsTrigger:updateReferralDetailsTrigger             |
-   | Patient1         | Triggers.AcknowledgeAndDiscloseTrigger:acknowledgeAndDiscloseTrigger           |
-   | Patient1         | Triggers.AcceptPatientPaymentRequestTrigger:acceptPatientPaymentRequestTrigger |
+1. Stop each running command by pressing **Ctrl+C**.
 
 ## User Guide
 
