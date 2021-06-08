@@ -18,9 +18,5 @@ dependencies:
   - daml-stdlib
   - daml-trigger
   - daml-script
-codegen:
-  js:
-    output-directory: ../ui/daml.js
-    npm-scope: daml.js
 sandbox-options:
 - --ledgerid=example-create-daml-app-sandbox
