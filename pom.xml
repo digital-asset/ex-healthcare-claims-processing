@@ -134,6 +134,8 @@
                         <exclude>**/*.hi</exclude>
                         <exclude>**/*.hie</exclude>
                         <exclude>**/.daml/**</exclude>
+                        <exclude>ui/node_modules/**</exclude>
+                        <exclude>ui/daml.js/**</exclude>
                         <exclude>.gitattributes</exclude>
                     </excludes>
                     <mapping>

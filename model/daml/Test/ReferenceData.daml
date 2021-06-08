@@ -8,6 +8,7 @@ module Test.ReferenceData where
 import Main.Types
 import DA.Map
 import DA.Date
+import DA.Time
 import DA.Optional
 
 -- InsuranceCompany
@@ -33,7 +34,7 @@ patient1_Address = "1234 John St."
 patient1_diagnosisCode = "ABCDE"
 patient1_procedureCode = "12345"
 patient1_globalEncounterId = "1010101010"
-patient1_appointmentTime = date 2018 Dec 31
+patient1_appointmentTime = time (date 2018 Dec 31) 16 0 0
 patient1_AddressLine2 = ""
 patient1_City = "Cincinnati"
 patient1_State = "OH"

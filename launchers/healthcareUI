@@ -4,5 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-cd model
-exec daml start --sandbox-option --address=localhost --sandbox-option --wall-clock-time --start-navigator true
+cd ui || exit 1
+npm install
+npm start

@@ -123,7 +123,7 @@ appointmentTest parties@Parties{..} = script do
 
   scheduleResult <- provider2 `submit`
     Script.exerciseCmd referralDetails ScheduleAppointment with
-      appointmentDate = patient1_appointmentTime
+      appointmentTime = patient1_appointmentTime
   let appointmentCid = fromSome $ eitherToOptional scheduleResult
 
   (updatePolicy, notifyPatient) <- payer1 `submit`

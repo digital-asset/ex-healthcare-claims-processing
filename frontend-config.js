@@ -122,14 +122,14 @@ const failedReferralView = createTab("Failed Referrals", ":FailedReferral@", [
 const failedCheckInView = createTab("Failed Check-Ins", ":FailedCheckIn@", [
     createIdCol(),
     createCol("patient"),
-    createCol("appointmentDate"),
+    createCol("appointmentTime"),
     createCol("reason", null, 300),
 ]);
 
 const failedSchedulingAppointmentView = createTab("Failed Appointments", ":FailedSchedulingAppointment@", [
     createIdCol(),
     createCol("patient"),
-    createCol("appointmentDate"),
+    createCol("appointmentTime"),
     createCol("reason", null, 300),
 ]);
 

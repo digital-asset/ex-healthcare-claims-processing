@@ -5,4 +5,4 @@
 #
 
 cd model
-exec daml start --sandbox-option --address=localhost --sandbox-option --wall-clock-time --start-navigator true
+exec daml start --sandbox-option --address=localhost --sandbox-option --wall-clock-time --start-navigator false

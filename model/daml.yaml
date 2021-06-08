@@ -1,0 +1,26 @@
+#
+# Copyright (c) 2019, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+
+sdk-version: 1.13.1
+name: healthcare-claims-processing
+source: daml/
+init-script: DemoOnboardScenario.StartScript:insurancePoliciesSetSingle
+parties:
+  - InsuranceCompany
+  - PrimaryCareProvider
+  - Radiologist
+  - Patient1
+version: 2.0.0
+dependencies:
+  - daml-prim
+  - daml-stdlib
+  - daml-trigger
+  - daml-script
+codegen:
+  js:
+    output-directory: ../ui/daml.js
+    npm-scope: daml.js
+sandbox-options:
+- --ledgerid=example-create-daml-app-sandbox

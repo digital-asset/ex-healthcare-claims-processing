@@ -1,0 +1,19 @@
+/**
+ * Copyright (c) 2019, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+.Landing {
+  padding-top: 126px;
+}
+
+.Landing > * {
+  margin-bottom: 40px;
+}
+
+.landing-header {
+  line-height: 1.16;
+}
+.landing-description {
+  line-height: 1.19;
+}

@@ -1,8 +1,9 @@
-#!/usr/bin/env bash
+#! /usr/bin/env nix-shell
+#! nix-shell -i bash
 #
 # Copyright (c) 2019, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 
-cd model
-exec daml start --sandbox-option --address=localhost --sandbox-option --wall-clock-time --start-navigator true
+make build
+cd ui && npm install && npm start

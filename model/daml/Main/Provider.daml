@@ -213,7 +213,7 @@ template ReferralDetails
 
       nonconsuming ScheduleAppointment : Either (ContractId FailedSchedulingAppointment) (ContractId Appointment, ContractId NotifyPayer)
         with
-          appointmentDate : Date
+          appointmentTime : Time
         do
           rulesCheck <- create RulesCheck with
             requestingParty = renderingProvider
@@ -248,7 +248,7 @@ template FailedSchedulingAppointment
     operator : Party
     provider : Party
     patient: Party
-    appointmentDate: Date
+    appointmentTime: Time
     reason : Text
   where
     signatory provider

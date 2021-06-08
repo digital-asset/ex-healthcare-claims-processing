@@ -8,6 +8,7 @@ module DemoOnboardScenario.ReferenceData where
 import Main.Types
 import DA.Map
 import DA.Date
+import DA.Time
 import DA.Optional
 import Daml.Script
 
@@ -132,10 +133,10 @@ patient1Demographics = PatientDemographics
     patientCity = "Columbus"
     patientState = "OH"
     patientZipCode = "43116"
-patient1_appointmentTime1 = date 2018 Jan 1
-patient1_appointmentTime2 = date 2018 Jan 2
-patient1_appointmentTime3 = date 2018 Jan 3
-patient1_appointmentTime4 = date 2018 Jan 4
+patient1_appointmentTime1 = time (date 2018 Jan 1) 10 0 0
+patient1_appointmentTime2 = time (date 2018 Jan 2) 10 0 0
+patient1_appointmentTime3 = time (date 2018 Jan 3) 10 0 0
+patient1_appointmentTime4 = time (date 2018 Jan 4) 10 0 0
 -- Patient2
 patient2_Name = "Jim Smith"
 patient2_InsuranceId = "GDR-53-7245"
@@ -150,9 +151,9 @@ patient2Demographics = PatientDemographics
     patientCity = "Columbus"
     patientState = "OH"
     patientZipCode = "43002"
-patient2_appointmentTime1 = date 2018 Feb 1
-patient2_appointmentTime2 = date 2018 Feb 2
-patient2_appointmentTime3 = date 2018 Feb 3
+patient2_appointmentTime1 = time (date 2018 Feb 1) 10 0 0
+patient2_appointmentTime2 = time (date 2018 Feb 2) 10 0 0
+patient2_appointmentTime3 = time (date 2018 Feb 3) 10 0 0
 -- Patient3
 patient3_Name = "Sally Smith"
 patient3_InsuranceId = "QEW-22-9999"
@@ -167,9 +168,9 @@ patient3Demographics = PatientDemographics
     patientCity = "Columbus"
     patientState = "OH"
     patientZipCode = "43090"
-patient3_appointmentTime1 = date 2018 Mar 1
-patient3_appointmentTime2 = date 2018 Mar 2
-patient3_appointmentTime3 = date 2018 Mar 3
+patient3_appointmentTime1 = time (date 2018 Mar 1) 10 0 0
+patient3_appointmentTime2 = time (date 2018 Mar 2) 10 0 0
+patient3_appointmentTime3 = time (date 2018 Mar 3) 10 0 0
 -- Patient4
 patient4_Name = "Kim Chao"
 patient4_InsuranceId = "LKV-65-3434"
@@ -184,9 +185,9 @@ patient4Demographics = PatientDemographics
     patientCity = "Columbus"
     patientState = "OH"
     patientZipCode = "43221"
-patient4_appointmentTime1 = date 2018 Apr 1
-patient4_appointmentTime2 = date 2018 Apr 2
-patient4_appointmentTime3 = date 2018 Apr 3
+patient4_appointmentTime1 = time (date 2018 Apr 1) 10 0 0
+patient4_appointmentTime2 = time (date 2018 Apr 2) 10 0 0
+patient4_appointmentTime3 = time (date 2018 Apr 3) 10 0 0
 -- Patient5
 patient5_Name = "Ted Walker"
 patient5_InsuranceId = "NVU-12-1345"
@@ -201,9 +202,9 @@ patient5Demographics = PatientDemographics
     patientCity = "Columbus"
     patientState = "OH"
     patientZipCode = "43019"
-patient5_appointmentTime1 = date 2018 May 1
-patient5_appointmentTime2 = date 2018 May 2
-patient5_appointmentTime3 = date 2018 May 3
+patient5_appointmentTime1 = time (date 2018 May 1) 10 0 0
+patient5_appointmentTime2 = time (date 2018 May 2) 10 0 0
+patient5_appointmentTime3 = time (date 2018 May 3) 10 0 0
 -- Patient6
 patient6_Name = "Richard Jones"
 patient6_InsuranceId = "PLK-90-9090"
@@ -218,9 +219,9 @@ patient6Demographics = PatientDemographics
     patientCity = "Columbus"
     patientState = "OH"
     patientZipCode = "43189"
-patient6_appointmentTime1 = date 2018 Jun 1
-patient6_appointmentTime2 = date 2018 Jun 2
-patient6_appointmentTime3 = date 2018 Jun 3
+patient6_appointmentTime1 = time (date 2018 Jun 1) 10 0 0
+patient6_appointmentTime2 = time (date 2018 Jun 2) 10 0 0
+patient6_appointmentTime3 = time (date 2018 Jun 3) 10 0 0
 -- Patient7
 patient7_Name = "Kate Andrews"
 patient7_InsuranceId = "ZRX-34-3456"
@@ -235,9 +236,9 @@ patient7Demographics = PatientDemographics
     patientCity = "Columbus"
     patientState = "OH"
     patientZipCode = "43165"
-patient7_appointmentTime1 = date 2018 Jul 1
-patient7_appointmentTime2 = date 2018 Jul 2
-patient7_appointmentTime3 = date 2018 Jul 3
+patient7_appointmentTime1 = time (date 2018 Jul 1) 10 0 0
+patient7_appointmentTime2 = time (date 2018 Jul 2) 10 0 0
+patient7_appointmentTime3 = time (date 2018 Jul 3) 10 0 0
 -- Patient8
 patient8_Name = "Bill Richards"
 patient8_InsuranceId = "ADT-34-3256"

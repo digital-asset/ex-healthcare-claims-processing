@@ -70,7 +70,7 @@ appointmentTest parties@Parties{..} = script do
 
   scheduleResult <- provider2 `submit` do
     exerciseCmd referralDetails ScheduleAppointment with
-      appointmentDate = patient1_appointmentTime
+      appointmentTime = patient1_appointmentTime
   let appointmentCid = fromSome $ eitherToOptional $ scheduleResult
 
   pure (originalPolicy, snd appointmentCid)

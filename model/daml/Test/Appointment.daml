@@ -23,7 +23,7 @@ data AppointmentScenarioOutput =
     appointmentCid : (ContractId Appointment, ContractId NotifyPayer)
     appointmentDetails : RuleParameters
     originalPolicy : ContractId InsurancePolicy
-    appointmentDate: Date
+    appointmentTime: Time
 
 -- standalone version to view it in DAML Studio
 appointmentTest' = appointmentTest =<< allocateParties
@@ -41,7 +41,7 @@ appointmentTest parties@Parties{..} = script
 
     scheduleResult <- provider2 `submit` do
       exerciseCmd referralDetails ScheduleAppointment with
-        appointmentDate = patient1_appointmentTime
+        appointmentTime = patient1_appointmentTime
     let appointmentCid = fromSome $ eitherToOptional $ scheduleResult
 
     (updatedPolicy, notifyPatient) <- payer1 `submit`
@@ -58,4 +58,4 @@ appointmentTest parties@Parties{..} = script
     return AppointmentScenarioOutput with
       appointmentDetails = updatedApptDetails
       originalPolicy = updatedPolicy
-      appointmentDate = patient1_appointmentTime, ..
+      appointmentTime = patient1_appointmentTime, ..

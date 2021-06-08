@@ -8,7 +8,6 @@ module DemoOnboardScenario.Treatment where
 
 import DA.Either
 import DA.Optional
-import DA.Time
 
 import Daml.Script
 
@@ -54,65 +53,65 @@ treatmentTest parties@Parties{..} = script
     let
       rp1: RuleParameters = appt.referral.patient1.ruleParams1
 
-    setTime (time patient1_appointmentTime1 0 0 0)
+    setTime patient1_appointmentTime1
     treatmentCid11 <- checkIn provider2 (appt.patient1.appointment1)
     paymentReq11 <- completeTreatment provider2 treatmentCid11
 
-    setTime (time patient1_appointmentTime2 0 0 0)
+    setTime patient1_appointmentTime2
     treatmentCid12 <- checkIn provider1 (appt.patient1.appointment2)
     paymentReq12 <- completeTreatment provider1 treatmentCid12
 
-    setTime (time patient2_appointmentTime1 0 0 0)
+    setTime patient2_appointmentTime1
     treatmentCid21 <- checkIn provider2 (appt.patient2.appointment1)
     paymentReq21 <- completeTreatment provider2 treatmentCid21
 
-    setTime (time patient2_appointmentTime2 0 0 0)
+    setTime patient2_appointmentTime2
     treatmentCid22 <- checkIn provider1 (appt.patient2.appointment2)
     paymentReq22 <- completeTreatment provider1 treatmentCid22
 
-    setTime (time patient2_appointmentTime3 0 0 0)
+    setTime patient2_appointmentTime3
     treatmentCid23 <- checkIn provider2 (appt.patient2.appointment3)
     paymentReq23 <- completeTreatment provider2 treatmentCid23
 
-    setTime (time patient3_appointmentTime1 0 0 0)
+    setTime patient3_appointmentTime1
     _treatmentCid31 <- checkIn provider2 (appt.patient3.appointment1)
 
-    setTime (time patient3_appointmentTime2 0 0 0)
+    setTime patient3_appointmentTime2
     treatmentCid32 <- checkIn provider1 (appt.patient3.appointment2)
     paymentReq32 <- completeTreatment provider1 treatmentCid32
 
-    setTime (time patient3_appointmentTime3 0 0 0)
+    setTime patient3_appointmentTime3
     treatmentCid33 <- checkIn provider2 (appt.patient3.appointment3)
     paymentReq33 <- completeTreatment provider2 treatmentCid33
 
-    setTime (time patient4_appointmentTime2 0 0 0)
+    setTime patient4_appointmentTime2
     treatmentCid42 <- checkIn provider1 (appt.patient4.appointment2)
     paymentReq42 <- completeTreatment provider1 treatmentCid42
 
-    setTime (time patient5_appointmentTime2 0 0 0)
+    setTime patient5_appointmentTime2
     treatmentCid52 <- checkIn provider1 (appt.patient5.appointment2)
     paymentReq52 <- completeTreatment provider1 treatmentCid52
 
-    setTime (time patient5_appointmentTime3 0 0 0)
+    setTime patient5_appointmentTime3
     _treatmentCid53 <- checkIn provider2 (appt.patient5.appointment3)
     -- the corresponding payment request can be created within the application
 
-    setTime (time patient6_appointmentTime2 0 0 0)
+    setTime patient6_appointmentTime2
     treatmentCid62 <- checkIn provider1 (appt.patient6.appointment2)
     paymentReq62 <- completeTreatment provider1 treatmentCid62
 
-    setTime (time patient6_appointmentTime3 0 0 0)
+    setTime patient6_appointmentTime3
     treatmentCid63 <- checkIn provider2 (appt.patient6.appointment3)
     paymentReq63 <- completeTreatment provider2 treatmentCid63
 
-    setTime (time patient7_appointmentTime1 0 0 0)
+    setTime patient7_appointmentTime1
     treatmentCid71 <- checkIn provider2 (appt.patient7.appointment1)
     paymentReq71 <- completeTreatment provider2 treatmentCid71
 
-    setTime (time patient7_appointmentTime2 0 0 0)
+    setTime patient7_appointmentTime2
     _treatmentCid72 <- checkIn provider1 (appt.patient7.appointment2)
 
-    setTime (time patient7_appointmentTime3 0 0 0)
+    setTime patient7_appointmentTime3
     _treatmentCid73 <- checkIn provider2 (appt.patient7.appointment3)
 
     return $ TreatmentData appt paymentReq11 paymentReq12 paymentReq21 paymentReq22 paymentReq23 paymentReq32 paymentReq33 paymentReq42 paymentReq52 paymentReq62 paymentReq63 paymentReq71

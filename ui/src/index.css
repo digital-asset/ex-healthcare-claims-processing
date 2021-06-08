@@ -1,0 +1,141 @@
+/**
+ * Copyright (c) 2019, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --blue: #4c6fea;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @apply font-alata;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-rows: 1fr;
+  min-height: 100vh;
+}
+
+.main-grid-narrow {
+  grid-template-columns: 256px 1fr;
+}
+
+.main-grid-wide {
+  grid-template-columns: 420px auto;
+}
+
+.tab-active {
+  @apply text-white bg-blue;
+}
+.tab-active i {
+  @apply text-white;
+}
+
+.tab-hover:hover {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+  @apply bg-trueGray-100 !important;
+  @apply text-blueGray-600 !important;
+}
+.tab-hover:hover i {
+  @apply text-blueGray-500 !important;
+}
+
+.userIconBlue {
+  /*width: 89px;
+  height: 85px;*/
+  width: 110px;
+  height: 107px;
+  font-size: 110px;
+  position: absolute;
+  top: -10.5px;
+  left: -11px;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to bottom, #83a8f6, var(--blue));
+}
+.userIconWrapper {
+  width: 89px;
+  height: 85px;
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+
+.size-card {
+  width: 476px;
+  height: 497px;
+}
+
+.label-sm {
+  @apply text-sm text-trueGray-500;
+}
+.sm-trueGray-400 {
+  @apply text-sm text-trueGray-400;
+}
+.sm-trueGray-500 {
+  @apply text-sm text-trueGray-500;
+}
+
+.heading-2xl {
+  @apply text-center text-2xl text-trueGray-700;
+}
+
+.card-GraphicalDots {
+  position: absolute;
+  width: 239px;
+  height: 239px;
+  transform: rotate(-6deg);
+  background-image: url("images/dots.svg");
+  background-size: cover;
+}
+.card-GraphicalDots img {
+  width: 239px;
+  height: 239px;
+}
+
+.card-gdots-pos1 {
+  top: calc(50% - 326.1px);
+  left: calc(50% - 335.7px);
+}
+.card-gdots-pos2 {
+  top: calc(50% + 79px);
+  left: calc(50% + 78.9px);
+}
+
+table {
+  /*  align-content: stretch; */
+}
+
+@for $i from 2 to 10 {
+  .table-widths-eq > thead > tr > *:nth-last-child($i) ~ * {
+    width: calc(100% / $i);
+  }
+}
+
+.react-select-modal-enum__value-container {
+  @apply bg-trueGray-100;
+}
+.react-select-modal-enum__indicators {
+  @apply bg-trueGray-100;
+}
+
+.overflow-ellipsis-20 {
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: 20em;
+  overflow: hidden;
+  white-space: nowrap;
+}

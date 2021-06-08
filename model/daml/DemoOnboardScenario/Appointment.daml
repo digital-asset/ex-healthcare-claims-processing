@@ -43,11 +43,11 @@ data PatientAppointmentData4 = PatientAppointmentData4
     appointment4: (ContractId Appointment, ContractId NotifyPayer)
   deriving (Eq, Show)
 
-scheduleAppointment : Party -> ContractId Provider -> ContractId ReferralDetails -> Date ->  Script (ContractId Appointment, ContractId NotifyPayer)
+scheduleAppointment : Party -> ContractId Provider -> ContractId ReferralDetails -> Time ->  Script (ContractId Appointment, ContractId NotifyPayer)
 scheduleAppointment provider providerRole referralDetails appointmentTime  = do
   scheduleResult <- provider `submit` do
     exerciseCmd referralDetails ScheduleAppointment with
-      appointmentDate = appointmentTime
+      appointmentTime = appointmentTime
   return $ fromSome $ eitherToOptional $ scheduleResult
 
 acknowledge : Party -> (ContractId Appointment, ContractId NotifyPayer) -> ContractId InsurancePolicy -> Script (ContractId InsurancePolicy, ContractId NotifyPatient)

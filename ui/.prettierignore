@@ -1,0 +1,7 @@
+build
+participants.json
+parties.json
+node_modules
+.vscode
+daml.js
+cbdc-ui.zip
