@@ -183,7 +183,7 @@ jobs:
       - run:
           name: UI install dependencies
           command: |
-            make build -j3
+            make build
       - run:
           name: UI build
           command: |
