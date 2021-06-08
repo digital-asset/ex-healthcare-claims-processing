@@ -204,8 +204,7 @@ jobs:
           keys:
             - m2-{{ checksum "pom.xml" }}-{{ checksum "daml.yaml" }}
             - m2
-      - install_python_dependencies
-      - install_sdk:
+      - install_prerequisites:
           version: << parameters.daml_sdk_version >>
       - save_cache:
           paths:
