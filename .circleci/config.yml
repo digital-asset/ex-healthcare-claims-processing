@@ -72,6 +72,13 @@ commands:
           name: install npm v7
           command: |
             sudo npm install -g npm@7.13.0
+  slack_notification:
+    description: "Notify about failure on Slack"
+    steps:
+      - slack/status:
+          fail_only: true
+          only_for_branches: main
+          webhook: '${SLACK_WEBHOOK}'
 
 jobs:
   daml_test:
@@ -102,6 +109,7 @@ jobs:
           path: target/daml-test-reports
       - store_artifacts:
           path: target/daml-test-reports
+      - slack_notification
 
   integration_test:
     parameters:
@@ -165,6 +173,7 @@ jobs:
             - "*.dar"
             - "lib"
             - "NOTICE"
+      - slack_notification
 
   ui_test:
     parameters:
