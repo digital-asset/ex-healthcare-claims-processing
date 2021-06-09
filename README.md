@@ -42,6 +42,8 @@ Be sure you have the following installed.
 
 ## Working with Daml Hub
 
+**Note**: the custom UI does not work on Daml Hub yet, only the builtin Live Explorer.
+
 1. As a first step, build the whole project
     ```shell
     make clean build
