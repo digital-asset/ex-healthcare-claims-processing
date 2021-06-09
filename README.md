@@ -42,7 +42,7 @@ Be sure you have the following installed.
 
 ## Working with Daml Hub
 
-**Note**: the custom UI does not work on Daml Hub yet, only the builtin Live Explorer.
+**Note**: The custom UI does not work on Daml Hub yet, but you can use Daml Hub's live explorer to interact with the contracts by following the instructions below.
 
 1. As a first step, build the whole project
     ```shell
