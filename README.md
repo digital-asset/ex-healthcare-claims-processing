@@ -38,7 +38,7 @@ Be sure you have the following installed.
 
 ### Stopping the App
 
-1. Stop the every running command by pressing **Ctrl+C**.
+1. Stop every running command by pressing **Ctrl+C**.
 
 ## Working with Daml Hub
 
