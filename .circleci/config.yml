@@ -54,7 +54,7 @@ commands:
       - run:
           name: install npm v7
           command: |
-            sudo npm install -g npm@7.13.0
+            sudo npm install -g npm@7.15.1
   slack_notification:
     description: "Notify about failure on Slack"
     steps:
