@@ -42,19 +42,6 @@ commands:
           name: Install flake8
           command: |
             pip3 install flake8
-  install_yq:
-    description: "Install yq"
-    steps:
-      - run:
-          name: Install pipenv
-          command: |
-            sudo apt-get update || sudo apt-get update
-            sudo apt-get install python3-pip
-            pip3 install pipenv
-      - run:
-          name: Install yq
-          command: |
-            pip3 install yq
   install_prerequisites:
     description: "Install all prerequisites"
     parameters:
@@ -63,15 +50,18 @@ commands:
     steps:
       - install_sdk:
           version: << parameters.daml_sdk_version >>
-      - install_yq
-      - update_npm
-  update_npm:
-    description: "Upgrade npm to v7"
-    steps:
+      - install_python_dependencies
       - run:
           name: install npm v7
           command: |
             sudo npm install -g npm@7.13.0
+  slack_notification:
+    description: "Notify about failure on Slack"
+    steps:
+      - slack/status:
+          fail_only: true
+          only_for_branches: main
+          webhook: '${SLACK_WEBHOOK}'
 
 jobs:
   daml_test:
@@ -102,6 +92,7 @@ jobs:
           path: target/daml-test-reports
       - store_artifacts:
           path: target/daml-test-reports
+      - slack_notification
 
   integration_test:
     parameters:
@@ -165,6 +156,7 @@ jobs:
             - "*.dar"
             - "lib"
             - "NOTICE"
+      - slack_notification
 
   ui_test:
     parameters:
@@ -183,7 +175,7 @@ jobs:
       - run:
           name: UI install dependencies
           command: |
-            make build -j3
+            make build
       - run:
           name: UI build
           command: |
@@ -196,6 +188,61 @@ jobs:
           paths:
             - ui/node_modules
           key: node-v1-{{ .Branch }}-{{ checksum "ui/package-lock.json" }}
+      - slack_notification
+
+  blackduck_check:
+    parameters:
+      daml_sdk_version:
+        type: string
+    executor: daml-executor
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - m2-{{ checksum "pom.xml" }}-{{ checksum "daml.yaml" }}
+            - m2
+      - install_prerequisites:
+          daml_sdk_version: << parameters.daml_sdk_version >>
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/.daml
+          key: m2-{{ checksum "pom.xml" }}-{{ checksum "daml.yaml" }}
+      - run:
+          name: Install Python dependencies
+          working_directory: scripts
+          command: |
+            pipenv install --ignore-pipfile
+      - run:
+          name: Maven build
+          command: |
+            mvn clean package
+      - run:
+          name: UI install dependencies
+          command: |
+            make build
+      - run:
+          name: Yarn recursive install
+          command: |
+            # recurse all directories with a package.json and run yarn install on them to resolve dependencies
+            find . -type f \( ! -path '*node_modules*' \) -name package.json | while read hit ; do yarn install --cwd $(dirname "$hit") ; done
+      - run:
+          name: Blackduck detect
+          command: |
+            bash <(curl -s https://raw.githubusercontent.com/DACH-NY/security-blackduck/master/synopsys-detect) \
+            ci-build digitalasset_ex-healthcare-claims-processing main \
+            --logging.level.com.synopsys.integration=DEBUG \
+            --detect.python.path="$(which python3)" \
+            --detect.pipenv.path="$(which pipenv)" \
+            --detect.notices.report=true \
+            --detect.timeout=3600
+      - run:
+          command: cp digitalasset_ex_healthcare_claims_processing_main_Black_Duck_Notices_Report.txt NOTICE
+      - persist_to_workspace:
+          root: .
+          paths:
+            - "NOTICE"
+      - slack_notification
 
 workflows:
   version: 2
@@ -203,7 +250,44 @@ workflows:
     jobs:
       - daml_test:
           daml_sdk_version: "1.13.1"
+          context: refapps
       - integration_test:
           daml_sdk_version: "1.13.1"
+          context: refapps
       - ui_test:
           daml_sdk_version: "1.13.1"
+          context: refapps
+      - blackduck_check:
+          daml_sdk_version: "1.13.1"
+          filters:
+            branches:
+              only:
+                - /.*blackduck.*/
+          context:
+            - blackduck
+            - refapps
+  scheduled_test:
+    triggers:
+      - schedule:
+          # need to scatter jobs to reduce Blackduck load
+          # see also https://digitalasset.atlassian.net/browse/ERA-913
+          cron: "30 2 * * *"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - daml_test:
+          daml_sdk_version: "1.13.1"
+          context: refapps
+      - integration_test:
+          daml_sdk_version: "1.13.1"
+          context: refapps
+      - ui_test:
+          daml_sdk_version: "1.13.1"
+          context: refapps
+      - blackduck_check:
+          daml_sdk_version: "1.13.1"
+          context:
+            - blackduck
+            - refapps
