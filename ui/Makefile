@@ -40,6 +40,6 @@ healthcare-claims-processing-ui.zip: $(UI_INSTALL_ARTIFACT) $(UI_SRC)
 	REACT_APP_LEDGER_ID=$(LEDGER_ID) \
 	REACT_APP_HTTP_BASE_URL="https://api.projectdabl.com/data/$(LEDGER_ID)/" \
 	REACT_APP_IS_LOCAL=false \
-	npm run build
+	npm --trace-warnings run build
 	rm -f healthcare-claims-processing-ui.zip
 	zip --quiet -r healthcare-claims-processing-ui.zip build
