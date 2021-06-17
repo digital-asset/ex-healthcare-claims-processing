@@ -5,7 +5,9 @@
 
 build: npminstall
 
-test: build eslint formatting
+test: build
+	npx prettier --check .
+	npm run-script lint -- --max-warnings 0
 	npm test -- --watchAll=false
 
 clean:
@@ -25,12 +27,6 @@ package-lock.json: package.json
 $(UI_INSTALL_ARTIFACT): package.json package-lock.json $(JS_CODEGEN_ARTIFACT)
 	npm install
 	touch $(UI_INSTALL_ARTIFACT)
-
-eslint: npminstall
-	npm run-script lint -- --max-warnings 0
-
-formatting:
-	npx prettier --check .
 
 daml-hub-package: healthcare-claims-processing-ui.zip
 
