@@ -15,7 +15,7 @@ clean:
 	rm -f healthcare-claims-processing-ui.zip
 	rm -rf build
 
-JS_CODEGEN_ARTIFACT=daml.js/healthcare-claims-processing-2.0.0/package.json
+JS_CODEGEN_ARTIFACT=daml.js
 
 UI_INSTALL_ARTIFACT=node_modules
 
