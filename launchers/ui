@@ -5,5 +5,4 @@
 #
 
 cd ui || exit 1
-npm install
 exec npm start

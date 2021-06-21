@@ -2,7 +2,9 @@ MODELS_DAR=target/healthcare-claims-processing.dar
 TRIGGERS_DAR=target/healthcare-claims-processing-triggers.dar
 
 .PHONY: build
-build: build-dars install-python-dependencies ui/daml.js
+build: build-dars build-ui install-python-dependencies
+
+test: test-dars test-ui
 
 .PHONY: clean
 clean:
@@ -10,19 +12,6 @@ clean:
 	rm -rf target
 	rm -rf ui/daml.js
 	$(MAKE) clean -C ui
-
-ui/daml.js: build-dars
-	rm -rf ui/daml.js
-	daml codegen js target/healthcare-claims-processing.dar -o ui/daml.js
-
-build-ui: ui/daml.js
-	$(MAKE) -C ui
-
-test-ui: build-ui
-	$(MAKE) -C ui test
-
-daml-hub-package: build
-	$(MAKE) -C ui daml-hub-package LEDGER_ID=$(LEDGER_ID)
 
 .PHONY: install-python-dependencies
 install-python-dependencies:
@@ -43,9 +32,26 @@ TRIGGERS_DAML_SRC=$(shell find triggers/daml/ -name '*.daml')
 $(TRIGGERS_DAR): $(TRIGGERS_DAML_SRC) triggers/daml.yaml $(MODELS_DAR)
 	cd triggers && daml build --output ../$@
 
-
 .PHONY: test-dars
 test-dars: build-dars
-	(cd model && daml test --junit ../target/daml-test-reports/model.xml)
+	cd model && daml test --junit ../target/daml-test-reports/model.xml
 	cd triggers && daml test --junit ../target/daml-test-reports/triggers.xml
 
+
+### JS Codegen ###
+
+ui/daml.js: $(MODELS_DAR)
+	daml codegen js $^ -o $@
+	@touch $@
+
+
+### UI ###
+
+build-ui: ui/daml.js
+	$(MAKE) -C ui
+
+test-ui: build-ui
+	$(MAKE) -C ui test
+
+daml-hub-package: build
+	$(MAKE) -C ui daml-hub-package LEDGER_ID=$(LEDGER_ID)
