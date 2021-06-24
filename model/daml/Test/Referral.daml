@@ -23,7 +23,7 @@ data ReferralScenarioOutput =
     originalPolicy : ContractId InsurancePolicy
 
 -- standalone version to view it in DAML Studio
-referralTest' _ = referralTest =<< allocateParties
+referralTest' = referralTest =<< allocateParties
 
 referralTest parties@Parties{..} = script
   do
