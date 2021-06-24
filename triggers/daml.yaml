@@ -13,3 +13,7 @@ dependencies:
   - daml-trigger
   - daml-script
   - ../target/healthcare-claims-processing.dar
+build-options:
+  - '--ghc-option'
+  - "-Werror -W -Wall \
+     -Wno-missing-signatures"
