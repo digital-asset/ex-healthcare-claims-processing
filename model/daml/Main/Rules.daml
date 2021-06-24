@@ -94,14 +94,14 @@ checkReferral requestingParty ruleParams =
         return False
 
 checkProviderNetwork : Party -> RuleParameters -> Update Bool
-checkProviderNetwork requestingParty ruleParams =
+checkProviderNetwork _ ruleParams =
   do
     n <- fetch ruleParams.networkContract
     p <- fetch ruleParams.policy
     return (n.payer == p.payer)
 
 checkPolicyDate : Party -> RuleParameters -> Update Bool
-checkPolicyDate requestingParty ruleParams =
+checkPolicyDate _ ruleParams =
   do
     now <- getTime
     let today = toDateUTC now
@@ -109,13 +109,13 @@ checkPolicyDate requestingParty ruleParams =
     return (p.policyEndDate >= today)
 
 checkPolicyActive : Party -> RuleParameters -> Update Bool
-checkPolicyActive requestingParty ruleParams =
+checkPolicyActive _ ruleParams =
   do
     p <- fetch ruleParams.policy
     return p.isPolicyInGoodStanding
 
 checkProcedureCount : Party -> RuleParameters -> Update Bool
-checkProcedureCount requestingParty ruleParams =
+checkProcedureCount _ ruleParams =
   do
     p <- fetch ruleParams.policy
     let maybeProcedureCid = M.lookup ruleParams.encounterDetails.procedureCode p.procedureList
@@ -127,11 +127,11 @@ checkProcedureCount requestingParty ruleParams =
       None -> return False
 
 checkValidProcedureForDiagnosis : Party -> RuleParameters -> Update Bool
-checkValidProcedureForDiagnosis requestingParty ruleParams =
+checkValidProcedureForDiagnosis _ ruleParams =
   return (diagnosisToProcedureMapping ruleParams.encounterDetails.diagnosisCode ruleParams.encounterDetails.procedureCode)
 
 checkReferralToSpecialist : Party -> RuleParameters -> Update Bool
-checkReferralToSpecialist requestingParty ruleParams =
+checkReferralToSpecialist _ ruleParams =
   do
   n <- fetch ruleParams.networkContract
   let maybeReferral = ruleParams.referral
@@ -145,7 +145,7 @@ checkReferralToSpecialist requestingParty ruleParams =
       return False
 
 checkProcedureAllowed : Party -> RuleParameters -> Update Bool
-checkProcedureAllowed requestingParty ruleParams =
+checkProcedureAllowed _ ruleParams =
   do
     p <- fetch ruleParams.policy
     let maybeProcedureCid = M.lookup ruleParams.encounterDetails.procedureCode p.procedureList

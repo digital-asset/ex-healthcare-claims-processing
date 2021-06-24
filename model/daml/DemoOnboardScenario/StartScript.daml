@@ -101,7 +101,7 @@ setupLedger config = do
         policyType = Ref.patient1_PolicyType
   procedures <- do
     let p = head Ref.procedureCodeList
-    forA Ref.procedureCodeList $ \procedureCode ->
+    forA Ref.procedureCodeList $ \_ ->
       payer1 `submit`
         createCmd Procedure with
           copay = 15.0

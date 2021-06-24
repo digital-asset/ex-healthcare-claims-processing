@@ -62,11 +62,8 @@ testNoNotification = script do
 appointmentTest parties@Parties{..} = script do
   referralScenario <- referralTest parties
 
-  let provider2Role = referralScenario.provider2Role
-      appointmentDetails = referralScenario.ruleParameters
-      referralDetails = referralScenario.referralDetails
+  let referralDetails = referralScenario.referralDetails
       originalPolicy = referralScenario.originalPolicy
-      disclosureList = [provider1, provider2]
 
   scheduleResult <- provider2 `submit` do
     exerciseCmd referralDetails ScheduleAppointment with

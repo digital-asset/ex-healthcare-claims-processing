@@ -14,7 +14,6 @@ import Daml.Script
 import Main.Appointment
 import Main.Treatment
 import Main.Provider
-import Main.RuleTypes
 import DemoOnboardScenario.Appointment
 import DemoOnboardScenario.ReferenceData
 
@@ -49,9 +48,6 @@ treatmentTest' = treatmentTest =<< allocateParties
 treatmentTest parties@Parties{..} = script
   do
     appt <- appointmentTest parties
-
-    let
-      rp1: RuleParameters = appt.referral.patient1.ruleParams1
 
     setTime patient1_appointmentTime1
     treatmentCid11 <- checkIn provider2 (appt.patient1.appointment1)

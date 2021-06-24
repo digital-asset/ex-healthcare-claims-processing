@@ -17,7 +17,7 @@ acknowledgeAppointmentTrigger : Trigger ()
 acknowledgeAppointmentTrigger = Trigger
   { initialize = pure ()
   , updateState = \_ -> pure ()
-  , rule = acknowledgeAppointments
+  , rule = const acknowledgeAppointments
   , registeredTemplates = RegisteredTemplates [
         registeredTemplate @NotifyPayer
       , registeredTemplate @InsurancePolicy
@@ -25,8 +25,8 @@ acknowledgeAppointmentTrigger = Trigger
   , heartbeat = None
   }
 
-acknowledgeAppointments : Party -> TriggerA () ()
-acknowledgeAppointments party = do
+acknowledgeAppointments : TriggerA () ()
+acknowledgeAppointments = do
   notifications <- query @NotifyPayer
   policies <- query @InsurancePolicy
 
