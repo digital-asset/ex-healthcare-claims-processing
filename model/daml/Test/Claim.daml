@@ -17,7 +17,6 @@ claimTest = script do
     treatmentScenario <- treatmentTest parties
     let
       paymentReq = treatmentScenario.paymentReq
-      originalPolicy = treatmentScenario.originalPolicy
 
     claim <- payer1 `submit`
       exerciseCmd paymentReq.claimReq AcceptClaimRequest

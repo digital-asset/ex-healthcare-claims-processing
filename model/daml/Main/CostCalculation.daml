@@ -36,7 +36,7 @@ calculateCosts ruleParams encounterStage =
          buildEncounterDetail (Some allowedAmount) (Some $ optionalPatientResponsibilityAmount procedure allowedAmount) (Some procedure.copay)
 
       -- optionalPatientResponsibilityAmount = Some . calculatePatientResp policy.currentDeductible copayAmount
-      -- getEncounterDetail coPay allowedAmount = 
+      -- getEncounterDetail coPay allowedAmount =
       --  buildEncounterDetail (Some allowedAmount) (optionalPatientResponsibilityAmount allowedAmount) (Some copayAmount)
 
     case (maybeProcedureCid, encounterStage) of
@@ -51,8 +51,7 @@ calculateCosts ruleParams encounterStage =
             let
               feeSchedule = networkContract.feeSchedule
               maybeAmt = M.lookup procedureCode feeSchedule
-              copayAmount = procedure.copay
-            optional (buildEncounterDetail None None (Some procedure.copay)) (getEncounterDetail procedure) maybeAmt   
+            optional (buildEncounterDetail None None (Some procedure.copay)) (getEncounterDetail procedure) maybeAmt
 
       (None, _) -> baseEncounterDetail
 
@@ -65,7 +64,7 @@ calculatePatientResp deductible copay allowedAmount
   | otherwise
     = copay
 
--- could be wrong way around 
+-- could be wrong way around
 calculatePatientResp' : Decimal -> Decimal -> Procedure -> Decimal
 calculatePatientResp' deductible copay allowedAmount
   | deductible >= allowedAmount.copay

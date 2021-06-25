@@ -43,8 +43,8 @@ data PatientAppointmentData4 = PatientAppointmentData4
     appointment4: (ContractId Appointment, ContractId NotifyPayer)
   deriving (Eq, Show)
 
-scheduleAppointment : Party -> ContractId Provider -> ContractId ReferralDetails -> Time ->  Script (ContractId Appointment, ContractId NotifyPayer)
-scheduleAppointment provider providerRole referralDetails appointmentTime  = do
+scheduleAppointment : Party -> ContractId ReferralDetails -> Time -> Script (ContractId Appointment, ContractId NotifyPayer)
+scheduleAppointment provider referralDetails appointmentTime  = do
   scheduleResult <- provider `submit` do
     exerciseCmd referralDetails ScheduleAppointment with
       appointmentTime = appointmentTime
@@ -68,138 +68,136 @@ appointmentTest parties@Parties{..} = script
     ref <- Ref.referralSet parties
     let
       ip = ref.insurancePolicies
-      provider1Role = ref.insurancePolicies.networkContracts.onboard.provider1Role
-      provider2Role = ref.insurancePolicies.networkContracts.onboard.provider2Role
 
 
     -- Appointment 11
-    appointmentCid11 <- scheduleAppointment provider2 provider2Role
+    appointmentCid11 <- scheduleAppointment provider2
       ref.patient1.referralDetails1 patient1_appointmentTime1
     (updatedPolicy11, notifyPatient11) <- acknowledge payer1 appointmentCid11 ip.patient1.originalPolicyCid
     newDisclosedPolicy11 <- acknowledgeAndDisclose provider1 provider2 patient1 notifyPatient11 updatedPolicy11
 
 --     -- Appointment 12
-    appointmentCid12 <- scheduleAppointment provider1 provider1Role
+    appointmentCid12 <- scheduleAppointment provider1
       ref.patient1.referralDetails2 patient1_appointmentTime2
     (updatedPolicy12, notifyPatient12) <- acknowledge payer1 appointmentCid12 updatedPolicy11
     newDisclosedPolicy12 <- acknowledgeAndDisclose provider1 provider2 patient1 notifyPatient12 updatedPolicy12
 
 --     -- Appointment 13
-    appointmentCid13 <- scheduleAppointment provider1 provider1Role
+    appointmentCid13 <- scheduleAppointment provider1
       ref.patient1.referralDetails3 patient1_appointmentTime3
     (updatedPolicy13, notifyPatient13) <- acknowledge payer1 appointmentCid13 updatedPolicy12
     newDisclosedPolicy13 <- acknowledgeAndDisclose provider1 provider2 patient1 notifyPatient13 updatedPolicy13
 
 --     -- Appointment 14
-    appointmentCid14 <- scheduleAppointment provider2 provider2Role
+    appointmentCid14 <- scheduleAppointment provider2
       ref.patient1.referralDetails4 patient1_appointmentTime4
     (updatedPolicy14, notifyPatient14) <- acknowledge payer1 appointmentCid14 updatedPolicy13
     newDisclosedPolicy14 <- acknowledgeAndDisclose provider1 provider2 patient1 notifyPatient14 updatedPolicy14
 
 --     -- Appointment 21
-    appointmentCid21 <- scheduleAppointment provider2 provider2Role
+    appointmentCid21 <- scheduleAppointment provider2
       ref.patient2.referralDetails1 patient2_appointmentTime1
     (updatedPolicy21, notifyPatient21) <- acknowledge payer1 appointmentCid21 ip.patient2.originalPolicyCid
     newDisclosedPolicy21 <- acknowledgeAndDisclose provider1 provider2 patient2 notifyPatient21 updatedPolicy21
 
 --     -- Appointment 22
-    appointmentCid22 <- scheduleAppointment provider1 provider1Role
+    appointmentCid22 <- scheduleAppointment provider1
       ref.patient2.referralDetails2 patient2_appointmentTime2
     (updatedPolicy22, notifyPatient22) <- acknowledge payer1 appointmentCid22 updatedPolicy21
     newDisclosedPolicy22 <- acknowledgeAndDisclose provider1 provider2 patient2 notifyPatient22 updatedPolicy22
 
 --     -- Appointment 23
-    appointmentCid23 <- scheduleAppointment provider2 provider2Role
+    appointmentCid23 <- scheduleAppointment provider2
       ref.patient2.referralDetails3 patient2_appointmentTime3
     (updatedPolicy23, notifyPatient23) <- acknowledge payer1 appointmentCid23 updatedPolicy22
     newDisclosedPolicy23 <- acknowledgeAndDisclose provider1 provider2 patient2 notifyPatient23 updatedPolicy23
 
     -- Appointment 31
-    appointmentCid31 <- scheduleAppointment provider2 provider2Role
+    appointmentCid31 <- scheduleAppointment provider2
       ref.patient3.referralDetails1 patient3_appointmentTime1
     (updatedPolicy31, notifyPatient31) <- acknowledge payer1 appointmentCid31 ip.patient3.originalPolicyCid
     newDisclosedPolicy31 <- acknowledgeAndDisclose provider1 provider2 patient3 notifyPatient31 updatedPolicy31
 
     -- Appointment 32
-    appointmentCid32 <- scheduleAppointment provider1 provider1Role
+    appointmentCid32 <- scheduleAppointment provider1
       ref.patient3.referralDetails2 patient3_appointmentTime2
     (updatedPolicy32, notifyPatient32) <- acknowledge payer1 appointmentCid32 updatedPolicy31
     newDisclosedPolicy32 <- acknowledgeAndDisclose provider1 provider2 patient3 notifyPatient32 updatedPolicy32
 
     -- Appointment 33
-    appointmentCid33 <- scheduleAppointment provider2 provider2Role
+    appointmentCid33 <- scheduleAppointment provider2
       ref.patient3.referralDetails3 patient3_appointmentTime3
     (updatedPolicy33, notifyPatient33) <- acknowledge payer1 appointmentCid33 updatedPolicy32
     newDisclosedPolicy33 <- acknowledgeAndDisclose provider1 provider2 patient3 notifyPatient33 updatedPolicy33
 
     -- Appointment 41
-    appointmentCid41 <- scheduleAppointment provider2 provider2Role
+    appointmentCid41 <- scheduleAppointment provider2
       ref.patient4.referralDetails1 patient4_appointmentTime1
     (updatedPolicy41, notifyPatient41) <- acknowledge payer1 appointmentCid41 ip.patient4.originalPolicyCid
     newDisclosedPolicy41 <- acknowledgeAndDisclose provider1 provider2 patient4 notifyPatient41 updatedPolicy41
 
     -- Appointment 42
-    appointmentCid42 <- scheduleAppointment provider1 provider1Role
+    appointmentCid42 <- scheduleAppointment provider1
       ref.patient4.referralDetails2 patient4_appointmentTime2
     (updatedPolicy42, notifyPatient42) <- acknowledge payer1 appointmentCid42 updatedPolicy41
     newDisclosedPolicy42 <- acknowledgeAndDisclose provider1 provider2 patient4 notifyPatient42 updatedPolicy42
 
     -- Appointment 43
-    appointmentCid43 <- scheduleAppointment provider2 provider2Role
+    appointmentCid43 <- scheduleAppointment provider2
       ref.patient4.referralDetails3 patient4_appointmentTime3
     (updatedPolicy43, notifyPatient43) <- acknowledge payer1 appointmentCid43 updatedPolicy42
     newDisclosedPolicy43 <- acknowledgeAndDisclose provider1 provider2 patient4 notifyPatient43 updatedPolicy43
 
     -- Appointment 51
-    appointmentCid51 <- scheduleAppointment provider2 provider2Role
+    appointmentCid51 <- scheduleAppointment provider2
       ref.patient5.referralDetails1 patient5_appointmentTime1
     (updatedPolicy51, notifyPatient51) <- acknowledge payer1 appointmentCid51 ip.patient5.originalPolicyCid
     newDisclosedPolicy51 <- acknowledgeAndDisclose provider1 provider2 patient5 notifyPatient51 updatedPolicy51
 
     -- Appointment 52
-    appointmentCid52 <- scheduleAppointment provider1 provider1Role
+    appointmentCid52 <- scheduleAppointment provider1
       ref.patient5.referralDetails2 patient5_appointmentTime2
     (updatedPolicy52, notifyPatient52) <- acknowledge payer1 appointmentCid52 updatedPolicy51
     newDisclosedPolicy52 <- acknowledgeAndDisclose provider1 provider2 patient5 notifyPatient52 updatedPolicy52
 
     -- Appointment 53
-    appointmentCid53 <- scheduleAppointment provider2 provider2Role
+    appointmentCid53 <- scheduleAppointment provider2
       ref.patient5.referralDetails3 patient5_appointmentTime3
     (updatedPolicy53, notifyPatient53) <- acknowledge payer1 appointmentCid53 updatedPolicy52
     newDisclosedPolicy53 <- acknowledgeAndDisclose provider1 provider2 patient5 notifyPatient53 updatedPolicy53
 
     -- Appointment 61
-    appointmentCid61 <- scheduleAppointment provider2 provider2Role
+    appointmentCid61 <- scheduleAppointment provider2
       ref.patient6.referralDetails1 patient6_appointmentTime1
     (updatedPolicy61, notifyPatient61) <- acknowledge payer1 appointmentCid61 ip.patient6.originalPolicyCid
     newDisclosedPolicy61 <- acknowledgeAndDisclose provider1 provider2 patient6 notifyPatient61 updatedPolicy61
 
     -- Appointment 62
-    appointmentCid62 <- scheduleAppointment provider1 provider1Role
+    appointmentCid62 <- scheduleAppointment provider1
       ref.patient6.referralDetails2 patient6_appointmentTime2
     (updatedPolicy62, notifyPatient62) <- acknowledge payer1 appointmentCid62 updatedPolicy61
     newDisclosedPolicy62 <- acknowledgeAndDisclose provider1 provider2 patient6 notifyPatient62 updatedPolicy62
 
     -- Appointment 63
-    appointmentCid63 <- scheduleAppointment provider2 provider2Role
+    appointmentCid63 <- scheduleAppointment provider2
       ref.patient6.referralDetails3 patient6_appointmentTime3
     (updatedPolicy63, notifyPatient63) <- acknowledge payer1 appointmentCid63 updatedPolicy62
     newDisclosedPolicy63 <- acknowledgeAndDisclose provider1 provider2 patient6 notifyPatient63 updatedPolicy63
 
     -- Appointment 71
-    appointmentCid71 <- scheduleAppointment provider2 provider2Role
+    appointmentCid71 <- scheduleAppointment provider2
       ref.patient7.referralDetails1 patient7_appointmentTime1
     (updatedPolicy71, notifyPatient71) <- acknowledge payer1 appointmentCid71 ip.patient7.originalPolicyCid
     newDisclosedPolicy71 <- acknowledgeAndDisclose provider1 provider2 patient7 notifyPatient71 updatedPolicy71
 
     -- Appointment 72
-    appointmentCid72 <- scheduleAppointment provider1 provider1Role
+    appointmentCid72 <- scheduleAppointment provider1
       ref.patient7.referralDetails2 patient7_appointmentTime2
     (updatedPolicy72, notifyPatient72) <- acknowledge payer1 appointmentCid72 updatedPolicy71
     newDisclosedPolicy72 <- acknowledgeAndDisclose provider1 provider2 patient7 notifyPatient72 updatedPolicy72
 
     -- Appointment 73
-    appointmentCid73 <- scheduleAppointment provider2 provider2Role
+    appointmentCid73 <- scheduleAppointment provider2
       ref.patient7.referralDetails3 patient7_appointmentTime3
     (updatedPolicy73, notifyPatient73) <- acknowledge payer1 appointmentCid73 updatedPolicy72
     newDisclosedPolicy73 <- acknowledgeAndDisclose provider1 provider2 patient7 notifyPatient73 updatedPolicy73

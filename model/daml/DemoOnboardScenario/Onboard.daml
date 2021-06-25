@@ -55,7 +55,7 @@ data OnboardData = OnboardData
 -- standalone version to view it in DAML Studio
 onboard' = onboard =<< allocateParties
 
-onboard parties@Parties{..} = script
+onboard Parties{..} = script
   do
 
 
@@ -131,4 +131,3 @@ onboard parties@Parties{..} = script
         patient8Role
         patient9Role
         patient10Role
-

@@ -23,7 +23,7 @@ data ReferralScenarioOutput =
     originalPolicy : ContractId InsurancePolicy
 
 -- standalone version to view it in DAML Studio
-referralTest' parties = referralTest =<< allocateParties
+referralTest' = referralTest =<< allocateParties
 
 referralTest parties@Parties{..} = script
   do
@@ -33,7 +33,6 @@ referralTest parties@Parties{..} = script
       onboard = patientScenario.onboardResult
       provider1Role = onboard.provider1Role
       provider2Role = onboard.provider2Role
-      provider1NetworkContract = onboard.provider1NetworkContract
       provider2NetworkContract = onboard.provider2NetworkContract
       policyCid = patientScenario.disclosedPolicyCid
       originalPolicy = patientScenario.originalPolicyCid

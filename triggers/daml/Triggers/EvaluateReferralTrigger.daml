@@ -19,7 +19,7 @@ evaluateReferralTrigger : Trigger ()
 evaluateReferralTrigger = Trigger
   { initialize = pure ()
   , updateState = \_ -> pure ()
-  , rule = evaluateReferrals
+  , rule = const evaluateReferrals
   , registeredTemplates = RegisteredTemplates [
         registeredTemplate @ReferralRequest
       , registeredTemplate @ProviderNetworkContract
@@ -27,8 +27,8 @@ evaluateReferralTrigger = Trigger
   , heartbeat = None
   }
 
-evaluateReferrals : Party -> TriggerA () ()
-evaluateReferrals party = do
+evaluateReferrals : TriggerA () ()
+evaluateReferrals = do
   requests <- query @ReferralRequest
   networkContracts <- query @ProviderNetworkContract
 
