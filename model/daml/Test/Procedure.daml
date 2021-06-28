@@ -37,7 +37,7 @@ testProcedureList = script
   do
     owner <- allocateParty "Owner"
     let
-      procedureList = [Preventative_Care , Physicals , Sick_Visits]
+      procedureList = [Preventive_Care , Physicals , Sick_Visits]
     newProcedureList <- owner `submit` do
       createProcedureList owner Bronze procedureList
     owner `submit` do
@@ -51,7 +51,7 @@ test2ProcedureList = script
     newObserver <- allocateParty "New One"
     let newObservers = [newObserver]
     let
-      procedureList = [Preventative_Care , Physicals , Sick_Visits]
+      procedureList = [Preventive_Care , Physicals , Sick_Visits]
     newProcedureList <- owner `submit` do
       createProcedureList owner Bronze procedureList
     display2 <- owner `submit` do
