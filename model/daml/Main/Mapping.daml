@@ -13,7 +13,7 @@ diagnosisToProcedureMapping : DiagnosisCode -> ProcedureCode -> Bool
 diagnosisToProcedureMapping diagnosisCode procedureCode
   =
   -- PCP visit
-  if procedureCode == Preventative_Care || procedureCode == Physicals ||
+  if procedureCode == Preventive_Care || procedureCode == Physicals ||
     procedureCode == Sick_Visits &&
     diagnosisCode == Pain_in_right_arm_M79_601 || diagnosisCode == Pain_in_left_arm_M79_602 || diagnosisCode == Pain_in_arm_unspecified_M79_603
     then True

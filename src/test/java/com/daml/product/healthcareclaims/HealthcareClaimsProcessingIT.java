@@ -99,7 +99,7 @@ public class HealthcareClaimsProcessingIT {
                 RADIOLOGIST_PARTY.getValue(),
                 policy,
                 "1",
-                ProcedureCode.PREVENTATIVE_CARE,
+                ProcedureCode.PREVENTIVE_CARE,
                 DiagnosisCode.PAIN_IN_RIGHT_ARM_M79_601,
                 "11",
                 "Elective"));
@@ -168,7 +168,7 @@ public class HealthcareClaimsProcessingIT {
                 RADIOLOGIST_PARTY.getValue(),
                 policy,
                 "1",
-                ProcedureCode.PREVENTATIVE_CARE,
+                ProcedureCode.PREVENTIVE_CARE,
                 DiagnosisCode.PAIN_IN_RIGHT_ARM_M79_601,
                 "11",
                 "Elective"));

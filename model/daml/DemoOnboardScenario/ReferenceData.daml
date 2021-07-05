@@ -285,11 +285,11 @@ patient10Demographics = PatientDemographics
 feeSchedule : FeeSchedule
 feeSchedule = fromList [(X_Ray_Wrist_2_Views, 105.0),
                         (X_Ray_Wrist_3_Views, 125.0),
-                        (Preventative_Care, 60.0),
+                        (Preventive_Care, 60.0),
                         (Physicals, 55.0),
                         (Sick_Visits, 40.0)]
 
-procedureCodeList = [X_Ray_Wrist_2_Views, X_Ray_Wrist_3_Views, Preventative_Care, Physicals, Sick_Visits]
+procedureCodeList = [X_Ray_Wrist_2_Views, X_Ray_Wrist_3_Views, Preventive_Care, Physicals, Sick_Visits]
 
 patientEncounter11 = EncounterDetails
   with
@@ -306,7 +306,7 @@ patientEncounter12 = EncounterDetails
   with
     patient = fromSome $ partyFromText "Patient1"
     encounterId = "5afc77be"
-    procedureCode = Preventative_Care
+    procedureCode = Preventive_Care
     diagnosisCode = Pain_in_right_arm_M79_601
     allowedAmount = None
     coPay = None
@@ -416,7 +416,7 @@ patientEncounter42 = EncounterDetails
   with
     patient = fromSome $ partyFromText "Patient4"
     encounterId = "53ad8150"
-    procedureCode = Preventative_Care
+    procedureCode = Preventive_Care
     diagnosisCode = Pain_in_right_arm_M79_601
     allowedAmount = None
     coPay = None

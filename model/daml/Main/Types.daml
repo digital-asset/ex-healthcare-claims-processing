@@ -58,7 +58,7 @@ data PolicyType = Gold | Bronze deriving (Eq, Show)
 -- Mapping between procedure codes and fees
 type FeeSchedule = Map ProcedureCode Decimal
 
-data ProcedureCode = Preventative_Care | Physicals | Sick_Visits | X_Ray_Wrist_2_Views | X_Ray_Wrist_3_Views
+data ProcedureCode = Preventive_Care | Physicals | Sick_Visits | X_Ray_Wrist_2_Views | X_Ray_Wrist_3_Views
   deriving (Enum, Eq, Show, Ord)
 
 readEnum: Show a => Text -> [a] -> Text -> a
