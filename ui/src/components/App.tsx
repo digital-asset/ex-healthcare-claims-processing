@@ -14,8 +14,9 @@ import { createBrowserHistory as createHistory } from "history";
  */
 // APP_BEGIN
 const App: React.FC = () => {
-  const [credentials, setCredentials] =
-    React.useState<Credentials | undefined>();
+  const [credentials, setCredentials] = React.useState<
+    Credentials | undefined
+  >();
 
   const history = createHistory();
 
