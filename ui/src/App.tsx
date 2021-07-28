@@ -5,7 +5,7 @@ import React from "react";
 import LoginScreen from "views/Login";
 import Routes from "./routes";
 import DamlLedger from "@daml/react";
-import Credentials from "./config/Credentials";
+import Credentials from "config/Credentials";
 import { Router } from "react-router";
 import { createBrowserHistory as createHistory } from "history";
 
