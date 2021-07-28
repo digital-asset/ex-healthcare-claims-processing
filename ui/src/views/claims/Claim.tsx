@@ -1,100 +1,12 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Main } from "@daml.js/healthcare-claims-processing";
-import { CreateEvent } from "@daml/ledger";
-import { useStreamQueries, useLedger } from "@daml/react";
 import { CalendarBlank } from "phosphor-react";
-import { mapIter, leftJoin, useAsync, Message } from "./Common";
-import { ChoiceModal } from "./ChoiceModal";
-import {
-  TabularScreenRoutes,
-  TabularView,
-  SingleItemView,
-} from "./TabularScreen";
-import { Party } from "@daml/types";
-
-type Props = {
-  role: Party;
-};
-
-const ClaimRoutes: React.FC<Props> = ({ role }) => (
-  <TabularScreenRoutes
-    metavar=":claimId"
-    table={Claims}
-    detail={Claim({ role })}
-  />
-);
-
-const useClaims = (query: any) => {
-  const ledger = useLedger();
-  const claim = useAsync(
-    async () =>
-      query.claimId
-        ? await ledger.fetch(Main.Claim.Claim, query.claimId)
-        : null,
-    query
-  );
-  const claimsStream = useStreamQueries(Main.Claim.Claim, () => [
-    query,
-  ]).contracts;
-  const claims: readonly CreateEvent<Main.Claim.Claim>[] =
-    query.claimId && claim ? [claim] : claimsStream;
-  const claimIds = claims.map((claim) => ({
-    paymentId: claim.payload.claimId,
-  }));
-  const receipts = useStreamQueries(
-    Main.Claim.PaymentReceipt,
-    () => claimIds
-  ).contracts;
-
-  const keyedClaims = new Map(
-    claims.map((claim) => [claim.payload.claimId, claim])
-  );
-  const keyedReceipts = new Map(
-    receipts.map((receipt) => [receipt.payload.paymentId, receipt])
-  );
-
-  const disclosed = useStreamQueries(Main.Policy.DisclosedPolicy).contracts;
-
-  const keyedDisclosed = new Map(disclosed.map((p) => [p.payload.patient, p]));
-
-  return Array.from(
-    mapIter(
-      ([claim, receipt]) => ({
-        claim,
-        receipt,
-        disclosed: keyedDisclosed.get(claim.payload.encounterDetails.patient),
-      }),
-      leftJoin(keyedClaims, keyedReceipts).values()
-    )
-  );
-};
-
-const useClaimsData = () => useClaims({});
-
-const Claims: React.FC = () => {
-  return (
-    <TabularView
-      title="Claims"
-      useData={useClaimsData}
-      fields={[
-        // NB: outputs provider role (e.g. "Radiologist") instead of provider name (e.g. "Beta Imaging Labs")
-        { label: "Provider", getter: (o) => o?.claim?.payload?.provider },
-        {
-          label: "Patient",
-          getter: (o) => o?.claim?.payload?.encounterDetails?.patient,
-        },
-        {
-          label: "Procedure Code",
-          getter: (o) => o?.claim?.payload?.encounterDetails.procedureCode,
-        },
-        { label: "Amount", getter: (o) => o?.claim?.payload?.amount },
-      ]}
-      tableKey={(o) => o.claim.contractId}
-      itemUrl={(o) => o.claim.contractId}
-    />
-  );
-};
+import { Message } from "components/Common";
+import { ChoiceModal } from "components/ChoiceModal";
+import { SingleItemView } from "components/TabularScreen";
+import { useParty } from "@daml/react";
+import { useClaims } from "hooks/claims";
 
 const useClaimData = () => {
   const { claimId } = useParams<{ claimId: string }>();
@@ -102,7 +14,8 @@ const useClaimData = () => {
   return [{ claimId, overview: overview }];
 };
 
-const Claim: React.FC<Props> = ({ role }) => {
+const Claim: React.FC = () => {
+  const role = useParty();
   const dollars = (n: any) => (n ? "$" + n : "");
   return (
     <SingleItemView
@@ -196,4 +109,4 @@ const Claim: React.FC<Props> = ({ role }) => {
   );
 };
 
-export default ClaimRoutes;
+export default Claim;

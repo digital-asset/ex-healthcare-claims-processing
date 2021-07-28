@@ -4,15 +4,7 @@
 import React from "react";
 import { Header } from "semantic-ui-react";
 import { Main } from "@daml.js/healthcare-claims-processing";
-import { useParty, useStreamQueries } from "@daml/react";
-import { Switch, Route } from "react-router-dom";
-import PatientRoutes from "./Patients";
-import ReferralRoutes from "./Referrals";
-import AppointmentRoutes from "./Appointments";
-import TreatmentRoutes from "./Treatments";
-import ClaimsRoutes from "./Claims";
-import BillRoutes from "./Bills";
-import { TabularScreenRoutes } from "./TabularScreen";
+import { useStreamQueries } from "@daml/react";
 import { User } from "phosphor-react";
 
 const UserIcon: React.FC<{ className: string }> = ({ className }) => {
@@ -125,44 +117,4 @@ const Profile: React.FC = () => {
   );
 };
 
-// USERS_BEGIN
-const MainView: React.FC = () => {
-  const username = useParty();
-
-  return (
-    <div className="min-h-full flex flex-col">
-      <Switch>
-        <Route exact={true} path="/">
-          <Profile />
-        </Route>
-        <Route path="/provider/patients">
-          <PatientRoutes />
-        </Route>
-        <Route path="/provider/referrals">
-          <ReferralRoutes role={username} />
-        </Route>
-        <Route path="/provider/appointments">
-          <AppointmentRoutes role={username} />
-        </Route>
-        <Route path="/provider/treatments">
-          <TreatmentRoutes role={username} />
-        </Route>
-        <Route path="/provider/Claims">
-          <ClaimsRoutes role={username} />
-        </Route>
-        <Route path="/patient/bills">
-          <BillRoutes />
-        </Route>
-        <Route path="/test">
-          <TabularScreenRoutes
-            metavar="foo"
-            table={<p>Nothing</p>}
-            detail={<p>Also nothing</p>}
-          />
-        </Route>
-      </Switch>
-    </div>
-  );
-};
-
-export default MainView;
+export default Profile;

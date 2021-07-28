@@ -98,7 +98,7 @@ code {
   width: 239px;
   height: 239px;
   transform: rotate(-6deg);
-  background-image: url("images/dots.svg");
+  background-image: url("assets/images/dots.svg");
   background-size: cover;
 }
 .card-GraphicalDots img {

@@ -106,6 +106,7 @@ export function ChoiceModal<T extends object, C, R, K>({
   const [modalActive, setModalActiveInner] = React.useState(false);
   const [successOrFailure, setSuccessOrFailure] =
     React.useState<MaybeSuccessOrFailure<C, R>>(Nothing);
+
   const setModalActive = (s: SetStateAction<boolean>) => {
     setModalActiveInner((p: boolean) => {
       const shown = typeof s === "function" ? s(p) : s;
@@ -113,6 +114,7 @@ export function ChoiceModal<T extends object, C, R, K>({
       return shown;
     });
   };
+
   const ledger = useLedger();
   let submitF = (
     values: PartialMaybe<C>,
@@ -129,6 +131,7 @@ export function ChoiceModal<T extends object, C, R, K>({
         console.log(f);
         setSuccessOrFailure({ tag: FailureTag, sentF: arg, error: f });
       };
+
       ledger.exercise(choice, contract, arg).then(success, failure);
     } else {
       console.log("Incomplete Parameters");

@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useCallback } from "react";
-import { ArrowRight } from "phosphor-react";
-import Credentials, { computeCredentials } from "../Credentials";
+import Credentials, { computeCredentials } from "config/Credentials";
 import Ledger from "@daml/ledger";
-import { ledgerId } from "../config";
-import { Landing } from "./Landing";
+import { ledgerId } from "config/config";
+import { Landing } from "components/Landing/index";
 import { useEffect } from "react";
+import SelectRole from "components/SelectRole";
 
 type Props = {
   onLogin: (credentials: Credentials) => void;
@@ -54,49 +54,6 @@ const LoginScreen: React.FC<Props> = ({ onLogin }) => {
     login({ token, party, ledgerId });
   }, [login]);
 
-  const roles = [
-    {
-      label: "Primary Care Provider",
-      username: "PrimaryCareProvider",
-    },
-    {
-      label: "Radiologist",
-      username: "Radiologist",
-    },
-    {
-      label: "Insurance Company",
-      username: "InsuranceCompany",
-    },
-    {
-      label: "Patient",
-      username: "Patient1",
-    },
-  ];
-
-  const SelectRole = () => (
-    <>
-      <div className="text-2xl text-center text-gray-600">
-        Select a User Role
-      </div>
-      <div className="text-sm text-center text-trueGray-500">
-        User roles allow you to access features unique to each party in a health
-        care system.
-      </div>
-      <div className="flex flex-col space-y-4">
-        {roles.map(({ label, username }) => (
-          <button
-            className="flex flex-row justify-between items-center rounded h-10 p-4 bg-trueGray-100 border-trueGray-100 focus:bg-blue focus:text-white hover:bg-white hover:border-blue border-2 text-sm text-gray-600"
-            onClick={handleLogin(username)}
-            key={username}
-          >
-            {label}
-            <ArrowRight size={21} color="var(--blue)" />
-          </button>
-        ))}
-      </div>
-    </>
-  );
-
   return (
     <div className="main-grid main-grid-wide font-alata">
       <Landing />
@@ -107,7 +64,7 @@ const LoginScreen: React.FC<Props> = ({ onLogin }) => {
           className="absolute top-7 left-11"
         />
         <div className="flex flex-col justify-center items-stretch space-y-4 w-80">
-          <SelectRole />
+          <SelectRole handleLogin={handleLogin} />
         </div>
       </div>
     </div>

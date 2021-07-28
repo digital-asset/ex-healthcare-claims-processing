@@ -1,80 +1,11 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Main } from "@daml.js/healthcare-claims-processing";
-import { CreateEvent } from "@daml/ledger";
-import { useStreamQueries, useLedger } from "@daml/react";
 import { Share } from "phosphor-react";
-import { mapIter, leftJoin, useAsync, Message } from "./Common";
-import { ChoiceModal } from "./ChoiceModal";
-import {
-  TabularScreenRoutes,
-  TabularView,
-  SingleItemView,
-} from "./TabularScreen";
-
-const BillRoutes: React.FC = () => (
-  <TabularScreenRoutes metavar=":billId" table={Bills} detail={Bill} />
-);
-
-const useBills = (query: any) => {
-  const ledger = useLedger();
-  const bill = useAsync(
-    async () =>
-      query.billId
-        ? await ledger.fetch(Main.Claim.PatientObligation, query.billId)
-        : null,
-    query
-  );
-  const billsStream = useStreamQueries(Main.Claim.PatientObligation, () => [
-    query,
-  ]).contracts;
-  const bills: readonly CreateEvent<Main.Claim.PatientObligation>[] =
-    query.billId && bill ? [bill] : billsStream;
-  const paymentIds = bills.map((bill) => ({
-    paymentId: bill.payload.paymentId,
-  }));
-  const receipts = useStreamQueries(
-    Main.Claim.PaymentReceipt,
-    () => paymentIds
-  ).contracts;
-
-  const keyedBills = new Map(
-    bills.map((bill) => [bill.payload.paymentId, bill])
-  );
-  const keyedReceipts = new Map(
-    receipts.map((receipt) => [receipt.payload.paymentId, receipt])
-  );
-
-  return Array.from(
-    mapIter(
-      ([bill, receipt]) => ({ bill, receipt }),
-      leftJoin(keyedBills, keyedReceipts).values()
-    )
-  );
-};
-
-const useBillsData = () => useBills({});
-
-const Bills: React.FC = () => {
-  return (
-    <TabularView
-      title="Bills"
-      useData={useBillsData}
-      fields={[
-        // NB: outputs provider party name (e.g. "Radiologist") instead of human-friendly provider name (e.g. "Beta Imaging Labs").
-        { label: "Provider", getter: (o) => o.bill?.payload?.provider },
-        { label: "Amount", getter: (o) => o?.bill?.payload?.amount },
-        {
-          label: "Procedure Code",
-          getter: (o) => o?.bill?.payload?.encounterDetails.procedureCode,
-        },
-        { label: "Paid", getter: (o) => (o?.receipt?.payload ? "Yes" : "No") },
-      ]}
-      tableKey={(o) => o.bill.contractId}
-      itemUrl={(o) => o.bill.contractId}
-    />
-  );
-};
+import { Message } from "components/Common";
+import { ChoiceModal } from "components/ChoiceModal";
+import { SingleItemView } from "components/TabularScreen";
+import { useBills } from "hooks/bills";
 
 const useBillData = () => {
   const { billId } = useParams<{ billId: string }>();
@@ -82,7 +13,7 @@ const useBillData = () => {
   return [{ billId, overview: overview }];
 };
 
-const Bill: React.FC = () => {
+const SingleBill: React.FC = () => {
   return (
     <SingleItemView
       title="Bill"
@@ -162,4 +93,4 @@ const Bill: React.FC = () => {
   );
 };
 
-export default BillRoutes;
+export default SingleBill;

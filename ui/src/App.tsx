@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React from "react";
-import LoginScreen from "./LoginScreen";
-import MainScreen from "./MainScreen";
+import LoginScreen from "views/Login";
+import Routes from "./routes";
 import DamlLedger from "@daml/react";
-import Credentials from "../Credentials";
+import Credentials from "./config/Credentials";
 import { Router } from "react-router";
 import { createBrowserHistory as createHistory } from "history";
 
@@ -29,7 +29,7 @@ const App: React.FC = () => {
   return credentials ? (
     <DamlLedger token={credentials.token} party={credentials.party}>
       <Router history={history}>
-        <MainScreen onLogout={onLogout} />
+        <Routes onLogout={onLogout} />
       </Router>
     </DamlLedger>
   ) : (

@@ -1,5 +1,5 @@
 import React, { useState, ReactNode, PropsWithChildren } from "react";
-import { Link, Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 import { CaretRight } from "phosphor-react";
 import {
   FieldsRow,
@@ -8,23 +8,10 @@ import {
   PageSubTitleSpan,
 } from "./Common";
 
-export const TabularScreenRoutes: React.FC<{
-  metavar: string;
-  table: ReactNode;
-  detail: ReactNode;
-}> = ({ metavar, table, detail }) => {
-  const match = useRouteMatch();
-  return (
-    <Switch>
-      <Route path={`${match.path}/${metavar}`}>{detail}</Route>
-      <Route path={match.path}>{table}</Route>
-    </Switch>
-  );
-};
-
 type TabularViewFields<T> = {
   label: string;
   getter: (a: T) => string;
+  value?: any;
 };
 
 type TabularViewConfig<T, F> = {
@@ -45,8 +32,11 @@ export function TabularView<T>({
   searchFunc,
 }: PropsWithChildren<TabularViewConfig<T, TabularViewFields<T>[]>>) {
   const match = useRouteMatch();
-  const [search, setSearch] = useState("");
-  const data = useData().filter((searchFunc || ((a) => (b) => true))(search));
+  const [search, setSearch] = useState<string | null>(null);
+
+  const data = useData().filter(
+    (searchFunc || ((a) => (b) => true))(search || "")
+  );
   return (
     <>
       <PageTitleDiv>
@@ -55,7 +45,7 @@ export function TabularView<T>({
       <div className="flex p-3 bg-white m-6">
         <input
           type="text"
-          value={search}
+          value={search || ""}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by name or insurance ID..."
           className="w-full px-3 py-2 h-10 bg-trueGray-100"
@@ -119,8 +109,6 @@ export function TabularView<T>({
 export function SingleItemView<T>({
   title,
   fields,
-  tableKey,
-  itemUrl,
   useData,
   choices,
 }: PropsWithChildren<
@@ -129,30 +117,22 @@ export function SingleItemView<T>({
   }
 >) {
   const data = useData();
-  const match = useRouteMatch();
 
   const content = (po: T) => (
     <div className="flex flex-col p-5 space-y-4 bg-white rounded shadow-lg">
-      <Switch>
-        <Route exact path={match.path}>
-          <div>{choices(po)}</div>
-          <hr />
-          {fields.map((row, i) => (
-            <div key={row.map((r) => r.label).join()}>
-              <FieldsRow
-                fields={row.map((f) => ({
-                  label: f.label,
-                  value: f.getter(po),
-                }))}
-              />
-              {i === fields.length - 1 ? <> </> : <hr />}
-            </div>
-          ))}
-        </Route>
-        <Route>
-          <Redirect to={match.url} />
-        </Route>
-      </Switch>
+      <div>{choices(po)}</div>
+      <hr />
+      {fields.map((row, i) => (
+        <div key={row.map((r) => r.label).join()}>
+          <FieldsRow
+            fields={row.map((f) => ({
+              label: f.label,
+              value: f.getter(po),
+            }))}
+          />
+          {i === fields.length - 1 ? <> </> : <hr />}
+        </div>
+      ))}
     </div>
   );
 
@@ -162,7 +142,6 @@ export function SingleItemView<T>({
         <PageTitleSpan title={title} />
         <PageSubTitleSpan title={""} />
       </PageTitleDiv>
-
       <div className="flex flex-col space-y-2">
         {data.length > 0 && content(data[0])}
       </div>
