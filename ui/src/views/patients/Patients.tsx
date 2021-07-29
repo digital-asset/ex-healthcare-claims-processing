@@ -1,5 +1,5 @@
 import { Main } from "@daml.js/healthcare-claims-processing";
-import { TabularView } from "components/TabularScreen";
+import TabularView from "components/TabularScreen";
 import { usePatients } from "hooks/patients";
 
 type PatientOverview = {

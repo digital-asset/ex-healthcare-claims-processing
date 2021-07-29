@@ -1,5 +1,5 @@
 import { useTreatments } from "hooks/treatments";
-import { TabularView } from "components/TabularScreen";
+import TabularView from "components/TabularScreen";
 
 const useTreatmentsData = () => useTreatments({});
 

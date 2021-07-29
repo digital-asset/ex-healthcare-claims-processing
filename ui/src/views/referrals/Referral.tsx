@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import { Main } from "@daml.js/healthcare-claims-processing";
 import { Share } from "phosphor-react";
 import { Message } from "components/Common";
-import { ChoiceModal, DayTimePickerField } from "components/ChoiceModal";
-import { SingleItemView } from "components/TabularScreen";
+import { FormModal } from "components/modals/FormModal";
+import { DayTimePickerField } from "components/fields/Common";
+import SingleItemView from "components/SingleItemView";
 import { useReferrals } from "hooks/referrals";
 import { useParty } from "@daml/react";
 
@@ -43,7 +44,7 @@ const SingleReferral: React.FC = () => {
       itemUrl={(o) => ""}
       choices={(d) =>
         d?.overview?.referral?.payload?.renderingProvider === role ? (
-          <ChoiceModal
+          <FormModal
             className="flex flex-col"
             choice={Main.Provider.ReferralDetails.ScheduleAppointment}
             contract={d.overview?.referral?.contractId}
@@ -67,7 +68,7 @@ const SingleReferral: React.FC = () => {
             <h1 className="text-center">Schedule Appointment</h1>
             <p>Select a date for this appointment</p>
             <DayTimePickerField name="appointmentTime" />
-          </ChoiceModal>
+          </FormModal>
         ) : (
           <></>
         )

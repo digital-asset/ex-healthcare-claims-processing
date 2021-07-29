@@ -1,9 +1,11 @@
 import React from "react";
 import { CreateEvent } from "@daml/ledger";
-import { ChoiceErrorsType, validateNonEmpty, RenderError } from "./ChoiceModal";
+import { RenderError } from "../fields/Common";
 import { Main } from "@daml.js/healthcare-claims-processing";
 import { useField } from "formik";
 import Select from "react-select";
+import { validateNonEmpty } from "utils";
+import { ChoiceErrorsType } from "./Common";
 
 const PolicySelectField: React.FC<{
   name: string;

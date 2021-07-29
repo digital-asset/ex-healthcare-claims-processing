@@ -1,5 +1,5 @@
 import React from "react";
-import { TabularView } from "components/TabularScreen";
+import TabularView from "components/TabularScreen";
 import { useAppointments } from "hooks/appointments";
 import { formatDate } from "utils/index";
 import { Time } from "@daml/types";
@@ -37,8 +37,8 @@ const Appointments: React.FC = () => {
         {
           label: "Appointment Priority",
           getter: (o) =>
-            o?.appointment?.payload?.encounterDetails.encounterDetails
-              .appointmentPriority,
+            o?.appointment?.payload?.encounterDetails?.encounterDetails
+              ?.appointmentPriority,
         },
       ]}
       tableKey={(o) => o.appointment.contractId}

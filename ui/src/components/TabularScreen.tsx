@@ -1,12 +1,7 @@
-import React, { useState, ReactNode, PropsWithChildren } from "react";
+import React, { useState, PropsWithChildren } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import { CaretRight } from "phosphor-react";
-import {
-  FieldsRow,
-  PageTitleDiv,
-  PageTitleSpan,
-  PageSubTitleSpan,
-} from "./Common";
+import { PageTitleDiv, PageTitleSpan } from "./Common";
 
 type TabularViewFields<T> = {
   label: string;
@@ -16,14 +11,17 @@ type TabularViewFields<T> = {
 
 type TabularViewConfig<T, F> = {
   title: string;
+  fields: F;
   tableKey: (a: T) => string;
   itemUrl: (a: T) => string;
-  fields: F;
   useData: () => readonly T[];
   searchFunc?: (a: string) => (b: T) => boolean;
 };
 
-export function TabularView<T>({
+/**
+ * High adaptable component to display a tables
+ */
+function TabularView<T>({
   title,
   fields,
   tableKey,
@@ -37,6 +35,7 @@ export function TabularView<T>({
   const data = useData().filter(
     (searchFunc || ((a) => (b) => true))(search || "")
   );
+
   return (
     <>
       <PageTitleDiv>
@@ -106,45 +105,4 @@ export function TabularView<T>({
   );
 }
 
-export function SingleItemView<T>({
-  title,
-  fields,
-  useData,
-  choices,
-}: PropsWithChildren<
-  TabularViewConfig<T, TabularViewFields<T>[][]> & {
-    choices: (data: T) => ReactNode;
-  }
->) {
-  const data = useData();
-
-  const content = (po: T) => (
-    <div className="flex flex-col p-5 space-y-4 bg-white rounded shadow-lg">
-      <div>{choices(po)}</div>
-      <hr />
-      {fields.map((row, i) => (
-        <div key={row.map((r) => r.label).join()}>
-          <FieldsRow
-            fields={row.map((f) => ({
-              label: f.label,
-              value: f.getter(po),
-            }))}
-          />
-          {i === fields.length - 1 ? <> </> : <hr />}
-        </div>
-      ))}
-    </div>
-  );
-
-  return (
-    <>
-      <PageTitleDiv>
-        <PageTitleSpan title={title} />
-        <PageSubTitleSpan title={""} />
-      </PageTitleDiv>
-      <div className="flex flex-col space-y-2">
-        {data.length > 0 && content(data[0])}
-      </div>
-    </>
-  );
-}
+export default TabularView;

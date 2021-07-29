@@ -6,7 +6,6 @@ import LoginScreen from "views/Login";
 import Routes from "./routes";
 import DamlLedger from "@daml/react";
 import Credentials from "config/Credentials";
-import { Router } from "react-router";
 import { createBrowserHistory as createHistory } from "history";
 
 /**
@@ -20,17 +19,9 @@ const App: React.FC = () => {
 
   const history = createHistory();
 
-  const onLogout = () => {
-    setCredentials(undefined);
-    // Go back to main profile page; others might not be visible.
-    history.replace("");
-  };
-
   return credentials ? (
     <DamlLedger token={credentials.token} party={credentials.party}>
-      <Router history={history}>
-        <Routes onLogout={onLogout} />
-      </Router>
+      <Routes history={history} setCredentials={setCredentials} />
     </DamlLedger>
   ) : (
     <LoginScreen onLogin={setCredentials} />

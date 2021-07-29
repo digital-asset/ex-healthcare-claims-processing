@@ -18,6 +18,7 @@ import Treatments from "../views/treatments/Treatments";
 import Claim from "../views/claims/Claim";
 import Claims from "../views/claims/Claims";
 
+/** Configs for all main */
 export const routes = [
   //general entry route
   {

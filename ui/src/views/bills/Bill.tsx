@@ -3,16 +3,22 @@ import { useParams } from "react-router-dom";
 import { Main } from "@daml.js/healthcare-claims-processing";
 import { Share } from "phosphor-react";
 import { Message } from "components/Common";
-import { ChoiceModal } from "components/ChoiceModal";
-import { SingleItemView } from "components/TabularScreen";
+import { FormModal } from "components/modals/FormModal";
+import SingleItemView from "components/SingleItemView";
 import { useBills } from "hooks/bills";
 
+/**
+ * function that is passed in the SingleBill component
+ * which retrieves bill data through the useBills hook.
+ * See "hooks/bills" for more details
+ */
 const useBillData = () => {
   const { billId } = useParams<{ billId: string }>();
   const overview = useBills({ billId })[0];
   return [{ billId, overview: overview }];
 };
 
+/** Single view for bills, display three table rows with bill information */
 const SingleBill: React.FC = () => {
   return (
     <SingleItemView
@@ -66,7 +72,7 @@ const SingleBill: React.FC = () => {
       tableKey={(o) => o.overview?.bill?.contractId}
       itemUrl={(o) => ""}
       choices={(d) => (
-        <ChoiceModal
+        <FormModal
           className="flex flex-col space-y-6 w-170 mt-3"
           choice={Main.Claim.PatientObligation.PayPatientObligation}
           contract={d.overview?.bill?.contractId}
@@ -87,7 +93,7 @@ const SingleBill: React.FC = () => {
             title="Pay Bill"
             content={"This bill is accurate and ready to be paid?"}
           />
-        </ChoiceModal>
+        </FormModal>
       )}
     />
   );

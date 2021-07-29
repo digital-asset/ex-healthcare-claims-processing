@@ -1,6 +1,6 @@
 import "./Landing.css";
 
-export function Landing() {
+const Landing = () => {
   return (
     <div className="px-20 bg-blue Landing object-center">
       <img className="h-6 text-white alata" src="/DAML_Logo_Blue.svg" alt="" />
@@ -13,5 +13,5 @@ export function Landing() {
       <img alt="" src="/healthcare-professionals.svg" />
     </div>
   );
-}
+};
 export default Landing;

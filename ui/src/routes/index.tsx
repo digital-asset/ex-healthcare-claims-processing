@@ -1,8 +1,17 @@
-import React, { useMemo } from "react";
-import { Switch, Route } from "react-router-dom";
+import React, { useCallback, useMemo } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { useParty } from "@daml/react";
 import { routes } from "./config";
 import MainLayout from "components/MainLayout";
+import { Router } from "react-router";
+import { History } from "history";
+
+const defaultRoutePath: { [index: string]: string } = {
+  Patient1: "/",
+  PrimaryCareProvider: "/",
+  Radiologist: "/",
+  InsuranceCompany: "/provider/claims",
+};
 
 type ChildRouteProps = {
   to: string;
@@ -19,45 +28,63 @@ type RouteProps = {
 };
 
 type RouteComponentProps = {
-  onLogout: any;
+  setCredentials: (prop: undefined) => void;
+  history: History;
 };
 
-const Routes: React.FC<RouteComponentProps> = ({ onLogout }) => {
-  const username = useParty();
+/**
+ * Component that initiates all routes for the authorized party
+ */
 
-  const filteredRoutes: RouteProps[] = useMemo(() => {
-    return routes.filter((route: RouteProps) => route.roles.includes(username));
-  }, [username]);
+const Routes: React.FC<RouteComponentProps> = ({ setCredentials, history }) => {
+  /** useParty() return the current authorized user */
+  const party = useParty();
+
+  const onLogout = useCallback(() => {
+    setCredentials(undefined);
+    // Go back to main profile page; others might not be visible.
+    history.replace("");
+  }, [history, setCredentials]);
+
+  //Only initiate routes for authorized user
+  const privateRoutes = useMemo(() => {
+    return routes.filter((route: RouteProps) => route.roles.includes(party));
+  }, [party]);
 
   return (
-    <MainLayout onLogout={onLogout}>
-      <div className="min-h-full flex flex-col">
-        <Switch>
-          {filteredRoutes.map((route: RouteProps) => {
-            if (route.childRoutes && route.childRoutes.length) {
-              return route.childRoutes.map((childRoute: ChildRouteProps) => (
+    <Router history={history}>
+      <MainLayout onLogout={onLogout}>
+        <div className="min-h-full flex flex-col">
+          <Switch>
+            {privateRoutes.map((route: RouteProps) => {
+              if (route.childRoutes && route.childRoutes.length) {
+                return route.childRoutes.map((childRoute: ChildRouteProps) => (
+                  <Route
+                    key={`child-route-${childRoute.to}-${route.to}`}
+                    path={route.to + childRoute.to}
+                    exact={childRoute.exact}
+                  >
+                    {childRoute.view}
+                  </Route>
+                ));
+              }
+              return (
                 <Route
-                  key={`child-route-${childRoute.to}-${route.to}`}
-                  path={route.to + childRoute.to}
-                  exact={childRoute.exact}
+                  key={`main-route-${route.to}`}
+                  path={route.to}
+                  exact={route.exact}
                 >
-                  {childRoute.view}
+                  {route.view}
                 </Route>
-              ));
-            }
-            return (
-              <Route
-                key={`main-route-${route.to}`}
-                path={route.to}
-                exact={route.exact}
-              >
-                {route.view}
-              </Route>
-            );
-          })}
-        </Switch>
-      </div>
-    </MainLayout>
+              );
+            })}
+            <Route>
+              <Redirect to={defaultRoutePath[party]} />
+            </Route>
+          </Switch>
+        </div>
+      </MainLayout>
+    </Router>
   );
 };
 

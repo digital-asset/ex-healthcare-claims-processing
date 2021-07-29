@@ -3,7 +3,7 @@
 
 import React from "react";
 import { useParty } from "@daml/react";
-import { Link, Route, useHistory } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 import "@fontsource/alata";
 import { formatDate } from "./Common";
 
@@ -88,12 +88,13 @@ const sidebar: Map<string, Array<TabProps>> = new Map([
   ["InsuranceCompany", [tabs.claims]],
 ]);
 
-const roleRoutes: Map<string, string> = new Map([
-  ["InsuranceCompany", "/provider/claims"],
-]);
+// const roleRoutes: Map<string, string> = new Map([
+//   ["InsuranceCompany", "/provider/claims"],
+// ]);
 
 type MainLayoutProps = {
   onLogout: () => void;
+  children: React.ReactChild;
 };
 
 const MainLayout: React.FC<MainLayoutProps> = ({ onLogout, children }) => {
@@ -101,7 +102,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ onLogout, children }) => {
   const role = useParty();
 
   // Navigate to the role's start page
-  useHistory().push(roleRoutes.get(role) || "/");
+  //useHistory().push(roleRoutes.get(role) || "/");
 
   const roleTabs = sidebar.get(role) ?? [];
 
@@ -142,4 +143,4 @@ const MainLayout: React.FC<MainLayoutProps> = ({ onLogout, children }) => {
   );
 };
 
-export default MainLayout;
+export default React.memo(MainLayout);

@@ -1,5 +1,5 @@
 import React from "react";
-import { TabularView } from "components/TabularScreen";
+import TabularView from "components/TabularScreen";
 import { useClaims } from "hooks/claims";
 
 const useClaimsData = () => useClaims({});

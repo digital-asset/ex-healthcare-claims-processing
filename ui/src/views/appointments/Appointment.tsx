@@ -4,14 +4,11 @@ import { Main } from "@daml.js/healthcare-claims-processing";
 import { Clock } from "phosphor-react";
 import { Message } from "components/Common";
 import { formatDate } from "utils";
-import { ChoiceModal, FollowUp, creations } from "components/ChoiceModal";
-import { SingleItemView } from "components/TabularScreen";
-import { Party, Time } from "@daml/types";
+import { FormModal, FollowUp, creations } from "components/modals/FormModal";
+import SingleItemView from "components/SingleItemView";
+import { Time } from "@daml/types";
 import { useAppointments } from "hooks/appointments";
-
-type Props = {
-  role: Party;
-};
+import { useParty } from "@daml/react";
 
 const formatDateHelper = (timeStr: Time) =>
   timeStr ? formatDate(new Date(timeStr)) : "";
@@ -22,7 +19,8 @@ const useAppointmentData = () => {
   return [{ appointmentId, overview: overviews[0] }];
 };
 
-const Appointment: React.FC<Props> = ({ role }) => {
+const Appointment: React.FC = () => {
+  const role = useParty();
   return (
     <SingleItemView
       title="Appointment"
@@ -93,8 +91,8 @@ const Appointment: React.FC<Props> = ({ role }) => {
       tableKey={(o) => o.overview?.appointment.contractId}
       itemUrl={(o) => ""}
       choices={(d) =>
-        d?.overview?.appointment?.payload?.provider === role && (
-          <ChoiceModal
+        d?.overview?.appointment?.payload?.provider === role ? (
+          <FormModal
             className="flex flex-col space-y-6 w-170 mt-3"
             choice={Main.Appointment.Appointment.CheckInPatient}
             contract={d.overview?.appointment?.contractId}
@@ -125,7 +123,9 @@ const Appointment: React.FC<Props> = ({ role }) => {
                 " is present and ready for their appointment?"
               }
             />
-          </ChoiceModal>
+          </FormModal>
+        ) : (
+          <></>
         )
       }
     />

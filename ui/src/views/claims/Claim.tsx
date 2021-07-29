@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { Main } from "@daml.js/healthcare-claims-processing";
 import { CalendarBlank } from "phosphor-react";
 import { Message } from "components/Common";
-import { ChoiceModal } from "components/ChoiceModal";
-import { SingleItemView } from "components/TabularScreen";
+import { FormModal } from "components/modals/FormModal";
+import SingleItemView from "components/SingleItemView";
 import { useParty } from "@daml/react";
 import { useClaims } from "hooks/claims";
 
@@ -87,7 +87,7 @@ const Claim: React.FC = () => {
       itemUrl={(o) => ""}
       choices={(d) =>
         d.overview?.claim?.payload?.payer === role ? (
-          <ChoiceModal
+          <FormModal
             className="flex flex-col space-y-6 w-170 mt-3"
             choice={Main.Claim.Claim.PayClaim}
             contract={d.overview?.claim?.contractId}
@@ -100,7 +100,7 @@ const Claim: React.FC = () => {
               title="Pay Claim"
               content={`This claim is approved and ready to be paid?`}
             />
-          </ChoiceModal>
+          </FormModal>
         ) : (
           <></>
         )

@@ -1,37 +1,8 @@
-import React, { useState, useMemo } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import dateFormat from "dateformat";
 
 type FieldProps = { label: string; value: string };
-
-function intercalate<X>(xs: X[], sep: X) {
-  return xs.flatMap((x) => [sep, x]).slice(1);
-}
-
-export function* mapIter<A, B>(
-  f: (_: A) => B,
-  i: IterableIterator<A>
-): IterableIterator<B> {
-  for (const x of i) {
-    yield f(x);
-  }
-}
-
-function leftJoin<K, X, Y>(
-  xs: Map<K, X>,
-  ys: Map<K, Y>
-): Map<K, [X, Y | undefined]> {
-  return new Map(mapIter(([k, x]) => [k, [x, ys.get(k)]], xs.entries()));
-}
-
-function innerJoin<K, X, Y>(xs: Map<K, X>, ys: Map<K, Y>): Map<K, [X, Y]> {
-  let ret = new Map();
-  for (const [k, x] of xs.entries()) {
-    const y = ys.get(k);
-    if (y) ret.set(k, [x, y]);
-  }
-  return ret;
-}
 
 export const formatDate = (d: Date) => dateFormat(d, "ddd, mmm d, yyyy");
 
@@ -98,23 +69,6 @@ const Message: React.FC<{ title: string; content: string }> = ({
   );
 };
 
-// Requirement: do not pass an array as "memoKeys" argument,
-//  since it's assumed that "useMemo" doesn't look at the content
-//  of arrays.
-function useAsync<T>(f: () => Promise<T>, memoKeys: any): T | null {
-  const [[v, lastMemoKeys], setV] = useState<[T | null, any]>([null, null]);
-  useMemo(
-    // some false positives so we do the extra comparison to avoid extra `setV`
-    () => {
-      if (JSON.stringify(memoKeys) !== JSON.stringify(lastMemoKeys)) {
-        f().then((nv) => setV([nv, memoKeys]));
-      }
-    },
-    [f, memoKeys, lastMemoKeys]
-  );
-  return v;
-}
-
 export {
   Field,
   FieldsRow,
@@ -124,8 +78,4 @@ export {
   PageTitleSpan,
   PageSubTitleSpan,
   TabLink,
-  innerJoin,
-  leftJoin,
-  intercalate,
-  useAsync,
 };

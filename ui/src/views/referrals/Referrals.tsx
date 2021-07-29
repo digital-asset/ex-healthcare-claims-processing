@@ -1,5 +1,5 @@
 import React from "react";
-import { TabularView } from "components/TabularScreen";
+import TabularView from "components/TabularScreen";
 import { useReferrals } from "hooks/referrals";
 
 const useReferralsData = () => useReferrals({});

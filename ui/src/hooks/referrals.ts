@@ -13,13 +13,11 @@ export const useReferrals = (query: any) => {
         : null,
     query
   );
-  console.log({ query });
   const referralsStream = useStreamQueries(
     Main.Provider.ReferralDetails,
     () => [query]
   ).contracts;
 
-  console.log({ referralsStream });
   const referrals: readonly CreateEvent<Main.Provider.ReferralDetails>[] =
     query.referralId && referral ? [referral] : referralsStream;
 

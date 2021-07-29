@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { Main } from "@daml.js/healthcare-claims-processing";
 import { Share } from "phosphor-react";
 import { Message } from "components/Common";
-import { ChoiceModal } from "components/ChoiceModal";
-import { SingleItemView } from "components/TabularScreen";
+import { FormModal } from "components/modals/FormModal";
+import SingleItemView from "components/SingleItemView";
 import { useTreatments } from "hooks/treatments";
 import { useParty } from "@daml/react";
 
@@ -77,7 +77,7 @@ const SingleTreatment: React.FC = () => {
       itemUrl={(o) => ""}
       choices={(d) =>
         d?.overview?.treatment?.payload?.provider === role && (
-          <ChoiceModal
+          <FormModal
             className="flex flex-col space-y-6 w-170 mt-3"
             choice={Main.Treatment.Treatment.CompleteTreatment}
             contract={d.overview?.treatment?.contractId}
@@ -104,7 +104,7 @@ const SingleTreatment: React.FC = () => {
                 " is present and ready for treatment?"
               }
             />
-          </ChoiceModal>
+          </FormModal>
         )
       }
     />

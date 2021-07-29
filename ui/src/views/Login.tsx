@@ -5,9 +5,9 @@ import React, { useCallback } from "react";
 import Credentials, { computeCredentials } from "config/Credentials";
 import Ledger from "@daml/ledger";
 import { ledgerId } from "config/config";
-import { Landing } from "components/Landing/index";
+import Landing from "components/Landing/index";
 import { useEffect } from "react";
-import SelectRole from "components/SelectRole";
+import SelectRole from "components/fields/SelectRole";
 
 type Props = {
   onLogin: (credentials: Credentials) => void;
@@ -22,7 +22,7 @@ const LoginScreen: React.FC<Props> = ({ onLogin }) => {
       try {
         console.log("Attempting Login");
         const ledger = new Ledger({ token: credentials.token });
-        console.log("Got ledger" + ledger);
+        console.log("Got ledger", { ledger });
         console.log(credentials);
         onLogin(credentials);
       } catch (error) {
@@ -32,7 +32,7 @@ const LoginScreen: React.FC<Props> = ({ onLogin }) => {
     [onLogin]
   );
 
-  const handleLogin = (username: string) => async (event: any) => {
+  const handleLogin = (username: string) => async (event: React.MouseEvent) => {
     event.preventDefault();
     await login(computeCredentials(username));
   };
