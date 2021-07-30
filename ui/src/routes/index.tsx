@@ -34,19 +34,20 @@ type RouteComponentProps = {
 
 /**
  * Component that initiates all routes for the authorized party
+ * The login route is found within App.tsx
  */
 
 const Routes: React.FC<RouteComponentProps> = ({ setCredentials, history }) => {
-  /** useParty() return the current authorized user */
+  // useParty() return the current authorized user
   const party = useParty();
 
   const onLogout = useCallback(() => {
     setCredentials(undefined);
-    // Go back to main profile page; others might not be visible.
+    // Go back to main profile page and replace history
     history.replace("");
   }, [history, setCredentials]);
 
-  //Only initiate routes for authorized user
+  // Only initiate routes for authorized user
   const privateRoutes = useMemo(() => {
     return routes.filter((route: RouteProps) => route.roles.includes(party));
   }, [party]);

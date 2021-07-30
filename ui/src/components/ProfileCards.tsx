@@ -6,6 +6,7 @@ import { Header } from "semantic-ui-react";
 import { User } from "phosphor-react";
 import { Main } from "@daml.js/healthcare-claims-processing";
 
+// Small UI component to renders the icon of the profile card
 const UserIcon: React.FC<{ className: string }> = ({ className }) => {
   return (
     <svg className={className} width="89" height="85" viewBox="0 0 89 85">
@@ -66,6 +67,10 @@ const ProfileKVCenter: React.FC<{ keyS: string; value?: string | null }> = ({
   </div>
 );
 
+/**
+ * Profile card to render information about the authorized party
+ * Note: This profile will only be used for providers (Radiologist and PrimaryCareProvider)
+ */
 export const ProviderProfile: React.FC<{ provider: Main.Provider.Provider }> =
   ({ provider }) => {
     return (
@@ -91,6 +96,10 @@ export const ProviderProfile: React.FC<{ provider: Main.Provider.Provider }> =
     );
   };
 
+/**
+ * Profile card to render information about the authorized party
+ * Note: This profile will only be used for patients (Patient1)
+ */
 export const PatientProfile: React.FC<{
   patient: Main.Patient.Patient;
   policy: Main.Policy.InsurancePolicy;

@@ -43,7 +43,10 @@ const SingleReferral: React.FC = () => {
       tableKey={(o) => o.overview.referral.contractId}
       itemUrl={(o) => ""}
       choices={(d) =>
-        d?.overview?.referral?.payload?.renderingProvider === role ? (
+        Boolean(
+          d?.overview?.referral?.payload?.renderingProvider === role &&
+            !d?.overview?.referral?.payload?.appointment
+        ) ? (
           <FormModal
             className="flex flex-col"
             choice={Main.Provider.ReferralDetails.ScheduleAppointment}

@@ -20,6 +20,10 @@ type TabularViewConfig<T, F> = {
 
 /**
  * High adaptable component to display a tables
+ * Main params explained:
+ *  useData: contains a function to stream data
+ *  itemUrl: Function that returns the redirect url base
+ *  tableKey: Function that returns the the unique table key
  */
 function TabularView<T>({
   title,

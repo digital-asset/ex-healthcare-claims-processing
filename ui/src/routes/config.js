@@ -18,7 +18,11 @@ import Treatments from "../views/treatments/Treatments";
 import Claim from "../views/claims/Claim";
 import Claims from "../views/claims/Claims";
 
-/** Configs for all main */
+/**
+ * Configs for all main routes
+ * Note: some routes might have more children routes nested. e.g. patients
+ * */
+
 export const routes = [
   //general entry route
   {

@@ -7,7 +7,15 @@ import { Link, Route } from "react-router-dom";
 import "@fontsource/alata";
 import { formatDate } from "./Common";
 
-const tabs = {
+type TabsProps = {
+  [index: string]: {
+    to: string;
+    icon: string;
+    exact?: boolean;
+    label: string;
+  };
+};
+const tabs: TabsProps = {
   profile: {
     to: "/",
     icon: "user",
@@ -88,22 +96,21 @@ const sidebar: Map<string, Array<TabProps>> = new Map([
   ["InsuranceCompany", [tabs.claims]],
 ]);
 
-// const roleRoutes: Map<string, string> = new Map([
-//   ["InsuranceCompany", "/provider/claims"],
-// ]);
-
 type MainLayoutProps = {
   onLogout: () => void;
   children: React.ReactChild;
 };
 
+/**
+ * Wrapper for the main layout of the app
+ * Component render tabs to other routes based on the authorized party
+ * Accepts one parameter "onLogout" to change the authorized party
+ */
 const MainLayout: React.FC<MainLayoutProps> = ({ onLogout, children }) => {
   const [date] = React.useState(new Date());
   const role = useParty();
 
-  // Navigate to the role's start page
-  //useHistory().push(roleRoutes.get(role) || "/");
-
+  // get tabs within the authorized scope
   const roleTabs = sidebar.get(role) ?? [];
 
   return (

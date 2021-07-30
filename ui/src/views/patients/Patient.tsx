@@ -19,12 +19,24 @@ import {
 import ReferralModal from "components/modals/ReferralModal";
 import { usePatients } from "hooks/patients";
 
+/**
+ * Single view for patient
+ * The component containes routes for the tab views
+ * */
 const SinglePatient: React.FC = () => {
   const username = useParty();
+
+  // function to predicate data that is fetched through "usePatients"
   const controlled = (d: Main.Policy.DisclosedPolicy) =>
     d.receivers.length > 0 && d.receivers.includes(username);
 
+  // get patient ID
   const { patientId } = useParams<{ patientId: string }>();
+
+  /**
+   * Fetch data about the patient through the "usePatients" hook
+   * Two params are being passed, the first is the query, the second is a predicate
+   */
   const { overviews, disclosed, disclosedRaw } = usePatients(
     { patient: patientId },
     controlled
@@ -32,6 +44,7 @@ const SinglePatient: React.FC = () => {
 
   const match = useRouteMatch();
 
+  // Stream data about the provider
   const pcpResult = useStreamQueries(Main.Provider.Provider).contracts;
   const pcpContract = pcpResult[0];
 

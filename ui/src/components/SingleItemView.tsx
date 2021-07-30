@@ -22,9 +22,11 @@ type TabularViewConfig<T, F> = {
 };
 
 /**
- * High adaptable component to display a singlar item through a table like component
+ * High adaptable component to display a single itemm view
+ * Main params explained:
+ *  useData: contains a function to data query
+ *  choices: React component that contains a button to render a modal (optional)
  */
-
 function SingleItemView<T>({
   title,
   fields,
@@ -32,7 +34,8 @@ function SingleItemView<T>({
   choices,
 }: PropsWithChildren<
   TabularViewConfig<T, TabularViewFields<T>[][]> & {
-    choices: (data: T) => ReactNode;
+    //set "data" type declaration back to T
+    choices: (data: any) => ReactNode;
   }
 >) {
   const data = useData();
@@ -54,7 +57,6 @@ function SingleItemView<T>({
       ))}
     </div>
   );
-
   return (
     <>
       <PageTitleDiv>

@@ -7,8 +7,12 @@ type PatientOverview = {
   policy: Main.Policy.DisclosedPolicy;
 };
 
-const useAllPatients: () => PatientOverview[] = () => usePatients({}).overviews;
+// View to display all patient data
 const TablePatients: React.FC = () => {
+  // Assign function to useAllPatients and passing to TabularView component
+  const useAllPatients: () => PatientOverview[] = () =>
+    usePatients({}).overviews;
+
   return (
     <TabularView
       title="Patients"

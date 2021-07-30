@@ -8,6 +8,7 @@ type Props = {
   setActive: Dispatch<SetStateAction<boolean>>;
 };
 
+//Wrapper to render a modal
 const Modal: React.FC<Props> = ({
   active,
   setActive,

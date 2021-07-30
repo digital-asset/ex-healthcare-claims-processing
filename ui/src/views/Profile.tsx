@@ -5,9 +5,14 @@ import React from "react";
 import { useProfile } from "hooks/profile";
 import { PatientProfile, ProviderProfile } from "components/ProfileCards";
 
+/**
+ * Component to render the profile of the authorized party
+ * Two types of profile can be displayed; patient profile and provider profile
+ */
 const Profile: React.FC = () => {
   const { pcpResult, patientResult, policyResult } = useProfile();
 
+  // return no profile if no provider or patient profile is loaded
   if (pcpResult.length === 0 && patientResult.length === 0) {
     return <></>;
   }
