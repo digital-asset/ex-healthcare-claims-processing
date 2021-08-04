@@ -1,7 +1,11 @@
 import React from "react";
 import { ArrowRight } from "phosphor-react";
 
-const roles = [
+type roleProps = {
+  label: string;
+  username: string;
+};
+const roles: roleProps[] = [
   {
     label: "Primary Care Provider",
     username: "PrimaryCareProvider",
@@ -20,6 +24,7 @@ const roles = [
   },
 ];
 
+// component to render all roles in the login screen
 const SelectRole: React.FC<{ handleLogin: Function }> = ({ handleLogin }) => (
   <>
     <div className="text-2xl text-center text-gray-600">Select a User Role</div>
@@ -33,6 +38,7 @@ const SelectRole: React.FC<{ handleLogin: Function }> = ({ handleLogin }) => (
           className="flex flex-row justify-between items-center rounded h-10 p-4 bg-trueGray-100 border-trueGray-100 focus:bg-blue focus:text-white hover:bg-white hover:border-blue border-2 text-sm text-gray-600"
           onClick={handleLogin(username)}
           key={username}
+          id={username}
         >
           {label}
           <ArrowRight size={21} color="var(--blue)" />

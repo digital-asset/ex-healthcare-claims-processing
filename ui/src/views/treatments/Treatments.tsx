@@ -3,6 +3,7 @@ import TabularView from "components/TabularScreen";
 
 const useTreatmentsData = () => useTreatments({});
 
+// Component to render multiple treatments within the scope of the authorized party
 const Treatments: React.FC = () => {
   return (
     <TabularView

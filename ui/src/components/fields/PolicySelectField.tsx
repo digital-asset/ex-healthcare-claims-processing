@@ -7,6 +7,7 @@ import Select from "react-select";
 import { validateNonEmpty } from "utils";
 import { ChoiceErrorsType } from "./Common";
 
+// component to a select field with all assignable policies
 const PolicySelectField: React.FC<{
   name: string;
   label: string;
@@ -17,7 +18,10 @@ const PolicySelectField: React.FC<{
     name,
     validate: validateNonEmpty(label),
   });
+
   const { setValue } = helpers;
+
+  // custom option label
   const formatOptionLabel = (a: CreateEvent<Main.Policy.DisclosedPolicy>) => (
     <div className="">
       Policy Provider: <b>{a.payload.payer}</b>
@@ -29,6 +33,7 @@ const PolicySelectField: React.FC<{
       </div>
     </div>
   );
+
   const error = errors?.[name];
   return (
     <div className="flow flow-col mb-2 mt-0.5">

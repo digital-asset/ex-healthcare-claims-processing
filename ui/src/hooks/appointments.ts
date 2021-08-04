@@ -2,43 +2,53 @@ import { Main } from "@daml.js/healthcare-claims-processing";
 import { CreateEvent } from "@daml/ledger";
 import { useStreamQueries, useLedger } from "@daml/react";
 import { mapIter, innerJoin, useAsync } from "../utils";
+import { useKeyedPolicies } from "./policies";
 
-// Hook to fetch and stream appointment data from Daml ledger
+// Hook to stream appointment data
 export const useAppointments = (query: any) => {
-  const ledger = useLedger();
-
-  // Fetch single appointment information if the query contains a "appointmentId"
-  const appointment = useAsync(
-    async () =>
-      query.appointmentId
-        ? await ledger.fetch(Main.Appointment.Appointment, query.appointmentId)
-        : null,
-    query
-  );
-
-  // Stream all appointment data which is within the authorized scope of the party
-  const appointmentsStream = useStreamQueries(
-    Main.Appointment.Appointment,
-    () => [query]
-  ).contracts;
-
+  // Stream all appointment data
   const appointments: readonly CreateEvent<Main.Appointment.Appointment>[] =
-    query.appointmentId && appointment ? [appointment] : appointmentsStream;
+    useStreamQueries(Main.Appointment.Appointment, () => [query]).contracts;
 
-  // Stream all policy data which is within the authorized scope of the party
-  const disclosed = useStreamQueries(Main.Policy.DisclosedPolicy).contracts;
-
-  // Create new maps for appointments and policies to combine data
   const keyedAppointments = new Map(
-    appointments.map((p) => [p.payload.policy, p])
+    appointments.map((p) => [p?.payload?.policy, p])
   );
-  const keyedDisclosed = new Map(disclosed.map((p) => [p.contractId, p]));
 
-  // Return the combined fetched data
+  const keyedPolicies = useKeyedPolicies();
+
   return Array.from(
     mapIter(
       ([appointment, policy]) => ({ appointment, policy }),
-      innerJoin(keyedAppointments, keyedDisclosed).values()
+      innerJoin(keyedAppointments, keyedPolicies).values()
+    )
+  );
+};
+
+// Hook to fetch and stream appointment data from Daml ledger
+export const useAppointment = (query: any) => {
+  const ledger = useLedger();
+
+  // Fetch single appointment data
+  const appointmentFetch = useAsync(
+    async () =>
+      await ledger.fetch(Main.Appointment.Appointment, query.appointmentId),
+    query
+  );
+
+  const appointments: readonly CreateEvent<Main.Appointment.Appointment>[] =
+    appointmentFetch ? [appointmentFetch] : [];
+
+  const keyedAppointments = new Map(
+    appointments.map((p) => [p?.payload?.policy, p])
+  );
+
+  const keyedPolicies = useKeyedPolicies();
+
+  //return a combined array of appointment and policy
+  return Array.from(
+    mapIter(
+      ([appointment, policy]) => ({ appointment, policy }),
+      innerJoin(keyedAppointments, keyedPolicies).values()
     )
   );
 };

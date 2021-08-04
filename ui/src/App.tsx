@@ -20,7 +20,11 @@ const App: React.FC = () => {
   const history = createHistory();
 
   return credentials ? (
-    <DamlLedger token={credentials.token} party={credentials.party}>
+    <DamlLedger
+      reconnectThreshold={3000}
+      token={credentials.token}
+      party={credentials.party}
+    >
       <Routes history={history} setCredentials={setCredentials} />
     </DamlLedger>
   ) : (

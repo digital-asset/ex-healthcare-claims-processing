@@ -1,12 +1,29 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import dateFormat from "dateformat";
+import { ArrowRight } from "phosphor-react";
+import { Link } from "react-router-dom";
 
 type FieldProps = { label: string; value: string };
 
 export const formatDate = (d: Date) => dateFormat(d, "ddd, mmm d, yyyy");
 
-const TabLink: React.FC<{ to: string }> = ({ children, to }) => {
+export const FollowUp: React.FC<{ to: string; label: string }> = ({
+  to,
+  label,
+}) => {
+  return (
+    <Link
+      to={to}
+      className="flex flex-row space-between items-center space-x-2 text-blue"
+    >
+      {label}
+      <ArrowRight />
+    </Link>
+  );
+};
+
+export const TabLink: React.FC<{ to: string }> = ({ children, to }) => {
   return (
     <NavLink
       exact
@@ -22,19 +39,19 @@ const TabLink: React.FC<{ to: string }> = ({ children, to }) => {
   );
 };
 
-const PageTitleDiv: React.FC<{}> = ({ children }) => {
+export const PageTitleDiv: React.FC<{}> = ({ children }) => {
   return <div className="flex items-baseline space-x-4 p-6"> {children} </div>;
 };
 
-const PageTitleSpan: React.FC<{ title: string }> = ({ title }) => {
+export const PageTitleSpan: React.FC<{ title: string }> = ({ title }) => {
   return <span className="text-3xl text-trueGray-700"> {title} </span>;
 };
 
-const PageSubTitleSpan: React.FC<{ title: string }> = ({ title }) => {
+export const PageSubTitleSpan: React.FC<{ title: string }> = ({ title }) => {
   return <span className="text-trueGray-500 text-sm"> {title} </span>;
 };
 
-const FieldsRow: React.FC<{ fields: FieldProps[] }> = ({ fields }) => {
+export const FieldsRow: React.FC<{ fields: FieldProps[] }> = ({ fields }) => {
   return (
     <div className="flex space-x-12">
       {fields.map((f) => (
@@ -44,7 +61,7 @@ const FieldsRow: React.FC<{ fields: FieldProps[] }> = ({ fields }) => {
   );
 };
 
-const Field: React.FC<FieldProps> = ({ label, value }) => {
+export const Field: React.FC<FieldProps> = ({ label, value }) => {
   return (
     <div className="flex flex-col">
       <div className="text-sm text-trueGray-500">{label}</div>
@@ -53,11 +70,11 @@ const Field: React.FC<FieldProps> = ({ label, value }) => {
   );
 };
 
-const Label: React.FC<{ content: string }> = ({ content }) => {
+export const Label: React.FC<{ content: string }> = ({ content }) => {
   return <div className="text-sm text-center text-trueGray-500">{content}</div>;
 };
 
-const Message: React.FC<{ title: string; content: string }> = ({
+export const Message: React.FC<{ title: string; content: string }> = ({
   title,
   content,
 }) => {
@@ -67,15 +84,4 @@ const Message: React.FC<{ title: string; content: string }> = ({
       <Label content={content} />
     </div>
   );
-};
-
-export {
-  Field,
-  FieldsRow,
-  Label,
-  Message,
-  PageTitleDiv,
-  PageTitleSpan,
-  PageSubTitleSpan,
-  TabLink,
 };

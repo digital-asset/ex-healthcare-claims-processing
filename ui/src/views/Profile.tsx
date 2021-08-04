@@ -1,9 +1,8 @@
 // Copyright (c) 2021 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-
 import React from "react";
-import { useProfile } from "hooks/profile";
 import { PatientProfile, ProviderProfile } from "components/ProfileCards";
+import { useProfile } from "hooks/profile";
 
 /**
  * Component to render the profile of the authorized party

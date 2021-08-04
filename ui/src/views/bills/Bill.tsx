@@ -5,21 +5,24 @@ import { Share } from "phosphor-react";
 import { Message } from "components/Common";
 import { FormModal } from "components/modals/FormModal";
 import SingleItemView from "components/SingleItemView";
-import { useBills } from "hooks/bills";
+import { useBill } from "hooks/bills";
 
 /**
- * function that is passed in the SingleBill component
- * which retrieves bill data through the useBills hook.
- * See "hooks/bills" for more details
+ * function that is passed in the Bill component
+ * which retrieves bill data through the useBill hook.
+ * See "hooks/bill" for more details
  */
 const useBillData = () => {
   const { billId } = useParams<{ billId: string }>();
-  const overview = useBills({ billId })[0];
+  const overview = useBill({ billId })[0];
   return [{ billId, overview: overview }];
 };
 
-/** Single view for bills, display three table rows with bill information */
-const SingleBill: React.FC = () => {
+/**
+ * Component to render single bill of the authorized party
+ * Component uses a table to display the bill and passes a modal to make a payment
+ */
+const Bill: React.FC = () => {
   return (
     <SingleItemView
       title="Bill"
@@ -99,4 +102,4 @@ const SingleBill: React.FC = () => {
   );
 };
 
-export default SingleBill;
+export default Bill;

@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import dateFormat from "dateformat";
+import { Event as DEvent, CreateEvent } from "@daml/ledger";
 
 export function intercalate<X>(xs: X[], sep: X) {
   return xs.flatMap((x) => [sep, x]).slice(1);
@@ -32,6 +33,10 @@ export function innerJoin<K, X, Y>(
   }
   return ret;
 }
+
+export const creations: (_: DEvent<object>[]) => CreateEvent<object>[] = (
+  evts
+) => evts.flatMap((a) => ("created" in a ? [a.created] : []));
 
 export const formatDate = (d: Date) => dateFormat(d, "ddd, mmm d, yyyy");
 

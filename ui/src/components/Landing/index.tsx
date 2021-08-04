@@ -1,5 +1,7 @@
+import React from "react";
 import "./Landing.css";
 
+// Landing page side bar of the daml application
 const Landing = () => {
   return (
     <div className="px-20 bg-blue Landing object-center">

@@ -2,23 +2,32 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Main } from "@daml.js/healthcare-claims-processing";
 import { Clock } from "phosphor-react";
-import { Message } from "components/Common";
-import { formatDate } from "utils";
-import { FormModal, FollowUp, creations } from "components/modals/FormModal";
+import { Message, FollowUp } from "components/Common";
+import { formatDate, creations } from "utils";
+import { FormModal } from "components/modals/FormModal";
 import SingleItemView from "components/SingleItemView";
 import { Time } from "@daml/types";
-import { useAppointments } from "hooks/appointments";
+import { useAppointment } from "hooks/appointments";
 import { useParty } from "@daml/react";
 
 const formatDateHelper = (timeStr: Time) =>
   timeStr ? formatDate(new Date(timeStr)) : "";
 
+/**
+ * function that is passed in the Appointment component
+ * which retrieves appointment data through the useAppointment hook.
+ * See "hooks/appointment" for more details
+ */
 const useAppointmentData = () => {
   const { appointmentId } = useParams<{ appointmentId: string }>();
-  const overviews = useAppointments({ appointmentId });
+  const overviews = useAppointment({ appointmentId });
   return [{ appointmentId, overview: overviews[0] }];
 };
 
+/**
+ * Component to render single appointment of the authorized party
+ * Component uses a table to display the appointment and passes a modal to check-in a patient
+ */
 const Appointment: React.FC = () => {
   const role = useParty();
   return (

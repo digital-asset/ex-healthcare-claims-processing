@@ -12,6 +12,7 @@ export type ChoiceErrorsType = { [_: string]: string | undefined };
 
 type NothingProps = typeof Nothing;
 
+// default field
 export const LField: React.FC<
   FieldAttributes<any> & {
     label: string;
@@ -34,6 +35,7 @@ export const LField: React.FC<
   );
 };
 
+// default select field
 export const EField: React.FC<{
   name: string;
   e: any;
@@ -91,6 +93,7 @@ export const DayPickerField: React.FC<{
 // convert a JavaScript "Date" value into a DAML-backend "Time" value
 const dateToTime = (d: Date): Time => d.toISOString();
 
+// Component Day Time picker
 export const DayTimePickerField: React.FC<{
   name: string;
   errors?: ChoiceErrorsType;

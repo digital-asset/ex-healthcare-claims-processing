@@ -7,12 +7,10 @@ type PatientOverview = {
   policy: Main.Policy.DisclosedPolicy;
 };
 
-// View to display all patient data
-const TablePatients: React.FC = () => {
-  // Assign function to useAllPatients and passing to TabularView component
-  const useAllPatients: () => PatientOverview[] = () =>
-    usePatients({}).overviews;
+const useAllPatients: () => PatientOverview[] = () => usePatients({}).overviews;
 
+// Component to render multiple patients within the scope of the authorized party
+const Patients: React.FC = () => {
   return (
     <TabularView
       title="Patients"
@@ -27,4 +25,4 @@ const TablePatients: React.FC = () => {
   );
 };
 
-export default TablePatients;
+export default Patients;

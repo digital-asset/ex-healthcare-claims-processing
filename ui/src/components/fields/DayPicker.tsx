@@ -9,6 +9,7 @@ type Props = {
   theme: { blue: string };
 };
 
+// Component date picker
 const DayPicker: React.FC<Props> = ({ date, setDate, theme }) => {
   const month = date;
 

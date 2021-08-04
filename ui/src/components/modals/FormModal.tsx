@@ -1,10 +1,9 @@
 import React, { SetStateAction } from "react";
 import { Choice, ContractId } from "@daml/types";
-import { Event as DEvent, CreateEvent } from "@daml/ledger";
+import { Event as DEvent } from "@daml/ledger";
 import { useLedger } from "@daml/react";
 import FormikMod, { Formik, Form, FormikHelpers } from "formik";
-import { ArrowRight, Check, X } from "phosphor-react";
-import { Link } from "react-router-dom";
+import { Check, X } from "phosphor-react";
 import Modal from "./ModalLayout";
 import { Nothing } from "utils";
 
@@ -45,6 +44,22 @@ interface Failure<C> {
   error: any;
 }
 
+export const SubmitButton: React.FC<{
+  submitTitle: string;
+  isSubmitting: boolean;
+}> = ({ submitTitle, isSubmitting }) => (
+  <button
+    type="submit"
+    disabled={isSubmitting}
+    className={
+      "flex justify-center items-center space-x-2 px-6 py-3 rounded-lg border-black border-2 bg-blue text-white"
+    }
+  >
+    {submitTitle}
+  </button>
+);
+type MaybeSuccessOrFailure<C, R> = Nothing | Success<C, R> | Failure<C>;
+
 type FormModalProps<T extends object, C, R, K> = {
   choice: Choice<T, C, R, K>;
   contract: ContractId<T>;
@@ -63,23 +78,14 @@ type FormModalProps<T extends object, C, R, K> = {
       }) => React.ReactNode);
 };
 
-type MaybeSuccessOrFailure<C, R> = Nothing | Success<C, R> | Failure<C>;
-
-export const SubmitButton: React.FC<{
-  submitTitle: string;
-  isSubmitting: boolean;
-}> = ({ submitTitle, isSubmitting }) => (
-  <button
-    type="submit"
-    disabled={isSubmitting}
-    className={
-      "flex justify-center items-center space-x-2 px-6 py-3 rounded-lg border-black border-2 bg-blue text-white"
-    }
-  >
-    {submitTitle}
-  </button>
-);
-
+/**
+ * High adaptable component to display a Form
+ * Main params explained:
+ *  choice: the object path to exercise in the ledger
+ *  contract: the contract id used to exercise a contract in the ledger
+ *  children: react component OR function accepting two params (see type declaration)
+ *  initialValues: initial value of the form (key value object)
+ */
 export function FormModal<T extends object, C, R, K>({
   choice,
   contract,
@@ -207,22 +213,3 @@ export function FormModal<T extends object, C, R, K>({
     </>
   );
 }
-
-export const creations: (_: DEvent<object>[]) => CreateEvent<object>[] = (
-  evts
-) => evts.flatMap((a) => ("created" in a ? [a.created] : []));
-
-export const FollowUp: React.FC<{ to: string; label: string }> = ({
-  to,
-  label,
-}) => {
-  return (
-    <Link
-      to={to}
-      className="flex flex-row space-between items-center space-x-2 text-blue"
-    >
-      {label}
-      <ArrowRight />
-    </Link>
-  );
-};

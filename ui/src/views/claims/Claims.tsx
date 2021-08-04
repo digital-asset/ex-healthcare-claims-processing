@@ -4,13 +4,13 @@ import { useClaims } from "hooks/claims";
 
 const useClaimsData = () => useClaims({});
 
+// Component to render multiple claims within the scope of the authorized party
 const Claims: React.FC = () => {
   return (
     <TabularView
       title="Claims"
       useData={useClaimsData}
       fields={[
-        // NB: outputs provider role (e.g. "Radiologist") instead of provider name (e.g. "Beta Imaging Labs")
         { label: "Provider", getter: (o) => o?.claim?.payload?.provider },
         {
           label: "Patient",
@@ -18,12 +18,12 @@ const Claims: React.FC = () => {
         },
         {
           label: "Procedure Code",
-          getter: (o) => o?.claim?.payload?.encounterDetails.procedureCode,
+          getter: (o) => o?.claim?.payload?.encounterDetails?.procedureCode,
         },
         { label: "Amount", getter: (o) => o?.claim?.payload?.amount },
       ]}
-      tableKey={(o) => o.claim.contractId}
-      itemUrl={(o) => o.claim.contractId}
+      tableKey={(o) => o?.claim?.contractId}
+      itemUrl={(o) => o?.claim?.contractId}
     />
   );
 };

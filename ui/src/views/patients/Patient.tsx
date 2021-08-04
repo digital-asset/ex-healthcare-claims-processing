@@ -23,7 +23,7 @@ import { usePatients } from "hooks/patients";
  * Single view for patient
  * The component containes routes for the tab views
  * */
-const SinglePatient: React.FC = () => {
+const Patient: React.FC = () => {
   const username = useParty();
 
   // function to predicate data that is fetched through "usePatients"
@@ -110,4 +110,4 @@ const SinglePatient: React.FC = () => {
   );
 };
 
-export default SinglePatient;
+export default Patient;

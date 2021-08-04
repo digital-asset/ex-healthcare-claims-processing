@@ -14,6 +14,7 @@ type PcpContactType<T> = {
   contractId: ContractId<T>;
 };
 
+//Component that renders a model with a form to create a referral
 const ReferralModal: React.FC<{
   disclosedRaw: readonly CreateEvent<Main.Policy.DisclosedPolicy>[];
   pcpContract: PcpContactType<any>;

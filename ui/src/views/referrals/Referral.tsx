@@ -6,18 +6,26 @@ import { Message } from "components/Common";
 import { FormModal } from "components/modals/FormModal";
 import { DayTimePickerField } from "components/fields/Common";
 import SingleItemView from "components/SingleItemView";
-import { useReferrals } from "hooks/referrals";
+import { useReferral } from "hooks/referrals";
 import { useParty } from "@daml/react";
 
+/**
+ * function that is passed in the Referral component
+ * which retrieves referral data through the useReferral hook.
+ * See "hooks/referral" for more details
+ */
 const useReferralData = () => {
   const { referralId } = useParams<{ referralId: string }>();
-  const overviews = useReferrals({ referralId: referralId });
+  const overviews = useReferral({ referralId: referralId });
   return [{ referralId, overview: overviews[0] }];
 };
 
-const SingleReferral: React.FC = () => {
+/**
+ * Component to render single referral of the authorized party
+ * Component uses a table to display the referral and passes a modal schedule appointments
+ */
+const Referral: React.FC = () => {
   const role = useParty();
-
   return (
     <SingleItemView
       title="Referral"
@@ -44,8 +52,8 @@ const SingleReferral: React.FC = () => {
       itemUrl={(o) => ""}
       choices={(d) =>
         Boolean(
-          d?.overview?.referral?.payload?.renderingProvider === role &&
-            !d?.overview?.referral?.payload?.appointment
+          d?.overview?.referral?.payload?.renderingProvider === role
+          //&& !d?.overview?.referral?.payload?.appointment
         ) ? (
           <FormModal
             className="flex flex-col"
@@ -80,4 +88,4 @@ const SingleReferral: React.FC = () => {
   );
 };
 
-export default SingleReferral;
+export default Referral;

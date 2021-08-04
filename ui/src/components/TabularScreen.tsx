@@ -68,7 +68,7 @@ function TabularView<T>({
         </thead>
         <tbody>
           {data.map((po) => {
-            let url = match.url + "/" + itemUrl(po);
+            let url = match?.url + "/" + itemUrl(po);
             return (
               <tr
                 key={tableKey(po)}

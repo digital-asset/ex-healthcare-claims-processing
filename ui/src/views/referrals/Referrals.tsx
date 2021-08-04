@@ -4,7 +4,8 @@ import { useReferrals } from "hooks/referrals";
 
 const useReferralsData = () => useReferrals({});
 
-const TableReferral: React.FC = () => {
+// Component to render multiple referrals within the scope of the authorized party
+const Referrals: React.FC = () => {
   return (
     <TabularView
       title="Referrals"
@@ -28,4 +29,4 @@ const TableReferral: React.FC = () => {
   );
 };
 
-export default TableReferral;
+export default Referrals;

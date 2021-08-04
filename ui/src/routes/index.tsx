@@ -36,7 +36,6 @@ type RouteComponentProps = {
  * Component that initiates all routes for the authorized party
  * The login route is found within App.tsx
  */
-
 const Routes: React.FC<RouteComponentProps> = ({ setCredentials, history }) => {
   // useParty() return the current authorized user
   const party = useParty();
@@ -64,9 +63,8 @@ const Routes: React.FC<RouteComponentProps> = ({ setCredentials, history }) => {
                     key={`child-route-${childRoute.to}-${route.to}`}
                     path={route.to + childRoute.to}
                     exact={childRoute.exact}
-                  >
-                    {childRoute.view}
-                  </Route>
+                    component={childRoute.view}
+                  />
                 ));
               }
               return (
@@ -74,9 +72,8 @@ const Routes: React.FC<RouteComponentProps> = ({ setCredentials, history }) => {
                   key={`main-route-${route.to}`}
                   path={route.to}
                   exact={route.exact}
-                >
-                  {route.view}
-                </Route>
+                  component={route.view}
+                />
               );
             })}
             <Route>

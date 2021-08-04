@@ -5,18 +5,26 @@ import { Share } from "phosphor-react";
 import { Message } from "components/Common";
 import { FormModal } from "components/modals/FormModal";
 import SingleItemView from "components/SingleItemView";
-import { useTreatments } from "hooks/treatments";
+import { useTreatment } from "hooks/treatments";
 import { useParty } from "@daml/react";
 
+/**
+ * function that is passed in the Bill component
+ * which retrieves treatment data through the useTreatment hook.
+ * See "hooks/treatment" for more details
+ */
 const useTreatmentData = () => {
   const { treatmentId } = useParams<{ treatmentId: string }>();
-  const overviews = useTreatments({ treatmentId });
+  const overviews = useTreatment({ treatmentId });
   return [{ treatmentId, overview: overviews[0] }];
 };
 
-const SingleTreatment: React.FC = () => {
+/**
+ * Component to render single treatment of the authorized party
+ * Component uses a table to display the treatment and passes a modal verify the treatment completion
+ */
+const Treatment: React.FC = () => {
   const role = useParty();
-
   return (
     <SingleItemView
       title="Treatment"
@@ -111,4 +119,4 @@ const SingleTreatment: React.FC = () => {
   );
 };
 
-export default SingleTreatment;
+export default Treatment;

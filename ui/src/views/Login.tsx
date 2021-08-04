@@ -13,17 +13,17 @@ type Props = {
   onLogin: (credentials: Credentials) => void;
 };
 
-/**
- * React component for the login screen of the `App`.
- */
+// React component for the login screen of the `App`.
 const LoginScreen: React.FC<Props> = ({ onLogin }) => {
   const login = useCallback(
     async (credentials: Credentials) => {
       try {
         console.log("Attempting Login");
+        // Initiate new ledger
         const ledger = new Ledger({ token: credentials.token });
         console.log("Got ledger", { ledger });
         console.log(credentials);
+        // Set credentials to main index component to initiate routes
         onLogin(credentials);
       } catch (error) {
         alert(`Unknown error:\n${error}`);
@@ -34,10 +34,15 @@ const LoginScreen: React.FC<Props> = ({ onLogin }) => {
 
   const handleLogin = (username: string) => async (event: React.MouseEvent) => {
     event.preventDefault();
+    // Compute tokens based on username and call login
     await login(computeCredentials(username));
   };
 
   useEffect(() => {
+    /**
+     * Try to signin with url based authentication details
+     * Authentication details are passed through query params "token" and "party"
+     */
     const url = new URL(window.location.toString());
     const token = url.searchParams.get("token");
     if (token === null) {

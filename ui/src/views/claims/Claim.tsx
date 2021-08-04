@@ -6,14 +6,24 @@ import { Message } from "components/Common";
 import { FormModal } from "components/modals/FormModal";
 import SingleItemView from "components/SingleItemView";
 import { useParty } from "@daml/react";
-import { useClaims } from "hooks/claims";
+import { useClaim } from "hooks/claims";
+
+/**
+ * function that is passed in the Claim component
+ * which retrieves claim data through the useClaim hook.
+ * See "hooks/claim" for more details
+ */
 
 const useClaimData = () => {
   const { claimId } = useParams<{ claimId: string }>();
-  const overview = useClaims({ claimId })[0];
+  const overview = useClaim({ claimId })[0];
   return [{ claimId, overview: overview }];
 };
 
+/**
+ * Component to render single claim of the authorized party
+ * Component uses a table to display the claim and passes a modal to pay the claim
+ */
 const Claim: React.FC = () => {
   const role = useParty();
   const dollars = (n: any) => (n ? "$" + n : "");
@@ -66,7 +76,6 @@ const Claim: React.FC = () => {
           },
         ],
         [
-          // NB: outputs provider role (e.g. "Radiologist") instead of provider name (e.g. "Beta Imaging Labs")
           {
             label: "Provider",
             getter: (o) => o?.overview?.claim?.payload?.provider,

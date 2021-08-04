@@ -9,6 +9,7 @@ const formatDateHelper = (timeStr: Time) =>
 
 const useAppointmentsData = () => useAppointments({});
 
+// Component to render multiple appointments within the scope of the authorized party
 const Appointments: React.FC = () => {
   return (
     <TabularView

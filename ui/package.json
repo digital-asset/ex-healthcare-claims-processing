@@ -32,12 +32,17 @@
     "start": "craco start",
     "dev": "nodemon craco start",
     "build": "craco build",
-    "test": "craco test --testURL='http://localhost:7575'",
+    "test": "craco test",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src/"
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less)$": "identity-obj-proxy"
+    }
   },
   "browserslist": {
     "production": [
@@ -52,17 +57,25 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.12.1",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.2.1",
     "@types/dateformat": "^3.0.1",
     "@types/dotenv": "^8.2.0",
+    "@types/jest": "^26.0.24",
     "@types/jwt-simple": "^0.5.33",
     "@types/react": "^16.9.16",
     "@types/react-dom": "^16.9.4",
     "@types/react-modal": "^3.12.0",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-select": "^4.0.13",
+    "@types/react-test-renderer": "^17.0.1",
     "@types/react-time-picker": "^4.0.1",
     "autoprefixer": "^9.8.6",
     "http-proxy-middleware": "^1.0.4",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^26.6.0",
     "postcss": "^7.0.36",
     "postcss-for": "^2.1.1",
     "prettier": "2.3.2",

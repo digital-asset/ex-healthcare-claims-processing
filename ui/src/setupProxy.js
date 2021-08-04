@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// NOTE: this file should stay inside src folder
+
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const httpJsonDevUrl =

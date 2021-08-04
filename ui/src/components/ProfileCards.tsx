@@ -6,7 +6,7 @@ import { Header } from "semantic-ui-react";
 import { User } from "phosphor-react";
 import { Main } from "@daml.js/healthcare-claims-processing";
 
-// Small UI component to renders the icon of the profile card
+// Component to renders the icon of the profile card
 const UserIcon: React.FC<{ className: string }> = ({ className }) => {
   return (
     <svg className={className} width="89" height="85" viewBox="0 0 89 85">
@@ -34,7 +34,9 @@ const ProfileTop: React.FC<{ name: string; role: string }> = ({
   role,
 }) => (
   <>
-    <div className="label-sm">Welcome!</div>
+    <div id="welcome_tag" className="label-sm">
+      Welcome!
+    </div>
     <UserIcon className="mx-auto mt-16 mb-4" />
     <Header className="text-2xl" as="h2">
       {name}
