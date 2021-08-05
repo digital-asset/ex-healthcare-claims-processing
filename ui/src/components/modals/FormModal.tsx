@@ -70,6 +70,7 @@ type FormModalProps<T extends object, C, R, K> = {
   className?: string;
   successWidget?: (succ: Success<C, R>, close: () => void) => React.ReactNode;
   failureWidget?: (fail: Failure<C>, close: () => void) => React.ReactNode;
+  disabled?: boolean;
   children:
     | React.ReactNode
     | ((_: {
@@ -96,6 +97,7 @@ export function FormModal<T extends object, C, R, K>({
   className,
   successWidget,
   failureWidget,
+  disabled = false,
   children,
 }: FormModalProps<T, C, R, K>) {
   const [modalActive, setModalActiveInner] = React.useState(false);
@@ -197,8 +199,11 @@ export function FormModal<T extends object, C, R, K>({
   return (
     <>
       <button
+        disabled={disabled}
         onClick={() => setModalActive(true)}
-        className="flex justify-center items-center space-x-2 px-4 py-2 rounded-lg border-black border-2 bg-blue text-white"
+        className={`flex disabled:opacity-50 ${
+          disabled ? "cursor-not-allowed" : ""
+        } justify-center items-center space-x-2 px-4 py-2 rounded-lg border-black border-2 bg-blue text-white`}
       >
         {icon}
         <div> {buttonTitle} </div>

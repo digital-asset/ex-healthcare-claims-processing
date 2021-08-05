@@ -104,7 +104,7 @@ export const ProviderProfile: React.FC<{ provider: Main.Provider.Provider }> =
  */
 export const PatientProfile: React.FC<{
   patient: Main.Patient.Patient;
-  policy: Main.Policy.InsurancePolicy;
+  policy?: Main.Policy.InsurancePolicy;
 }> = ({ patient, policy }) => (
   <>
     <ProfileTop name={patient?.patientName} role="Patient" />

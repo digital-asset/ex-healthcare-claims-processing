@@ -26,41 +26,44 @@ export const useReferrals = (query: any) => {
   );
 };
 
+interface IReferralDetails extends Main.Provider.ReferralDetails {
+  appointment?: CreateEvent<Main.Appointment.Appointment>;
+}
+
 // Hook to fetch and referral data from Daml ledger
 export const useReferral = (query: any) => {
   const ledger = useLedger();
 
   // Fetch single referral information if the query contains a "referralId"
-  const referralFetch = useAsync(
+  const referralFetch: CreateEvent<IReferralDetails> | null = useAsync(
     async () =>
       await ledger.fetch(Main.Provider.ReferralDetails, query.referralId),
     query
   );
 
-  const referrals: readonly CreateEvent<Main.Provider.ReferralDetails>[] =
-    referralFetch ? [referralFetch] : [];
+  //UNCOMMENT IF PROPOSED SOLUTION
+  var referralId = referralFetch?.payload?.referralDetails?.referral;
+  const appointmentsStream: readonly CreateEvent<Main.Appointment.Appointment>[] =
+    useStreamQueries(Main.Appointment.Appointment, () => [
+      {
+        encounterDetails: {
+          referral: referralId,
+        },
+      },
+    ]).contracts;
 
-  // UNCOMMENT IF PROPOSED SOLUTION
-  // var referralId = referral?.payload?.referralDetails?.referral;
-  // const appointmentsStream = useStreamQueries(
-  //   Main.Appointment.Appointment,
-  //   () => [
-  //     {
-  //       encounterDetails: {
-  //         referral: referralId,
-  //       },
-  //     },
-  //   ]
-  // ).contracts;
-  // // TODO MAKE TYPE SAFE
-  // if (
-  //   appointmentsStream &&
-  //   appointmentsStream.length &&
-  //   referral &&
-  //   referral.payload
-  // ) {
-  //   referral.payload.appointment = appointmentsStream[0];
-  // }
+  if (
+    appointmentsStream &&
+    appointmentsStream.length &&
+    referralFetch &&
+    referralFetch.payload
+  ) {
+    referralFetch.payload.appointment = appointmentsStream[0];
+  }
+
+  const referrals: readonly CreateEvent<IReferralDetails>[] = referralFetch
+    ? [referralFetch]
+    : [];
 
   const keyedReferrals = new Map(
     referrals.map((p) => [p.payload.referralDetails.policy, p])

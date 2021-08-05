@@ -29,7 +29,7 @@ export const routes = [
     to: "/",
     exact: true,
     roles: ["Patient1", "PrimaryCareProvider", "Radiologist"],
-    view: (props) => <Profile {...props} />,
+    view: Profile,
   },
 
   //patient routes
@@ -40,12 +40,12 @@ export const routes = [
       {
         to: "/",
         exact: true,
-        view: (props) => <Patients {...props} />,
+        view: Patients,
       },
       {
         to: "/:patientId",
         exact: false,
-        view: (props) => <Patient {...props} />,
+        view: Patient,
       },
     ],
   },
@@ -58,12 +58,12 @@ export const routes = [
       {
         to: "/",
         exact: true,
-        view: (props) => <Referrals {...props} />,
+        view: Referrals,
       },
       {
         to: "/:referralId",
         exact: true,
-        view: (props) => <Referral {...props} />,
+        view: Referral,
       },
     ],
   },
@@ -76,12 +76,12 @@ export const routes = [
       {
         to: "/",
         exact: true,
-        view: (props) => <Treatments {...props} />,
+        view: Treatments,
       },
       {
         to: "/:treatmentId",
         exact: true,
-        view: (props) => <Treatment {...props} />,
+        view: Treatment,
       },
     ],
   },
@@ -94,12 +94,12 @@ export const routes = [
       {
         to: "/",
         exact: true,
-        view: (props) => <Bills {...props} />,
+        view: Bills,
       },
       {
         to: "/:billId",
         exact: true,
-        view: (props) => <Bill {...props} />,
+        view: Bill,
       },
     ],
   },
@@ -112,12 +112,12 @@ export const routes = [
       {
         to: "/",
         exact: true,
-        view: (props) => <Claims {...props} />,
+        view: Claims,
       },
       {
         to: "/:claimId",
         exact: true,
-        view: (props) => <Claim {...props} />,
+        view: Claim,
       },
     ],
   },
@@ -130,12 +130,12 @@ export const routes = [
       {
         to: "/",
         exact: true,
-        view: (props) => <Appointments {...props} />,
+        view: Appointments,
       },
       {
         to: "/:appointmentId",
         exact: true,
-        view: (props) => <Appointment {...props} />,
+        view: Appointment,
       },
     ],
   },

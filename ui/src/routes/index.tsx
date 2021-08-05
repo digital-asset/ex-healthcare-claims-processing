@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { useParty } from "@daml/react";
-import { routes } from "./config";
+import { routes } from "Routes/config";
 import MainLayout from "components/MainLayout";
 import { Router } from "react-router";
 import { History } from "history";
@@ -30,13 +29,18 @@ type RouteProps = {
 type RouteComponentProps = {
   setCredentials: (prop: undefined) => void;
   history: History;
+  useParty: () => string;
 };
 
 /**
  * Component that initiates all routes for the authorized party
  * The login route is found within App.tsx
  */
-const Routes: React.FC<RouteComponentProps> = ({ setCredentials, history }) => {
+const Routes: React.FC<RouteComponentProps> = ({
+  setCredentials,
+  history,
+  useParty,
+}) => {
   // useParty() return the current authorized user
   const party = useParty();
 

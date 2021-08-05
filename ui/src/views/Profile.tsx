@@ -18,7 +18,10 @@ const Profile: React.FC = () => {
 
   return (
     <>
-      <div className="shadow-2xl size-card rounded-xl content-center flex flex-col text-center m-auto justify-self-center self-center p-12 z-20 bg-white relative">
+      <div
+        data-testid="profile_card"
+        className="shadow-2xl size-card rounded-xl content-center flex flex-col text-center m-auto justify-self-center self-center p-12 z-20 bg-white relative"
+      >
         {pcpResult.length === 1 ? (
           <ProviderProfile provider={pcpResult[0]?.payload} />
         ) : (

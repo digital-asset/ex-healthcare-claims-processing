@@ -44,7 +44,7 @@ const tabs: TabsProps = {
   },
   patients: {
     to: "/provider/patients",
-    icon: "pedestrian",
+    icon: "person",
     label: "Patients",
   },
   bills: {
@@ -65,7 +65,7 @@ const TabLink: React.FC<TabProps> = ({ to, label, icon, exact }) => {
         <Link
           to={to}
           className={
-            "flex flex-grow-0 h-9 items-center text-blue text-sm font-alata mr-3 ml-3 mt-1 mb-1 rounded" +
+            "flex flex-grow-0 h-9 items-center text-blue text-sm font-alata mr-3 ml-3 mt-1 mb-1 rounded tab-test" +
             (match ? " tab-active" : " tab-hover")
           }
         >
@@ -139,7 +139,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ onLogout, children }) => {
         </div>
         <button
           onClick={onLogout}
-          className="flex flex-grow-0 h-9 items-center text-blue text-sm mr-3 ml-3 mt-1 mb-1 rounded tab-hover"
+          className="flex flex-grow-0 h-9 items-center text-blue text-sm mr-3 ml-3 mt-1 mb-1 rounded tab-hover logout-button"
         >
           <i className={"ph-users text-blueGray-400 text-2xl center m-4"} />
           Change Roles

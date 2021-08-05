@@ -26,10 +26,15 @@ module.exports = {
       zIndex: {
         "-10": "-10",
       },
+      cursor: {
+        "not-allowed": "not-allowed",
+      },
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      opacity: ["disabled"],
+    },
   },
   plugins: [],
 };

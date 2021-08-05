@@ -35,7 +35,7 @@ function SingleItemView<T>({
 }: PropsWithChildren<
   TabularViewConfig<T, TabularViewFields<T>[][]> & {
     //set "data" type declaration back to T
-    choices: (data: any) => ReactNode;
+    choices: (data: T) => ReactNode;
   }
 >) {
   const data = useData();

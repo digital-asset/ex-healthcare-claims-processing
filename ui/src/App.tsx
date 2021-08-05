@@ -3,10 +3,11 @@
 
 import React from "react";
 import LoginScreen from "views/Login";
-import Routes from "./routes";
+import Routes from "./Routes";
 import DamlLedger from "@daml/react";
 import Credentials from "config/Credentials";
 import { createBrowserHistory as createHistory } from "history";
+import { useParty } from "@daml/react";
 
 /**
  * React component for the entry point into the application.
@@ -25,7 +26,11 @@ const App: React.FC = () => {
       token={credentials.token}
       party={credentials.party}
     >
-      <Routes history={history} setCredentials={setCredentials} />
+      <Routes
+        useParty={useParty}
+        history={history}
+        setCredentials={setCredentials}
+      />
     </DamlLedger>
   ) : (
     <LoginScreen onLogin={setCredentials} />
