@@ -3,7 +3,7 @@
 
 import React from "react";
 import LoginScreen from "views/Login";
-import Routes from "./Routes";
+import Routes from "routes/Routes";
 import DamlLedger from "@daml/react";
 import Credentials from "config/Credentials";
 import { createBrowserHistory as createHistory } from "history";

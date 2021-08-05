@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { routes } from "Routes/config";
+import { routes } from "routes/config";
 import MainLayout from "components/MainLayout";
 import { Router } from "react-router";
 import { History } from "history";

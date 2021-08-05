@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import React from "react";
 //import userEvent from "@testing-library/user-event";
-import Routes from "../Routes";
+import Routes from "../routes/Routes";
 import { computeCredentials } from "config/Credentials";
 import Ledger from "@daml/ledger";
 import { createMemoryHistory } from "history";
