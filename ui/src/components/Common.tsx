@@ -44,7 +44,12 @@ export const PageTitleDiv: React.FC<{}> = ({ children }) => {
 };
 
 export const PageTitleSpan: React.FC<{ title: string }> = ({ title }) => {
-  return <span className="text-3xl text-trueGray-700"> {title} </span>;
+  return (
+    <span className="text-3xl text-trueGray-700" id="title-test">
+      {" "}
+      {title}{" "}
+    </span>
+  );
 };
 
 export const PageSubTitleSpan: React.FC<{ title: string }> = ({ title }) => {

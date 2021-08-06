@@ -29,9 +29,11 @@ describe("Test rendering layout components", () => {
   it("Display all roll login buttons", () => {
     var container = render(<SelectRole handleLogin={() => {}} />);
     parties.forEach((party) => {
-      var button = container.container.querySelector(`#${party}`);
+      var button: HTMLElement | null = container.container.querySelector(
+        `#${party}`
+      );
 
-      expect(container.container).toBeInTheDocument(button);
+      expect(button).toBeInTheDocument();
     });
   });
 

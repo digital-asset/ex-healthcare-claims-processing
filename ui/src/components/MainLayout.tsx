@@ -68,6 +68,7 @@ const TabLink: React.FC<TabProps> = ({ to, label, icon, exact }) => {
             "flex flex-grow-0 h-9 items-center text-blue text-sm font-alata mr-3 ml-3 mt-1 mb-1 rounded tab-test" +
             (match ? " tab-active" : " tab-hover")
           }
+          id={`tab-link-${label.replace(" ", "-")}`}
         >
           <i
             className={"ph-" + icon + " text-blueGray-400 text-2xl center m-4"}
@@ -134,7 +135,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ onLogout, children }) => {
           </div>
           <div className="my-2">
             Selected Role:
-            <div className="text-sm text-trueGray-400">{role}</div>
+            <div className="text-sm text-trueGray-400" id="current-role">
+              {role}
+            </div>
           </div>
         </div>
         <button

@@ -84,6 +84,7 @@ function TabularView<T>({
                   <td key={idx}>
                     <Link
                       to={url}
+                      id={`table-link-test-${idx}`}
                       className="flex"
                       {...(idx === 0 ? {} : { tabIndex: -1 })}
                     >
