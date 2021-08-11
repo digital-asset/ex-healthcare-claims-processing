@@ -54,7 +54,10 @@ function TabularView<T>({
           className="w-full px-3 py-2 h-10 bg-trueGray-100"
         />
       </div>
-      <table className="table-fixed m-6 table-widths-eq">
+      <table
+        className="table-fixed m-6 table-widths-eq"
+        id={`test_table_${title}`}
+      >
         <thead>
           <tr className="text-left text-trueGray-500 text-sm">
             {fields.map((a) => (

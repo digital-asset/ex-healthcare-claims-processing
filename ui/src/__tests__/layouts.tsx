@@ -5,12 +5,12 @@ import SelectRole from "../components/fields/SelectRole";
 import MainLayout from "../components/MainLayout";
 import { computeCredentials } from "config/Credentials";
 import Ledger from "@daml/ledger";
-import { createBrowserHistory, createMemoryHistory } from "history";
+import { createBrowserHistory } from "history";
 
-import { shallow, mount, configure } from "enzyme";
+import { configure } from "enzyme";
 import EnzymeAdapter from "enzyme-adapter-react-16";
 import DamlLedger from "@daml/react";
-import { Router, useHistory } from "react-router-dom";
+import { Router } from "react-router-dom";
 
 configure({ adapter: new EnzymeAdapter() });
 

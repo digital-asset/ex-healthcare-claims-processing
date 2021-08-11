@@ -28,7 +28,7 @@ const PolicySelectField: React.FC<{
       <br />
       Disclosed Parties: <b>{a.payload.receivers}</b>
       <br />
-      <div className="overflow-ellipsis-20">
+      <div className="overflow-ellipsis-20 contractId">
         Contract ID: <b>{a.contractId}</b>
       </div>
     </div>
@@ -36,17 +36,18 @@ const PolicySelectField: React.FC<{
 
   const error = errors?.[name];
   return (
-    <div className="flow flow-col mb-2 mt-0.5">
+    <div className="flow flow-col mb-2 mt-0.5" id={name}>
       <label htmlFor={name} className="block label-sm">
         {label}
       </label>
       <Select
-        classNamePrefix="react-select-modal-enum"
+        classNamePrefix={name}
         options={disclosedRaw}
         onChange={(option) => setValue(option?.contractId)}
         formatOptionLabel={formatOptionLabel}
         getOptionValue={(a) => a.contractId}
         styles={{ singleValue: (base) => ({ textOverflow: "ellipsis" }) }}
+        id={name}
       />
       <RenderError error={error} />
     </div>

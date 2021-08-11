@@ -36,7 +36,7 @@ const Modal: React.FC<Props> = ({
     >
       {hasCloseButton && (
         <div className="flex flex-auto flex-row-reverse">
-          <button onClick={() => setActive(false)}>
+          <button onClick={() => setActive(false)} id="close-modal-button">
             <X size="20px" color="var(--blue)" weight="bold" />
           </button>
         </div>

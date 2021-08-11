@@ -44,7 +44,7 @@ describe("Test rendering main components", () => {
       </Router>
     );
 
-    // Table has one empty <th />
+    // Table has one empty <th /> so +1 on length
     var countRows = container.container.querySelectorAll("th").length;
     expect(countRows).toEqual(dataMockup().length + 1);
   });

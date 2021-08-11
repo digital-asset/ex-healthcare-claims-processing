@@ -54,6 +54,7 @@ export const SubmitButton: React.FC<{
     className={
       "flex justify-center items-center space-x-2 px-6 py-3 rounded-lg border-black border-2 bg-blue text-white"
     }
+    id="submit-button"
   >
     {submitTitle}
   </button>
@@ -117,6 +118,8 @@ export function FormModal<T extends object, C, R, K>({
     values: PartialMaybe<C>,
     { setSubmitting }: FormikHelpers<PartialMaybe<C>>
   ) => {
+    console.log({ values });
+
     const arg = complete(values);
     if (arg) {
       const success = (a: [R, DEvent<object>[]]) => {
@@ -140,14 +143,17 @@ export function FormModal<T extends object, C, R, K>({
     switch (successOrFailure.tag) {
       case SuccessTag: {
         content = (
-          <div className="w-170 py-24 space-y-8 flex justify-center items-center flex-col text-center">
+          <div
+            className="w-170 py-24 space-y-8 flex justify-center items-center flex-col text-center"
+            id="succes-widget"
+          >
             <div className="rounded-full bg-green-100 h-12 w-12 flex">
               <Check className="m-auto" size="24" weight="bold" />
             </div>
             {successWidget ? (
               successWidget(successOrFailure, () => setModalActive(false))
             ) : (
-              <> Success </>
+              <span> Success </span>
             )}
           </div>
         );
@@ -204,9 +210,10 @@ export function FormModal<T extends object, C, R, K>({
         className={`flex disabled:opacity-50 ${
           disabled ? "cursor-not-allowed" : ""
         } justify-center items-center space-x-2 px-4 py-2 rounded-lg border-black border-2 bg-blue text-white`}
+        id="modal-button"
       >
         {icon}
-        <div> {buttonTitle} </div>
+        <div id="modal-button-text"> {buttonTitle} </div>
       </button>
       <Modal
         active={modalActive}

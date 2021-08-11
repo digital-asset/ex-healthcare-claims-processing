@@ -54,7 +54,7 @@ export const EField: React.FC<{
         {label}
       </label>
       <Select
-        cla1ssNamePrefix="react-select-modal-enum"
+        classNamePrefix={name}
         multi={false}
         options={e.keys.map((a: string) => ({ value: a, label: a }))}
         onChange={(option) => setValue(option?.value)}
@@ -62,6 +62,7 @@ export const EField: React.FC<{
           singleValue: () => ({ textOverflow: "ellipsis", maxWidth: "10em" }),
         }}
         validate={undefined}
+        id={name}
       />
       <RenderError error={error} />
     </div>
