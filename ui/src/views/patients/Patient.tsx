@@ -7,7 +7,7 @@ import {
   useParams,
 } from "react-router-dom";
 import { Main } from "@daml.js/healthcare-claims-processing";
-import { useParty, useStreamQueries } from "@daml/react";
+import { useStreamQueries } from "@daml/react";
 import {
   FieldsRow,
   PageTitleDiv,
@@ -24,23 +24,16 @@ import { usePatients } from "hooks/patients";
  * The component containes routes for the tab views
  * */
 const Patient: React.FC = () => {
-  const username = useParty();
-
-  // function to predicate data that is fetched through "usePatients"
-  const controlled = (d: Main.Policy.DisclosedPolicy) =>
-    d.receivers.length > 0 && d.receivers.includes(username);
-
   // get patient ID
   const { patientId } = useParams<{ patientId: string }>();
 
   /**
    * Fetch data about the patient through the "usePatients" hook
-   * Two params are being passed, the first is the query, the second is a predicate
+   * One param being passed
    */
-  const { overviews, disclosed, disclosedRaw } = usePatients(
-    { patient: patientId },
-    controlled
-  );
+  const { overviews, disclosed, disclosedRaw } = usePatients({
+    patient: patientId,
+  });
 
   const match = useRouteMatch();
 

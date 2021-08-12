@@ -2,7 +2,7 @@ import { useStreamQueries } from "@daml/react";
 import { mapIter, innerJoin } from "../utils";
 import { Main } from "@daml.js/healthcare-claims-processing";
 
-export const usePatients = (query: any, predicate: any = () => true) => {
+export const usePatients = (query: any) => {
   // Stream all acceptance patients data which is within the authorized scope of the party
   const acceptances = useStreamQueries(
     Main.Patient.NotifyPatientOfPCPAcceptance,
@@ -12,7 +12,7 @@ export const usePatients = (query: any, predicate: any = () => true) => {
   // Stream all policy data which is within the authorized scope of the party
   const disclosedRaw = useStreamQueries(Main.Policy.DisclosedPolicy, () => [
     query,
-  ]).contracts.filter((resp) => predicate(resp.payload));
+  ]).contracts;
   const disclosed = disclosedRaw.map((resp) => resp.payload);
 
   //Create new map for acceptance and policies, used to combine data

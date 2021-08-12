@@ -20,7 +20,7 @@ const App: React.FC = () => {
   >();
 
   const history = createHistory();
-
+  console.log({ credentials });
   return credentials ? (
     <DamlLedger
       reconnectThreshold={3000}

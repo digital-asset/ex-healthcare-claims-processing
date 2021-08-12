@@ -18,6 +18,11 @@ const LoginScreen: React.FC<Props> = ({ onLogin }) => {
   const login = useCallback(
     async (credentials: Credentials) => {
       try {
+        credentials = {
+          token: tempToken,
+          party,
+          ledgerId,
+        };
         console.log("Attempting Login");
         // Initiate new ledger
         const ledger = new Ledger({ token: credentials.token });
@@ -56,7 +61,7 @@ const LoginScreen: React.FC<Props> = ({ onLogin }) => {
     }
     url.search = "";
     window.history.replaceState(window.history.state, "", url.toString());
-    login({ token, party, ledgerId });
+    //login({ token, party, ledgerId });
   }, [login]);
 
   return (

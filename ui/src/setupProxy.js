@@ -7,8 +7,8 @@
 
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
-const httpJsonDevUrl =
-  "http://localhost:" + process.env.REACT_APP_HTTP_JSON_PORT;
+const httpJsonDevUrl = "https://api.projectdabl.com/data/lmw46c77h4kaxptl";
+//"http://localhost:" + process.env.REACT_APP_HTTP_JSON_PORT;
 
 /**
  * @return {Boolean}
@@ -32,6 +32,7 @@ module.exports = function (app) {
     createProxyMiddleware(filter, {
       target: httpJsonDevUrl,
       ws: true, //Proxy websockets
+      changeOrigin: true,
     })
   );
 };

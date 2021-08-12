@@ -41,7 +41,6 @@ export const useReferral = (query: any) => {
     query
   );
 
-  //UNCOMMENT IF PROPOSED SOLUTION
   var referralId = referralFetch?.payload?.referralDetails?.referral;
   const appointmentsStream: readonly CreateEvent<Main.Appointment.Appointment>[] =
     useStreamQueries(Main.Appointment.Appointment, () => [
@@ -52,6 +51,7 @@ export const useReferral = (query: any) => {
       },
     ]).contracts;
 
+  // extensive check to make Typescript happy
   if (
     appointmentsStream &&
     appointmentsStream.length &&

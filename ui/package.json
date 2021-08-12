@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@auth0/auth0-react": "^1.6.0",
     "@craco/craco": "6.1.1",
     "@daml.js/healthcare-claims-processing": "file:daml.js/healthcare-claims-processing-2.0.0",
     "@daml/ledger": "^1.15.0",
