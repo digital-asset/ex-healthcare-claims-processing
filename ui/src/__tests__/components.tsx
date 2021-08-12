@@ -1,9 +1,7 @@
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
-//import userEvent from "@testing-library/user-event";
 import TabularView from "../components/TabularScreen";
 import SingleItemView from "../components/SingleItemView";
-
 import { ProviderProfile, PatientProfile } from "../components/ProfileCards";
 import { Router } from "react-router";
 import { createBrowserHistory } from "history";
@@ -27,6 +25,8 @@ const tableFieldsSingleItem = [
 
 const itemUrl = (a: any) => a.user;
 const tableKey = (a: any) => a.user;
+
+// Test cases to check if all main components render as expected with the right input
 
 describe("Test rendering main components", () => {
   it("Table component", async () => {

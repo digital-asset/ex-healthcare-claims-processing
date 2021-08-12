@@ -3,7 +3,7 @@
 /// SPDX-License-Identifier: Apache-2.0
 ///
 
-import { ChildProcess, spawn, spawnSync, SpawnOptions } from "child_process";
+import { ChildProcess, spawn, SpawnOptions } from "child_process";
 import puppeteer, { Browser } from "puppeteer";
 import { Page } from "puppeteer";
 import waitOn from "wait-on";
@@ -16,6 +16,12 @@ let uiProc: ChildProcess | undefined = undefined;
 
 let browser: Browser | undefined = undefined;
 
+/**
+ * NOTE: This test suite is bug sensitive
+ * In some events the ledger and api might not be ready when the tests start
+ * You may want to start the ledger in seperate terminals and run the tests
+ * If so, please see comments below and out comment the two applicable blocks
+ */
 beforeAll(async () => {
   // Note(kill-npm-start): The `detached` flag starts the process in a new process group.
   // This allows us to kill the process with all its descendents after the tests finish,
@@ -26,9 +32,16 @@ beforeAll(async () => {
     cwd: "..",
   };
 
+  /**
+   * OUT COMMENT THIS IF RUNNING LEDGER IN SEPERATE TERMINALS
+   * Start out comment
+   */
+
   sandboxProc = spawn("launchers/sandbox+populate", launcherOpts);
   automationProc = spawn("launchers/automation", launcherOpts);
   uiProc = spawnUI(launcherOpts);
+
+  // End out comment
 
   await waitOn({ resources: [`tcp:localhost:${UI_PORT}`] });
   await waitOn({ resources: [`tcp:localhost:7575`] });
@@ -44,7 +57,10 @@ function spawnUI(opts: SpawnOptions) {
 }
 
 afterAll(async () => {
-  //  TODO there may be still some hanging processes.
+  /**
+   * OUT COMMENT THIS IF RUNNING LEDGER IN SEPERATE TERMINALS
+   * Start out comment
+   */
   if (uiProc?.pid) {
     process?.kill(-uiProc.pid);
   }
@@ -54,6 +70,8 @@ afterAll(async () => {
   if (sandboxProc?.pid) {
     process?.kill(-sandboxProc.pid);
   }
+  // End out comment
+
   if (browser) {
     await browser.close();
   }

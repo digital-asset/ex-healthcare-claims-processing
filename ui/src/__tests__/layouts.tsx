@@ -6,7 +6,6 @@ import MainLayout from "../components/MainLayout";
 import { computeCredentials } from "config/Credentials";
 import Ledger from "@daml/ledger";
 import { createBrowserHistory } from "history";
-
 import { configure } from "enzyme";
 import EnzymeAdapter from "enzyme-adapter-react-16";
 import DamlLedger from "@daml/react";
@@ -14,6 +13,7 @@ import { Router } from "react-router-dom";
 
 configure({ adapter: new EnzymeAdapter() });
 
+// Test cases to check if all layout components render as expected with the right input
 describe("Test rendering layout components", () => {
   it("Landing page layout", () => {
     var container = render(<Landing />);

@@ -5,7 +5,6 @@ import Routes from "../routes/Routes";
 import { computeCredentials } from "config/Credentials";
 import Ledger from "@daml/ledger";
 import { createMemoryHistory } from "history";
-
 import { shallow, configure } from "enzyme";
 import EnzymeAdapter from "enzyme-adapter-react-16";
 import { Route } from "react-router";
@@ -27,6 +26,7 @@ import Bills from "views/bills/Bills";
 
 configure({ adapter: new EnzymeAdapter() });
 
+// Test cases to check if each role can access their applicable routes
 describe("Test all Patient1 routes and views", () => {
   const credentials = computeCredentials("Patient1");
   new Ledger({ token: credentials.token });
