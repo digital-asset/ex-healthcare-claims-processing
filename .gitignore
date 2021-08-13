@@ -13,6 +13,7 @@ dist
 .project
 .settings/
 ui/daml.js
-
+ui/build
+ui/build.zip
 # Nix
 result*
