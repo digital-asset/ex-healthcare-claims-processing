@@ -4,25 +4,38 @@
 import React, { useCallback } from "react";
 import Credentials, { computeCredentials } from "config/Credentials";
 import Ledger from "@daml/ledger";
-import { ledgerId } from "config/config";
 import Landing from "components/Landing/index";
 import { useEffect } from "react";
 import SelectRole from "components/fields/SelectRole";
+import { deploymentMode } from "config/config";
 
 type Props = {
   onLogin: (credentials: Credentials) => void;
 };
+
+const makeLoginUrl = () => {
+  let host = window.location.host.split(".");
+  const ledgerId = host[0];
+  let loginUrl = host.slice(1);
+  loginUrl.unshift("login");
+
+  return (
+    loginUrl.join(".") +
+    (window.location.port ? ":" + window.location.port : "") +
+    "/auth/login?ledgerId=" +
+    ledgerId
+  );
+};
+
+function loginDablUser(): void {
+  window.open(`https://${makeLoginUrl()}`, "_self");
+}
 
 // React component for the login screen of the `App`.
 const LoginScreen: React.FC<Props> = ({ onLogin }) => {
   const login = useCallback(
     async (credentials: Credentials) => {
       try {
-        credentials = {
-          token: tempToken,
-          party,
-          ledgerId,
-        };
         console.log("Attempting Login");
         // Initiate new ledger
         const ledger = new Ledger({ token: credentials.token });
@@ -73,9 +86,17 @@ const LoginScreen: React.FC<Props> = ({ onLogin }) => {
           alt="Daml Health logo"
           className="absolute top-7 left-11"
         />
-        <div className="flex flex-col justify-center items-stretch space-y-4 w-80">
-          <SelectRole handleLogin={handleLogin} />
-        </div>
+        {Boolean(deploymentMode) ? (
+          <div className="flex flex-col justify-center items-stretch space-y-4 w-80">
+            <button className="btn btn-gray" onClick={loginDablUser}>
+              Log in with DABL
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col justify-center items-stretch space-y-4 w-80">
+            <SelectRole handleLogin={handleLogin} />
+          </div>
+        )}
       </div>
     </div>
   );

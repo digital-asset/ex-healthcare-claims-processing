@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import dateFormat from "dateformat";
 import { Event as DEvent, CreateEvent } from "@daml/ledger";
+import jwt_decode from "jwt-decode";
 
 export function intercalate<X>(xs: X[], sep: X) {
   return xs.flatMap((x) => [sep, x]).slice(1);
@@ -65,4 +66,67 @@ export const validateNonEmpty = (label: string) => (a: any) => {
     error = `${label} is required`;
   }
   return error;
+};
+
+export const partyFromToken = ({
+  token,
+}: {
+  token: string;
+}): string | undefined => {
+  try {
+    const decoded: any = jwt_decode(token);
+    return decoded["https://daml.com/ledger-api"].actAs.shift();
+  } catch (e) {
+    console.log(e.message || "failed to extract party from jwt token");
+    return undefined;
+  }
+};
+
+export const ledgerIdFromToken = ({
+  token,
+}: {
+  token: string;
+}): string | undefined => {
+  try {
+    const decoded: any = jwt_decode(token);
+    return decoded["https://daml.com/ledger-api"].ledgerId;
+  } catch (e) {
+    console.log(e.message || "failed to extract ledger id from jwt token");
+    return undefined;
+  }
+};
+
+export const setCookie = ({
+  name,
+  value,
+  days,
+}: {
+  name: string;
+  value: string;
+  days: number;
+}) => {
+  var expires = "";
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + (value || "") + expires + `;`;
+};
+
+export const getCookie = ({ name }: { name: string }) => {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(";");
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    // eslint-disable-next-line eqeqeq
+    while (c.charAt(0) == " ") c = c.substring(1, c.length);
+    // eslint-disable-next-line eqeqeq
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+};
+
+export const deleteCookie = ({ name }: { name: string }): void => {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.projectdabl.com;`;
 };

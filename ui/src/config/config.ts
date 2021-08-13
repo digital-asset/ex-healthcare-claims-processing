@@ -17,3 +17,5 @@ export const deploymentMode: DeploymentMode =
 // an environment variable, falling back on the sandbox ledger ID.
 export const ledgerId: string =
   process.env.REACT_APP_LEDGER_ID ?? "example-create-daml-app-sandbox";
+
+export const cookieName = "DAMLHUB_LEDGER_ACCESS_TOKEN";

@@ -4,6 +4,8 @@ import { routes } from "routes/config";
 import MainLayout from "components/MainLayout";
 import { Router } from "react-router";
 import { History } from "history";
+import { cookieName } from "config/config";
+import { deleteCookie } from "utils";
 
 const defaultRoutePath: { [index: string]: string } = {
   Patient1: "/",
@@ -45,8 +47,14 @@ const Routes: React.FC<RouteComponentProps> = ({
   const party = useParty();
 
   const onLogout = useCallback(() => {
+    // Remove all cookies and token related to authentication
+    deleteCookie({
+      name: cookieName,
+    });
+    localStorage.removeItem("daml.token");
+    localStorage.removeItem("daml.token");
+
     setCredentials(undefined);
-    // Go back to main profile page and replace history
     history.replace("");
   }, [history, setCredentials]);
 
