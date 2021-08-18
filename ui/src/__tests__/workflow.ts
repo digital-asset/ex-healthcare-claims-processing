@@ -16,11 +16,11 @@ let uiProc: ChildProcess | undefined = undefined;
 
 let browser: Browser | undefined = undefined;
 
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
 /**
  * NOTE: This test suite is bug sensitive
  * In some events the ledger and api might not be ready when the tests start
- * You may want to start the ledger in seperate terminals and run the tests
- * If so, please see comments below and out comment the two applicable blocks
  */
 beforeAll(async () => {
   // Note(kill-npm-start): The `detached` flag starts the process in a new process group.
@@ -32,19 +32,17 @@ beforeAll(async () => {
     cwd: "..",
   };
 
-  /**
-   * OUT COMMENT THIS IF RUNNING LEDGER IN SEPERATE TERMINALS
-   * Start out comment
-   */
-
   sandboxProc = spawn("launchers/sandbox+populate", launcherOpts);
   automationProc = spawn("launchers/automation", launcherOpts);
+  //add 30 second delay for the processes to start
+  await delay(30000);
+
   uiProc = spawnUI(launcherOpts);
 
-  // End out comment
-
+  //wait for all port to be open
   await waitOn({ resources: [`tcp:localhost:${UI_PORT}`] });
   await waitOn({ resources: [`tcp:localhost:7575`] });
+  await waitOn({ resources: [`tcp:localhost:6865`] });
 
   browser = await puppeteer.launch();
 }, 120_000);
@@ -52,15 +50,12 @@ beforeAll(async () => {
 function spawnUI(opts: SpawnOptions) {
   // Disable automatically opening a browser using the env var described here:
   // https://github.com/facebook/create-react-app/issues/873#issuecomment-266318338
-  const env = { ...process.env, BROWSER: "none" };
+  // Explicitly set NODE_ENV to development. If not, the test may run in production settings and target wrong proxy and ledger
+  const env = { ...process.env, NODE_ENV: "development", BROWSER: "none" };
   return spawn("launchers/ui", { ...opts, env });
 }
 
 afterAll(async () => {
-  /**
-   * OUT COMMENT THIS IF RUNNING LEDGER IN SEPERATE TERMINALS
-   * Start out comment
-   */
   if (uiProc?.pid) {
     process?.kill(-uiProc.pid);
   }
@@ -70,13 +65,12 @@ afterAll(async () => {
   if (sandboxProc?.pid) {
     process?.kill(-sandboxProc.pid);
   }
-  // End out comment
-
   if (browser) {
     await browser.close();
   }
 });
 
+// test creating a referral by primary care provider
 test("Create referral", async () => {
   const page = await goToPage();
   await changeRole(page, "PrimaryCareProvider");
@@ -115,6 +109,7 @@ test("Create referral", async () => {
   await clickButton(page, "#close-modal-button");
 }, 60_000);
 
+// test creating a appointment by radiologist
 test("Create appointemnt", async () => {
   const page = await goToPage("/provider/referrals");
   await changeRole(page, "Radiologist");
@@ -124,12 +119,12 @@ test("Create appointemnt", async () => {
   await clickFirstItemInTable(page);
   //create appointment modal
   await clickButton(page, "#modal-button");
-  //await expectContentText(page, ".text-center", "Schedule Appointment");
 
   //submit appointment form
   await clickButton(page, "#submit-button");
 }, 60_000);
 
+// test checking-in a patient by radiologist
 test("Check-in patient", async () => {
   const page = await goToPage("/provider/appointments");
   await changeRole(page, "Radiologist");
@@ -137,20 +132,22 @@ test("Check-in patient", async () => {
 
   //move to check-in page
   await clickFirstItemInTable(page);
+
   //create appointment modal
   await clickButton(page, "#modal-button");
-  //await expectContentText(page, ".text-center", "Schedule Appointment");
 
   //submit appointment form
   await clickButton(page, "#submit-button");
 }, 60_000);
 
+// test completing treatment by radiologist
 test("Complete treatment", async () => {
   const page = await goToPage("/provider/treatments");
   await changeRole(page, "Radiologist");
   await expectContentText(page, "#title-test", "Treatments");
 
   await clickFirstItemInTable(page);
+
   //create appointment modal
   await clickButton(page, "#modal-button");
 
@@ -158,6 +155,7 @@ test("Complete treatment", async () => {
   await clickButton(page, "#submit-button");
 }, 60_000);
 
+// test paying insurance claim by insurance company
 test("Pay insurance claim treatment", async () => {
   const page = await goToPage("/provider/claims");
   await changeRole(page, "InsuranceCompany");
@@ -171,6 +169,7 @@ test("Pay insurance claim treatment", async () => {
   await clickButton(page, "#submit-button");
 }, 60_000);
 
+// test paying patient bill by patient
 test("Pay patient bill", async () => {
   const page = await goToPage("/patient/bills");
   await changeRole(page, "Patient1");
