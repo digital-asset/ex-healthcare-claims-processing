@@ -8,6 +8,8 @@ import Landing from "components/Landing/index";
 import { useEffect } from "react";
 import SelectRole from "components/fields/SelectRole";
 import { deploymentMode } from "config/config";
+import { useAuth0 } from "@auth0/auth0-react";
+import { ledgerId } from "config/config";
 
 type Props = {
   onLogin: (credentials: Credentials) => void;
@@ -33,6 +35,14 @@ function loginDablUser(): void {
 
 // React component for the login screen of the `App`.
 const LoginScreen: React.FC<Props> = ({ onLogin }) => {
+  const {
+    user,
+    isAuthenticated,
+    isLoading,
+    loginWithRedirect,
+    getAccessTokenSilently,
+  } = useAuth0();
+
   const login = useCallback(
     async (credentials: Credentials) => {
       try {
@@ -55,6 +65,32 @@ const LoginScreen: React.FC<Props> = ({ onLogin }) => {
     // Compute tokens based on username and call login
     await login(computeCredentials(username));
   };
+
+  const handleLoginAuth0 = () => {
+    if (
+      !process.env.REACT_APP_AUTH0_DOMAIN ||
+      !process.env.REACT_APP_AUTH0_LOGIN_ID
+    ) {
+      alert("Please make sure to configure the .env file before using Auth0");
+      return;
+    }
+    loginWithRedirect();
+  };
+
+  (async function () {
+    if (isLoading === false && isAuthenticated === true) {
+      if (user !== undefined) {
+        const creds: Credentials = {
+          party: user["https://daml.com/ledger-api"],
+          token: await getAccessTokenSilently({
+            audience: "https://daml.com/ledger-api",
+          }),
+          ledgerId,
+        };
+        login(creds);
+      }
+    }
+  })();
 
   useEffect(() => {
     /**
@@ -86,6 +122,7 @@ const LoginScreen: React.FC<Props> = ({ onLogin }) => {
           alt="Daml Health logo"
           className="absolute top-7 left-11"
         />
+
         {Boolean(deploymentMode) ? (
           <div className="flex flex-col justify-center items-stretch space-y-4 w-80">
             <button className="btn btn-gray" onClick={loginDablUser}>
@@ -97,6 +134,17 @@ const LoginScreen: React.FC<Props> = ({ onLogin }) => {
             <SelectRole handleLogin={handleLogin} />
           </div>
         )}
+        <p className="flex flex-col justify-center items-stretch font-sans p-4 text-center space-y-4 w-80">
+          OR
+        </p>
+
+        <button
+          className="btn btn-gray"
+          disabled={isLoading || isAuthenticated}
+          onClick={handleLoginAuth0}
+        >
+          Log in with Auth0
+        </button>
       </div>
     </div>
   );

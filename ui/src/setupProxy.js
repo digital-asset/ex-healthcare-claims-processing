@@ -7,8 +7,10 @@
 
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
-const httpJsonDevUrl = "https://api.projectdabl.com/data/lmw46c77h4kaxptl";
-//"http://localhost:" + process.env.REACT_APP_HTTP_JSON_PORT;
+const httpJsonDevUrl =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:" + process.env.REACT_APP_HTTP_JSON_PORT
+    : `https://api.projectdabl.com/data/${process.env.REACT_APP_LEDGER_ID}`;
 
 /**
  * @return {Boolean}
