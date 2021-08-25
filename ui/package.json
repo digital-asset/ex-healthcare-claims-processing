@@ -5,9 +5,9 @@
   "dependencies": {
     "@craco/craco": "6.1.1",
     "@daml.js/healthcare-claims-processing": "file:daml.js/healthcare-claims-processing-2.0.0",
-    "@daml/ledger": "^1.16.0",
-    "@daml/react": "^1.16.0",
-    "@daml/types": "^1.16.0",
+    "@daml/ledger": "^1.15.0",
+    "@daml/react": "^1.15.0",
+    "@daml/types": "^1.15.0",
     "@fontsource/alata": "^4.2.2",
     "dateformat": "^4.5.1",
     "dotenv": "^8.2.0",
