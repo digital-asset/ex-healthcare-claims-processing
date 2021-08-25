@@ -1,7 +1,0 @@
-* The UI uses @tailwindcss/postcss7-compat. According to https://tailwindcss.com/docs/installation#post-css-7-compatibility-build :
-
-| Once the rest of your tools have added support for PostCSS 8, you can move off of the compatibility build by re-installing Tailwind and its peer-dependencies using the latest tag:
-
-npm uninstall tailwindcss
-npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
-

@@ -3,10 +3,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// NOTE: this file should stay inside src folder
+
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const httpJsonDevUrl =
-  "http://localhost:" + process.env.REACT_APP_HTTP_JSON_PORT;
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:" + process.env.REACT_APP_HTTP_JSON_PORT
+    : `https://api.projectdabl.com/data/${process.env.REACT_APP_LEDGER_ID}`;
 
 /**
  * @return {Boolean}
@@ -30,6 +34,7 @@ module.exports = function (app) {
     createProxyMiddleware(filter, {
       target: httpJsonDevUrl,
       ws: true, //Proxy websockets
+      changeOrigin: true,
     })
   );
 };

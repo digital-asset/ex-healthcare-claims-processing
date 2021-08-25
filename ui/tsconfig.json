@@ -1,7 +1,13 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "baseUrl": "./src",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "noImplicitAny":false,
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -18,5 +24,7 @@
     "emitDecoratorMetadata": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

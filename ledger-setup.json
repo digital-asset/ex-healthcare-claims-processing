@@ -1,0 +1,10 @@
+{
+  "parties": {
+    "payer1": "ledger-party-e59f66cd-70e1-4f88-924b-e5155df610ac",
+    "operator": "ledger-party-0839a976-4839-4a1e-8ca8-238c7c7068fe",
+    "patient1": "ledger-party-1015d2f4-1052-489a-9d70-e1c5c49961c2",
+    "provider1": "ledger-party-d77165ed-ae44-4931-b55b-0853cf074695",
+    "undefined": "ledger-party-bae5d613-2f3f-46f0-9f8d-558239dbc9d1",
+    "provider2": "ledger-party-b3f1c141-6343-4275-aef6-3822af5d9481"
+  }
+}
