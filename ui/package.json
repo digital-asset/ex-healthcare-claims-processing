@@ -62,7 +62,7 @@
     "@types/react-time-picker": "^4.0.1",
     "autoprefixer": "^9.8.6",
     "http-proxy-middleware": "^1.0.4",
-    "postcss": "^7.0.36",
+    "postcss": "^8.2.13",
     "postcss-for": "^2.1.1",
     "prettier": "2.3.2",
     "react-scripts": "^4.0.2",
