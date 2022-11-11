@@ -113,6 +113,11 @@ jobs:
           command: |
             flake8 --max-line-length=120 $(find -name \*.py)
       - run:
+          name: Pipenv install
+          working_directory: scripts
+          command: |
+            pipenv install
+      - run:
           name: Pipenv check
           working_directory: scripts
           command: |
