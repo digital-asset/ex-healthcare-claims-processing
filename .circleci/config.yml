@@ -161,7 +161,7 @@ jobs:
             - "*.dar"
             - "lib"
             - "NOTICE"
-      - slack_notification
+      # - slack_notification
 
   ui_test:
     parameters:
@@ -193,7 +193,7 @@ jobs:
           paths:
             - ui/node_modules
           key: node-v1-{{ .Branch }}-{{ checksum "ui/package-lock.json" }}
-      - slack_notification
+      # - slack_notification
 
   blackduck_check:
     parameters:
@@ -247,7 +247,7 @@ jobs:
           root: .
           paths:
             - "NOTICE"
-      - slack_notification
+      # - slack_notification
 
 workflows:
   version: 2
