@@ -92,7 +92,7 @@ jobs:
           path: target/daml-test-reports
       - store_artifacts:
           path: target/daml-test-reports
-      - slack_notification
+      #- slack_notification
 
   integration_test:
     parameters:
